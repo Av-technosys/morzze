@@ -21,14 +21,28 @@ import { db } from "@/db";
 import { category } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
+import slugify from "slugify";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
+
+const CATEGORY_META: Record<string, Pick<Metadata, "title" | "description">> = {
+  "kitchen-faucets": {
+    title: "Premium Kitchen Faucets Stylish & Durable | Morzze",
+    description: "Premium Kitchen Faucets Stylish & Durable | Morzze",
+  },
+};
+
+function normalizeCategorySlug(slug: string) {
+  return slugify(decodeURIComponent(slug), { lower: true });
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
+  const categorySlug = normalizeCategorySlug(slug);
+  const fallbackMeta = CATEGORY_META[categorySlug];
 
   try {
     const [productRes] = await db
@@ -39,11 +53,11 @@ export async function generateMetadata(
         image: category.bannerImage,
       })
       .from(category)
-      .where(eq(category.slug, slug));
+      .where(eq(category.slug, categorySlug));
 
     if (!productRes) {
       return {
-        title: "Category Not Found | Morzze",
+        title: fallbackMeta?.title || "Category Not Found | Morzze",
         description: "The requested category could not be found.",
       };
     }
@@ -51,12 +65,13 @@ export async function generateMetadata(
     const images: string = productRes.image!;
 
     return {
-      title: productRes.title || `${productRes.name} | Morzze`,
+      title: productRes.title || fallbackMeta?.title || `${productRes.name} | Morzze`,
       description:
         productRes.description ||
+        fallbackMeta?.description ||
         `Browse ${productRes.name} products at Morzze.`,
       alternates: {
-        canonical: `/kitchen/${slug}`,
+        canonical: `/kitchen/${categorySlug}`,
       },
       openGraph: {
         images,
@@ -78,14 +93,15 @@ export default async function CategoryPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
+  const categorySlug = normalizeCategorySlug(slug);
   const sParams = await searchParams;
 
   const [categoryData, steelSinkCategorySlugs, productsResult] =
     await Promise.all([
-      getCategoryBySlug(slug),
+      getCategoryBySlug(categorySlug),
       getSteelSinkCategorySlugs(),
       getProducts({
-        category: slug,
+        category: categorySlug,
         size: sParams.size as string | string[],
         material: sParams.material as string | string[],
         finish: sParams.finish as string | string[],

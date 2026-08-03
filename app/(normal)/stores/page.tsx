@@ -7,6 +7,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: `Find a Morzze Store Near You – Showrooms & Dealers`,
   description: `Find Morzze stores near you – from flagship showrooms to authorised dealers across India. Experience our kitchen & bathroom collection up close before you buy.`,
+  alternates: {
+    canonical: "/stores",
+  },
 };
 
 export default async function StoresPage() {

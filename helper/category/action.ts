@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import slugify from "slugify";
 //import path from "path";
 import { redirect } from "next/navigation";
-import { desc, eq, isNull, or } from "drizzle-orm";
+import { desc, eq, isNull, ne, or } from "drizzle-orm";
 import { revalidatePath, unstable_cache } from "next/cache";
 import { generateUniqueSlug } from "../slug/generateUniqueSlug";
 import { and, asc, ilike, sql } from "drizzle-orm";
@@ -30,6 +30,14 @@ function revalidateCategorySlugPages(slugs: Array<string | null | undefined>) {
   }
 }
 
+function normalizeSlug(value: string) {
+  return slugify(value || "item", {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
+}
+
 interface GetCategoriesOptions {
   page?: number;
   pageSize?: any;
@@ -38,8 +46,23 @@ interface GetCategoriesOptions {
 }
 export async function createCategory(categoryData: any) {
   try {
-    const { name, description, parentId, bannerImage, horizontalBannerImage, type } = categoryData;
-    const slug = await generateUniqueSlug(db, name, category.slug);
+    const { name, slug: inputSlug, description, parentId, bannerImage, horizontalBannerImage, type } = categoryData;
+    const slug = inputSlug
+      ? normalizeSlug(inputSlug)
+      : await generateUniqueSlug(db, name, category.slug);
+
+    if (inputSlug) {
+      const [existingSlug] = await db
+        .select({ id: category.id })
+        .from(category)
+        .where(eq(category.slug, slug))
+        .limit(1);
+
+      if (existingSlug) {
+        return { success: false, message: "Category slug already exists" };
+      }
+    }
+
     await db.insert(category).values({
       name,
       slug,
@@ -63,7 +86,7 @@ export async function createCategory(categoryData: any) {
 
 export async function updateCategory(categoryData: any) {
   try {
-    const { id, name, description, parentId, bannerImage, horizontalBannerImage, type } =
+    const { id, name, slug, description, parentId, bannerImage, horizontalBannerImage, type } =
       categoryData;
     const [existingCategory] = await db
       .select({ slug: category.slug })
@@ -71,7 +94,17 @@ export async function updateCategory(categoryData: any) {
       .where(eq(category.id, id))
       .limit(1);
     const previousSlug = existingCategory?.slug ?? null;
-    const nextSlug = slugify(name, { lower: true });
+    const nextSlug = normalizeSlug(slug || name);
+
+    const [duplicateSlug] = await db
+      .select({ id: category.id })
+      .from(category)
+      .where(and(eq(category.slug, nextSlug), ne(category.id, id)))
+      .limit(1);
+
+    if (duplicateSlug) {
+      return { success: false, message: "Category slug already exists" };
+    }
 
     await db
       .update(category)

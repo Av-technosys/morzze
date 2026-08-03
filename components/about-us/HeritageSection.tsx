@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import { imageKitUrl } from "@/lib/imagekit-url";
 
 const containerVariants: Variants = {
@@ -96,13 +97,13 @@ const HeritageSection = () => {
               viewport={{ once: false }}
               className="relative w-1/2 aspect-4/5 mt-12 md:mt-24 rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
             >
-              <motion.img
-                src={imageKitUrl("haritage2.jpg")}
-                alt="Product"
-                className="w-full h-full object-cover"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.6 }}
-              />
+             <Image
+              src={imageKitUrl("haritage2.jpg")}
+              alt="Product"
+              width={800}
+              height={800}
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+            />
             </motion.div>
           </div>
         </div>

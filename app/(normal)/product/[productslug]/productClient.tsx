@@ -120,14 +120,13 @@ const ProductClient = ({ product, slug, reviews }: any) => {
           <div className="space-y-6">
             <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden group">
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={`${selectedVariant}-${selectedImage}`}
-                  src={getImageURL(displayImages[selectedImage] || "")}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full h-full object-cover"
-                />
+             <Image
+              src={getImageURL(displayImages[selectedImage] || "")}
+              alt={product.name}
+              width={800}
+              height={800}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
               </AnimatePresence>
 
               {/* ARROWS */}

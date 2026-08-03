@@ -296,11 +296,11 @@ export default function AddProductForm() {
           ratio: 2000 / 2000,
         });
 
-        const { fileKey, fileUrl } = await upload(file, "product");
+        const { fileKey, preview } = await upload(file, "product");
 
         setVariants((prev: any) => ({
           ...prev,
-          gallery: [...prev.gallery, { key: fileKey, preview: fileUrl as any }],
+          gallery: [...prev.gallery, { key: fileKey, preview }],
         }));
 
         toast.success("Image uploaded");
@@ -329,13 +329,13 @@ export default function AddProductForm() {
         ratio: 1,
       });
 
-      const { fileKey, fileUrl } = await upload(file, "product");
+      const { fileKey, preview } = await upload(file, "product");
 
       setVariants((prev: any) => ({
         ...prev,
         banner: {
           key: fileKey,
-          preview: fileUrl as any,
+          preview,
         },
       }));
 
@@ -413,7 +413,7 @@ export default function AddProductForm() {
       VarientBoxes: varientBox
         ? variantBoxes.map((item: any) => ({
           ...item,
-          image: getStoredImageKey(item.image),
+          image: getStoredImageKey(item.key || item.image),
         }))
         : [],
       hasVarientBox: varientBox,
@@ -439,10 +439,11 @@ export default function AddProductForm() {
     if (!file) return;
 
     try {
-      const { fileUrl } = await upload(file, "product");
+      const { fileKey, preview } = await upload(file, "product");
 
       const updated = [...variantBoxes];
-      updated[index].image = fileUrl;
+      updated[index].image = preview;
+      updated[index].key = fileKey;
       setVariantBoxes(updated);
       toast.success("Variant image uploaded");
     } catch (err) {

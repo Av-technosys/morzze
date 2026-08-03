@@ -25,13 +25,51 @@ type Props = {
 };
 
 const PLACEHOLDER_IMG = imageKitUrl("video.png");
+const PINNED_CATEGORIES = ["neo", "vertex", "pulse"];
+
+type CatalogueTab = {
+  value: string;
+  label: string;
+};
+
+function normalizeCategory(value: string) {
+  return value.trim().toLowerCase().replace(/[\s_-]+/g, "-");
+}
+
+function formatCategoryLabel(value: string) {
+  return value
+    .trim()
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
 
 export default function CatalogueGridDownloads({ items }: Props) {
-  const tabs = useMemo(() => {
-    const categories = [
-      ...new Set(items.map((c) => c.category).filter(Boolean)),
-    ].sort((a, b) => a.localeCompare(b));
-    return ["All", ...categories];
+  const tabs = useMemo<CatalogueTab[]>(() => {
+    const categories = [...new Set(items.map((c) => c.category).filter(Boolean))];
+    const sortedCategories = categories.sort((a, b) => {
+      const aPinnedIndex = PINNED_CATEGORIES.indexOf(normalizeCategory(a));
+      const bPinnedIndex = PINNED_CATEGORIES.indexOf(normalizeCategory(b));
+
+      if (aPinnedIndex !== -1 || bPinnedIndex !== -1) {
+        if (aPinnedIndex === -1) return 1;
+        if (bPinnedIndex === -1) return -1;
+        return aPinnedIndex - bPinnedIndex;
+      }
+
+      return formatCategoryLabel(a).localeCompare(formatCategoryLabel(b));
+    });
+
+    return [
+      { value: "All", label: "All" },
+      ...sortedCategories.map((category) => ({
+        value: category,
+        label: formatCategoryLabel(category),
+      })),
+    ];
   }, [items]);
 
   const [activeTab, setActiveTab] = useState("All");
@@ -49,12 +87,12 @@ export default function CatalogueGridDownloads({ items }: Props) {
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button
-                key={tab}
+                key={tab.value}
                 type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`px-7 h-10 rounded-full text-[13px] whitespace-nowrap ${activeTab === tab ? "bg-[#e6aa12] text-black" : "text-white"}`}
+                onClick={() => setActiveTab(tab.value)}
+                className={`px-7 h-10 rounded-full text-[13px] whitespace-nowrap ${activeTab === tab.value ? "bg-[#e6aa12] text-black" : "text-white"}`}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>

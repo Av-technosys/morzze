@@ -30,6 +30,14 @@ import { useFileUpload } from "@/helper";
 import { getImageURL } from "@/lib/getImageLin";
 import { getStoredImageKey } from "@/lib/imagePath";
 
+function slugFromText(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export default function EditCategory({ categoryInfo }: any) {
   const router = useRouter();
   const { upload, uploading } = useFileUpload();
@@ -38,6 +46,7 @@ export default function EditCategory({ categoryInfo }: any) {
 
   const [form, setForm] = useState({
     name: categoryInfo.name,
+    slug: categoryInfo.slug ?? "",
     parent: categoryInfo.parentId ?? "",
     description: categoryInfo.description ?? "",
     type: categoryInfo.type
@@ -76,6 +85,7 @@ export default function EditCategory({ categoryInfo }: any) {
     const categoryData = {
       id: categoryInfo.id,
       name: form.name,
+      slug: form.slug,
       type: selectedParent,
       description: form.description,
       // type: form.type,
@@ -148,10 +158,28 @@ export default function EditCategory({ categoryInfo }: any) {
                   </Label>
                   <Input
                     name="name"
-                    defaultValue={categoryInfo.name}
+                    value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="h-11"
                   />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-slate-600 font-medium">
+                    Slug
+                  </Label>
+                  <Input
+                    name="slug"
+                    value={form.slug}
+                    onChange={(e) =>
+                      setForm({ ...form, slug: slugFromText(e.target.value) })
+                    }
+                    placeholder="floor-drainers"
+                    className="h-11"
+                  />
+                  <p className="text-xs text-slate-500">
+                    Used in category URL, for example /bathroom/floor-drainers.
+                  </p>
                 </div>
 
                 <div className="space-y-1.5">

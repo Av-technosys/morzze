@@ -29,12 +29,23 @@ import { useFileUpload } from "@/helper";
 import { getImageURL } from "@/lib/getImageLin";
 import { getStoredImageKey } from "@/lib/imagePath";
 
+function slugFromText(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export default function AddCategoryForm() {
   const router = useRouter();
   const { upload, uploading } = useFileUpload();
   const bannerRef = useRef<HTMLInputElement>(null);
 
   const [parentId, setParentId] = useState("");
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   // 'preview' ki jagah hum 'bannerUrl' use karenge jo ImageKit se aayega
   const [bannerUrl, setBannerUrl] = useState<string>("");
   const [bannerKey, setBannerKey] = useState<string>("");
@@ -49,7 +60,8 @@ export default function AddCategoryForm() {
   const submitHandler = async (e: any) => {
     e.preventDefault();
     const categoryData = {
-      name: e.target.name.value,
+      name,
+      slug,
       parentId: parentId,
       description: e.target.description?.value,
       bannerImage: getStoredImageKey(bannerKey || bannerUrl),
@@ -108,9 +120,34 @@ export default function AddCategoryForm() {
                   <Label className="text-slate-600 font-medium">Category Name</Label>
                   <Input
                     name="name"
+                    value={name}
+                    onChange={(e) => {
+                      const nextName = e.target.value;
+                      setName(nextName);
+                      if (!slugManuallyEdited) {
+                        setSlug(slugFromText(nextName));
+                      }
+                    }}
                     placeholder="Enter Category Name"
                     className="h-11"
                   />
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-slate-600 font-medium">Slug</Label>
+                  <Input
+                    name="slug"
+                    value={slug}
+                    onChange={(e) => {
+                      setSlugManuallyEdited(true);
+                      setSlug(slugFromText(e.target.value));
+                    }}
+                    placeholder="floor-drainers"
+                    className="h-11"
+                  />
+                  <p className="text-xs text-slate-500">
+                    Used in category URL, for example /bathroom/floor-drainers.
+                  </p>
                 </div>
 
                 <div className="space-y-1.5">

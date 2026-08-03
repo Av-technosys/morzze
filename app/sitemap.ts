@@ -180,60 +180,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-501`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-501T`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-503`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-505`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-506`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-507`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-508`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/bathroom-faucets-mbf-509`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
-{
-  url: `${baseUrl}/product/Granite-Wash-Basin-MBB-403`,
-  lastModified: new Date(),
-  changeFrequency: "weekly",
-  priority: 0.6,
-},
+
   ];
 
   categories.forEach((cat) => {
