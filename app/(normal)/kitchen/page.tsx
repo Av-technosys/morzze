@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: `Premium Kitchen Accessories | Faucets, Sinks & More - Morzze`,
   description:
     "Explore top-quality kitchen accessories at Morzze—faucets, sinks, disposers & air taps. Stylish, functional picks to elevate your kitchen effortlessly.",
+  alternates: {
+    canonical: "/kitchen",
+  },
 };
 
 const page = async () => {

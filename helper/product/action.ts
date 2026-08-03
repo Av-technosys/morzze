@@ -87,6 +87,50 @@ function isMissingProductFaqTableError(error: any) {
   return error?.code === "42P01" || error?.cause?.code === "42P01";
 }
 
+function revalidateProductPages(slugs: Array<string | null | undefined>) {
+  revalidatePath("/products");
+
+  const uniqueSlugs = new Set(
+    slugs.filter((slug): slug is string => Boolean(slug)),
+  );
+
+  for (const slug of uniqueSlugs) {
+    revalidatePath(`/product/${slug}`);
+  }
+}
+
+function revalidateProductCategoryPages(slugs: Array<string | null | undefined>) {
+  const uniqueSlugs = new Set(
+    slugs.filter((slug): slug is string => Boolean(slug)),
+  );
+
+  for (const slug of uniqueSlugs) {
+    revalidatePath(`/kitchen/${slug}`);
+    revalidatePath(`/bathroom/${slug}`);
+  }
+}
+
+async function getCategorySlugsByIds(categoryIds: string[]) {
+  if (!categoryIds.length) return [];
+
+  const rows = await db
+    .select({ slug: category.slug })
+    .from(category)
+    .where(inArray(category.id, categoryIds));
+
+  return rows.map((row) => row.slug);
+}
+
+async function getProductCategorySlugs(productId: string) {
+  const rows = await db
+    .select({ slug: category.slug })
+    .from(category)
+    .innerJoin(productCategory, eq(category.id, productCategory.categoryId))
+    .where(eq(productCategory.productId, productId));
+
+  return rows.map((row) => row.slug);
+}
+
 async function getProductFaqRows(productId: string) {
   try {
     return await db
@@ -237,9 +281,11 @@ export async function createProduct(formData: FormData): Promise<void> {
 
     const variants: any = JSON.parse(variantsData);
     const canWriteProductFaq = await hasProductFaqTable();
+    let createdSlug: string | null = null;
 
     await db.transaction(async (tx) => {
       const slug = await generateUniqueSlug(tx, variants.name, product.slug);
+      createdSlug = slug;
       // 1. Create Product
       // Derive a single canonical size from the size filter values
       const sizeFilterValues: string[] = (variants.filters || [])
@@ -352,8 +398,10 @@ export async function createProduct(formData: FormData): Promise<void> {
       }
     });
 
-    revalidateProductCache(variants.slug);
+    revalidateProductCache(createdSlug);
     revalidateCategoryCache();
+    revalidateProductPages([createdSlug]);
+    revalidateProductCategoryPages(await getCategorySlugsByIds(categoryIds));
     revalidatePath("/admin/product");
   } catch (error) {
     console.error("createProduct failed:", error);
@@ -376,6 +424,14 @@ export async function updateProduct(formData: FormData): Promise<void> {
     const variants: any = JSON.parse(variantsData);
     const faqs = variants.faqs || [];
     const canWriteProductFaq = await hasProductFaqTable();
+    const [existingProduct] = await db
+      .select({ slug: product.slug })
+      .from(product)
+      .where(eq(product.id, productId))
+      .limit(1);
+    const previousSlug = existingProduct?.slug ?? null;
+    const nextSlug = variants.slug ?? previousSlug;
+    const previousCategorySlugs = await getProductCategorySlugs(productId);
 
     await db.transaction(async (tx) => {
       // 1. Update categories for the parent product
@@ -532,9 +588,15 @@ export async function updateProduct(formData: FormData): Promise<void> {
       // }
     });
 
-    revalidateProductCache(variants.slug);
+    revalidateProductCache(previousSlug);
+    revalidateProductCache(nextSlug);
     revalidateProductCache(productId);
     revalidateCategoryCache();
+    revalidateProductPages([previousSlug, nextSlug]);
+    revalidateProductCategoryPages([
+      ...previousCategorySlugs,
+      ...(await getCategorySlugsByIds(categoryIds)),
+    ]);
     revalidatePath("/admin/product");
   } catch (error) {
     console.error("updateProduct failed:", error);
@@ -765,6 +827,14 @@ export async function getProductSimilarProducts(slug: string | any) {
 
 export async function deleteProduct(id: string) {
   try {
+    const [existingProduct] = await db
+      .select({ slug: product.slug })
+      .from(product)
+      .where(eq(product.id, id))
+      .limit(1);
+    const deletedSlug = existingProduct?.slug ?? null;
+    const deletedCategorySlugs = await getProductCategorySlugs(id);
+
     await db.transaction(async (tx) => {
       // 1. Delete review media for reviews on this product
       const productReviews = await tx
@@ -820,7 +890,10 @@ export async function deleteProduct(id: string) {
     });
 
     revalidateProductCache(id);
+    revalidateProductCache(deletedSlug);
     revalidateCategoryCache();
+    revalidateProductPages([deletedSlug]);
+    revalidateProductCategoryPages(deletedCategorySlugs);
     revalidatePath("/admin/product");
     return {
       success: true,
@@ -856,9 +929,12 @@ export async function getProducts({
   // Normalize params outside cache so cache key is stable
   const normalizeParam = (val: string | string[]): string[] => {
     const arr = Array.isArray(val) ? val : val ? [val] : [];
-    return arr.map((v) => decodeURIComponent(v).trim());
+    return [
+      ...new Set(arr.map((v) => decodeURIComponent(v).trim()).filter(Boolean)),
+    ].sort();
   };
 
+  const normalizedCategorySlugs = normalizeParam(categorySlug ?? "");
   const normalizedSize = normalizeParam(size);
   const normalizedType = normalizeParam(type);
   const normalizedMaterial = normalizeParam(material);
@@ -867,15 +943,28 @@ export async function getProducts({
   const normalizedCramps = normalizeParam(cramps);
   const normalizedAllergies = normalizeParam(allergies);
 
-  // Resolve category IDs OUTSIDE cache (async lookup)
+  // Resolve category IDs outside the main product-list cache, but keep this
+  // lookup cached so filtered /products requests do not hit categories every time.
   let resolvedCategoryIds: string[] = [];
-  if (categorySlug) {
-    const slugs = Array.isArray(categorySlug) ? categorySlug : [categorySlug];
-    const categoryRows = await db
-      .select({ id: category.id })
-      .from(category)
-      .where(inArray(category.slug, slugs));
-    resolvedCategoryIds = categoryRows.map((c) => c.id);
+  if (normalizedCategorySlugs.length) {
+    resolvedCategoryIds = await unstable_cache(
+      async () => {
+        const categoryRows = await db
+          .select({ id: category.id })
+          .from(category)
+          .where(inArray(category.slug, normalizedCategorySlugs));
+
+        return categoryRows.map((c) => c.id).sort();
+      },
+      ["product-list-category-ids", ...normalizedCategorySlugs],
+      {
+        revalidate: cacheRevalidateTime,
+        tags: [
+          CACHE_TAGS.categories,
+          ...normalizedCategorySlugs.map((slug) => CACHE_TAGS.category(slug)),
+        ],
+      },
+    )();
   }
 
   const cacheKey = JSON.stringify({
@@ -897,6 +986,7 @@ export async function getProducts({
     sort,
     includeHidden,
   });
+  const hasSearch = search.trim() !== "";
 
   return unstable_cache(
     async () => {
@@ -1024,20 +1114,53 @@ export async function getProducts({
       const offset = (page - 1) * pageSize;
 
       const [countResult, products] = await Promise.all([
+        db.select({ count: sql<number>`count(*)` }).from(product).where(whereClause),
         db
-          .select({ count: sql<number>`count(*)` })
+          .select({
+            id: product.id,
+            sku: product.sku,
+            slug: product.slug,
+            name: product.name,
+            basePrice: product.basePrice,
+            strikethroughPrice: product.strikethroughPrice,
+            bannerImage: product.bannerImage,
+            hasVarientBox: product.hasVarientBox,
+            isInStock: product.isInStock,
+            isHidden: product.isHidden,
+            size: product.size,
+            filters: sql`
+              COALESCE(
+                json_agg(
+                  json_build_object(
+                    'id', ${productFilter.id},
+                    'type', ${productFilter.type},
+                    'filter', ${productFilter.filter}
+                  )
+                ) FILTER (WHERE ${productFilter.id} IS NOT NULL),
+                '[]'::json
+              )
+            `.as("filters"),
+          })
           .from(product)
-          .where(whereClause),
-        db
-          .select()
-          .from(product)
+          .leftJoin(productFilter, eq(product.id, productFilter.productId))
           .where(whereClause)
+          .groupBy(
+            product.id,
+            product.sku,
+            product.slug,
+            product.name,
+            product.basePrice,
+            product.strikethroughPrice,
+            product.bannerImage,
+            product.hasVarientBox,
+            product.isInStock,
+            product.isHidden,
+            product.size,
+          )
           .orderBy(...orderBy)
           .limit(pageSize)
           .offset(offset),
       ]);
-
-      products.map((product) => console.log(product.sku))
 
       const total = Number(countResult[0]?.count ?? 0);
 
@@ -1051,36 +1174,53 @@ export async function getProducts({
       };
     },
     [cacheKey],
-    { revalidate: 60 }
+    {
+      revalidate: hasSearch ? 3600 : cacheRevalidateTime,
+      tags: [
+        CACHE_TAGS.products,
+        CACHE_TAGS.categories,
+        ...normalizedCategorySlugs.map((slug) => CACHE_TAGS.category(slug)),
+      ],
+    },
   )();
 }
 
 export async function getSteelSinkCategorySlugs() {
-  const rows = await db
-    .select({ slug: category.slug })
-    .from(category)
-    .where(
-      or(
-        and(
-          ilike(category.name, "%sink%"),
+  return unstable_cache(
+    async () => {
+      const rows = await db
+        .select({ slug: category.slug })
+        .from(category)
+        .where(
           or(
-            ilike(category.name, "%steel%"),
-            ilike(category.name, "%steal%"),
-            ilike(category.name, "%stainless%")
+            and(
+              ilike(category.name, "%sink%"),
+              or(
+                ilike(category.name, "%steel%"),
+                ilike(category.name, "%steal%"),
+                ilike(category.name, "%stainless%")
+              )
+            ),
+            and(
+              ilike(category.slug, "%sink%"),
+              or(
+                ilike(category.slug, "%steel%"),
+                ilike(category.slug, "%steal%"),
+                ilike(category.slug, "%stainless%")
+              )
+            ),
+            eq(category.slug, "pulse")
           )
-        ),
-        and(
-          ilike(category.slug, "%sink%"),
-          or(
-            ilike(category.slug, "%steel%"),
-            ilike(category.slug, "%steal%"),
-            ilike(category.slug, "%stainless%")
-          )
-        ),
-        eq(category.slug, "pulse")
-      )
-    );
-  return rows.map((r) => r.slug);
+        );
+
+      return rows.map((r) => r.slug);
+    },
+    ["steel-sink-category-slugs"],
+    {
+      revalidate: cacheRevalidateTime,
+      tags: [CACHE_TAGS.categories],
+    },
+  )();
 }
 
 export async function getSteelSinkSizes() {
@@ -1431,38 +1571,36 @@ export async function getProductsBySlugList(slugs: string[]) {
 // }
 
 export async function getProductFilterOptions() {
-  const rows = await db
-    .select({
-      type: productFilter.type,
-      filter: productFilter.filter,
-    })
-    .from(productFilter)
-    .groupBy(productFilter.type, productFilter.filter);
+  return unstable_cache(
+    async () => {
+      const rows = await db
+        .select({
+          type: productFilter.type,
+          filter: productFilter.filter,
+        })
+        .from(productFilter)
+        .groupBy(productFilter.type, productFilter.filter);
 
+      const makeOptions = (type: string) =>
+        rows
+          .filter((row) => row.type === type && row.filter)
+          .map((row) => ({
+            label: row.filter,
+            value: row.filter,
+          }));
 
-  const sizeRows = rows.filter((row) => row.type === "size");
-
-
-  const makeOptions = (type: string) => {
-    const options = rows
-      .filter((row) => row.type === type && row.filter)
-      .map((row) => ({
-        label: row.filter,
-        value: row.filter,
-      }));
-
-    return options;
-  };
-
-  const result = {
-    materialOptions: makeOptions("material"),
-    finishOptions: makeOptions("finish"),
-    sizeOptions: makeOptions("size"),
-  };
-
-
-
-  return result;
+      return {
+        materialOptions: makeOptions("material"),
+        finishOptions: makeOptions("finish"),
+        sizeOptions: makeOptions("size"),
+      };
+    },
+    ["product-filter-options"],
+    {
+      revalidate: cacheRevalidateTime,
+      tags: [CACHE_TAGS.products],
+    },
+  )();
 }
 
 export async function getSignatureProducts(limit = 8) {
@@ -1478,6 +1616,7 @@ export async function getSignatureProducts(limit = 8) {
             basePrice: product.basePrice,
             strikethroughPrice: product.strikethroughPrice,
             categoryName: category.name,
+            size:product.size
           })
           .from(product)
           .innerJoin(productCategory, eq(productCategory.productId, product.id))
@@ -1510,6 +1649,7 @@ export async function getNewArrivalProducts(limit = 8) {
             basePrice: product.basePrice,
             strikethroughPrice: product.strikethroughPrice,
             categoryName: category.name,
+            size: product.size
           })
           .from(product)
           .innerJoin(productCategory, eq(productCategory.productId, product.id))
@@ -1542,6 +1682,7 @@ export async function getTrendingProducts(limit = 8) {
             basePrice: product.basePrice,
             strikethroughPrice: product.strikethroughPrice,
             categoryName: category.name,
+            size: product.size
           })
           .from(product)
           .innerJoin(productCategory, eq(productCategory.productId, product.id))

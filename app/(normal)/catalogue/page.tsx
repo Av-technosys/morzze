@@ -7,6 +7,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: `Morzze Catalogue | Premium Kitchen & Bathroom Solutions`,
   description: `Explore Morzze's comprehensive catalogue featuring high-quality kitchen and bathroom products, including faucets, Sinks, and other accessories.`,
+  alternates: {
+    canonical: "/catalogue",
+  },
 };
 
 const page = async () => {

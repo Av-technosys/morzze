@@ -9,6 +9,9 @@ import { getImageURL } from "@/lib/getImageLin";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
 import { Metadata } from "next";
 
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 export async function generateMetadata({
   params,
 }: {

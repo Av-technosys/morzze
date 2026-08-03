@@ -9,6 +9,9 @@ import { Form226186 } from "./couponForm";
 export const metadata: Metadata = {
   title: `Check Promo Code Eligibility | Morzze`,
   description: `Find out if you qualify for Morzze promo codes & special offers. Check your eligibility instantly and enjoy savings on premium kitchen and bathroom products.`,
+  alternates: {
+    canonical: "/promo-code",
+  },
 };
 
 const Page = async () => {

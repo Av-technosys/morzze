@@ -7,6 +7,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: `Terms of Use | Service Agreement & User Guidelines | Morzze`,
   description: `Review Morzze’s Terms of Use to understand the rules, responsibilities, and service agreement that define your access and use.`,
+  alternates: {
+    canonical: "/terms-of-use",
+  },
 }
 
 

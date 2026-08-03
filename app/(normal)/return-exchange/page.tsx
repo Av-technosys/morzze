@@ -7,6 +7,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: `Return and Exchange Policy | Easy Replacements | Morzze`,
   description: `Learn Morzze’s Return & Exchange policy to explore how to return or replace items easily. We’re committed to a smooth process and customer satisfaction.`,
+  alternates: {
+    canonical: "/return-exchange",
+  },
 }
 
 

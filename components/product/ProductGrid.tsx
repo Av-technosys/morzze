@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -106,12 +106,13 @@ const ProductGrid = ({
               </div> */}
 
               <Link href={`/product/${product.slug}`}>
-                <motion.img
+                <Image
                   src={getImageURL(product.bannerImage || "")}
                   alt={product.name}
-                  className="w-full h-full object-contain cursor-pointer"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.6 }}
+                  className="w-full hover:scale-105 duration-200 h-full object-contain cursor-pointer"
+                  width={800}
+                  height={800}
+                  
                 />
               </Link>
 

@@ -12,6 +12,9 @@ import React from "react";
 export const metadata: Metadata = {
   title: `Media - Morzze | Discover Our Journey and Innovations`,
   description: `Explore Morzze's media page featuring our Instagram journey, press highlights & brand videos. Stay updated on our innovations in kitchen & bathroom solutions`,
+  alternates: {
+    canonical: "/media",
+  },
 }
 
 

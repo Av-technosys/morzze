@@ -51,7 +51,7 @@ const Footer = async () => {
             >
               <div className="relative w-40 h-16 md:w-48 md:h-20">
                 <Image
-                  src={imageKitUrl("logo.png")}
+                  src={imageKitUrl("anupam_logo-removebg-preview.png")}
                   alt="Morzze Logo"
                   height={500}
                   width={500}

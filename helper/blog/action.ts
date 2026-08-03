@@ -6,6 +6,14 @@ import { db } from "@/lib/db";
 
 import { and, desc, eq, ilike, or, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+
+function revalidateBlogSlugPaths(slug?: string | null) {
+  if (!slug) return;
+
+  revalidatePath(`/blog/${slug}`);
+  revalidatePath(`/article/${slug}`);
+}
+
 export async function getBlogs(search = "") {
   const filters = [];
   if (search && search.trim() !== "") {
@@ -97,6 +105,7 @@ export async function createBlog(blogData: any) {
     });
     revalidatePath("/admin/blog");
     revalidatePath("/blog"); 
+    revalidateBlogSlugPaths(slug);
     
     return { success: true };
   } catch (error: any) {
@@ -161,12 +170,10 @@ export async function updateBlog(blogId: string, blogData: any) {
 
     revalidatePath("/admin/blog");
     if (existingSlug) {
-      revalidatePath(`/blog/${existingSlug}`);
-      revalidatePath(`/article/${existingSlug}`);
+      revalidateBlogSlugPaths(existingSlug);
     }
     if (formattedSlug !== existingSlug) {
-      revalidatePath(`/blog/${formattedSlug}`);
-      revalidatePath(`/article/${formattedSlug}`);
+      revalidateBlogSlugPaths(formattedSlug);
     }
     return { success: true };
   } catch (error) {
@@ -177,9 +184,16 @@ export async function updateBlog(blogId: string, blogData: any) {
 
 export async function deleteBlog(id: string) {
   try {
+    const [existingBlog] = await db
+      .select({ slug: blog.slug })
+      .from(blog)
+      .where(eq(blog.id, id))
+      .limit(1);
+
     await db.delete(blog).where(eq(blog.id, id));
     revalidatePath("/admin/blog");
     revalidatePath("/blog");
+    revalidateBlogSlugPaths(existingBlog?.slug);
     return { success: true };
   } catch (error) {
     console.error("Delete Blog Error:", error);

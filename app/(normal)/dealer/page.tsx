@@ -12,6 +12,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: `Join the Morzze Dealer Network for Kitchen & Bathroom sink`,
   description: 'Partner with Morzze and become a part of our mission to deliver premium kitchen and bathroom solutions that combine innovation, quality, and sustainability.',
+  alternates: {
+    canonical: "/dealer",
+  },
 }
 
 

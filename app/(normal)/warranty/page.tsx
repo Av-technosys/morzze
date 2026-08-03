@@ -10,6 +10,9 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: `Warranty | Product Guarantee & Support | Morzze`,
   description: `Explore Morzze’s Warranty policy to understand our product guarantee, support process, and defect handling process. We’re dedicated to quality & customer care.`,
+  alternates: {
+    canonical: "/warranty",
+  },
 }
 
 

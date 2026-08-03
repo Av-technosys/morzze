@@ -6,12 +6,12 @@ import { db } from "@/lib/db";
 import slugify from "slugify";
 //import path from "path";
 import { redirect } from "next/navigation";
-import { desc, eq, isNull, or } from "drizzle-orm";
+import { desc, eq, isNull, ne, or } from "drizzle-orm";
 import { revalidatePath, unstable_cache } from "next/cache";
 import { generateUniqueSlug } from "../slug/generateUniqueSlug";
 import { and, asc, ilike, sql } from "drizzle-orm";
 import { paginate } from "@/lib/pagination";
-import { category, productCategory, product } from "@/db/schema";
+import { category, productCategory, product, productFilter } from "@/db/schema";
 import { cacheRevalidateTime } from "@/const/globalconst";
 import {
   CACHE_TAGS,
@@ -19,6 +19,24 @@ import {
   revalidateProductCache,
 } from "@/lib/cache-tags";
 
+function revalidateCategorySlugPages(slugs: Array<string | null | undefined>) {
+  const uniqueSlugs = new Set(
+    slugs.filter((slug): slug is string => Boolean(slug)),
+  );
+
+  for (const slug of uniqueSlugs) {
+    revalidatePath(`/kitchen/${slug}`);
+    revalidatePath(`/bathroom/${slug}`);
+  }
+}
+
+function normalizeSlug(value: string) {
+  return slugify(value || "item", {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
+}
 
 interface GetCategoriesOptions {
   page?: number;
@@ -28,8 +46,23 @@ interface GetCategoriesOptions {
 }
 export async function createCategory(categoryData: any) {
   try {
-    const { name, description, parentId, bannerImage, horizontalBannerImage, type } = categoryData;
-    const slug = await generateUniqueSlug(db, name, category.slug);
+    const { name, slug: inputSlug, description, parentId, bannerImage, horizontalBannerImage, type } = categoryData;
+    const slug = inputSlug
+      ? normalizeSlug(inputSlug)
+      : await generateUniqueSlug(db, name, category.slug);
+
+    if (inputSlug) {
+      const [existingSlug] = await db
+        .select({ id: category.id })
+        .from(category)
+        .where(eq(category.slug, slug))
+        .limit(1);
+
+      if (existingSlug) {
+        return { success: false, message: "Category slug already exists" };
+      }
+    }
+
     await db.insert(category).values({
       name,
       slug,
@@ -41,6 +74,7 @@ export async function createCategory(categoryData: any) {
 
     revalidateCategoryCache(slug);
     revalidateProductCache();
+    revalidateCategorySlugPages([slug]);
     revalidatePath("/admin/category");
     return { success: true, message: "Category created successfully" };
   } catch (error) {
@@ -52,14 +86,31 @@ export async function createCategory(categoryData: any) {
 
 export async function updateCategory(categoryData: any) {
   try {
-    const { id, name, description, parentId, bannerImage, horizontalBannerImage, type } =
+    const { id, name, slug, description, parentId, bannerImage, horizontalBannerImage, type } =
       categoryData;
+    const [existingCategory] = await db
+      .select({ slug: category.slug })
+      .from(category)
+      .where(eq(category.id, id))
+      .limit(1);
+    const previousSlug = existingCategory?.slug ?? null;
+    const nextSlug = normalizeSlug(slug || name);
+
+    const [duplicateSlug] = await db
+      .select({ id: category.id })
+      .from(category)
+      .where(and(eq(category.slug, nextSlug), ne(category.id, id)))
+      .limit(1);
+
+    if (duplicateSlug) {
+      return { success: false, message: "Category slug already exists" };
+    }
 
     await db
       .update(category)
       .set({
         name,
-        slug: slugify(name, { lower: true }),
+        slug: nextSlug,
         description,
         bannerImage: bannerImage || null,
         horizontalBannerImage: horizontalBannerImage || null,
@@ -67,8 +118,10 @@ export async function updateCategory(categoryData: any) {
       })
       .where(eq(category.id, id));
 
-    revalidateCategoryCache(slugify(name, { lower: true }));
+    revalidateCategoryCache(previousSlug);
+    revalidateCategoryCache(nextSlug);
     revalidateProductCache();
+    revalidateCategorySlugPages([previousSlug, nextSlug]);
     revalidatePath("/admin/category");
     revalidatePath(`/admin/category/${id}`);
     return { success: true, message: "Category updated successfully" };
@@ -172,6 +225,12 @@ export async function getCategoriesPagination({
 }
 export async function deleteCategory(id: string) {
   try {
+    const [existingCategory] = await db
+      .select({ slug: category.slug })
+      .from(category)
+      .where(eq(category.id, id))
+      .limit(1);
+
     const usage = await db
       .select({ count: sql<number>`count(*)` })
       .from(productCategory)
@@ -187,7 +246,9 @@ export async function deleteCategory(id: string) {
     await db.delete(category).where(eq(category.id, id));
 
     revalidateCategoryCache(id);
+    revalidateCategoryCache(existingCategory?.slug);
     revalidateProductCache();
+    revalidateCategorySlugPages([existingCategory?.slug]);
     revalidatePath("/admin/category");
 
     return {
@@ -251,6 +312,19 @@ export async function getAllProductsByCategorySlug(slug: string) {
             rateing4Star: product.rateing4Star,
             rateing5Star: product.rateing5Star,
             sku: product.sku,
+            size: product.size,
+            filters: sql`
+              COALESCE(
+                json_agg(
+                  json_build_object(
+                    'id', ${productFilter.id},
+                    'type', ${productFilter.type},
+                    'filter', ${productFilter.filter}
+                  )
+                ) FILTER (WHERE ${productFilter.id} IS NOT NULL),
+                '[]'::json
+              )
+            `.as("filters"),
           })
           .from(product)
           .innerJoin(
@@ -261,12 +335,29 @@ export async function getAllProductsByCategorySlug(slug: string) {
             category,
             eq(category.id, productCategory.categoryId),
           )
+          .leftJoin(productFilter, eq(product.id, productFilter.productId))
           .where(
             and(
               eq(category.slug, slug),
               or(eq(product.isHidden, false), isNull(product.isHidden))
             )
-          ).orderBy(asc(product.sku))
+          )
+          .groupBy(
+            product.id,
+            product.name,
+            product.basePrice,
+            product.strikethroughPrice,
+            product.slug,
+            product.bannerImage,
+            product.rateing1Star,
+            product.rateing2Star,
+            product.rateing3Star,
+            product.rateing4Star,
+            product.rateing5Star,
+            product.sku,
+            product.size,
+          )
+          .orderBy(asc(product.sku))
 
         return products;
       } catch (error) {

@@ -1,9 +1,14 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { motion } from "framer-motion";
-import { IconArrowRight, IconShoppingBag, IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconShoppingBag,
+  IconHeart,
+  IconHeartFilled,
+} from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -16,7 +21,8 @@ interface NewArrivalProduct {
   bannerImage: string | null;
   basePrice: number | null;
   strikethroughPrice: number | null;
-  categoryName: string
+  categoryName: string;
+  size: string | null;
 }
 
 const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
@@ -37,7 +43,6 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
             <h2 className="font-montserrat text-3xl md:text-5xl font-medium tracking-tight text-white">
               New Arrival
             </h2>
-
           </div>
           <div className="hidden md:block absolute right-0 bottom-7">
             <Link
@@ -60,7 +65,6 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
               transition={{
-
                 duration: 0.8,
                 delay: index * 0.1,
                 ease: [0.16, 1, 0.3, 1],
@@ -121,15 +125,19 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
                         e.preventDefault();
                         toggleWishlist(product.slug || "", product.id);
                       }}
-                      className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug || "")
-                        ? "bg-[#FFBF3F] hover:bg-white"
-                        : "bg-[#FFBF3F] cursor-pointer"
-                        }`}
+                      className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                        isInWishlist(product.slug || "")
+                          ? "bg-[#FFBF3F] hover:bg-white"
+                          : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
                     >
                       {isInWishlist(product.slug || "") ? (
                         <IconHeartFilled size={20} className="text-red-500" />
                       ) : (
-                        <IconHeart size={20} className="text-white hover:text-black" />
+                        <IconHeart
+                          size={20}
+                          className="text-white hover:text-black"
+                        />
                       )}
                     </Button>
                   </div>
@@ -138,10 +146,16 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
 
               {/* Product Info */}
               <div className="space-y-1.5 px-1 md:px-0">
-                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
-                  {product.categoryName}
-                </p>
-
+                <div className=" flex items-center justify-between">
+                  <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
+                    {product.categoryName}
+                  </p>
+                  {product.size && (
+                    <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
+                      {product.size?.split("\n")[0]}
+                    </p>
+                  )}
+                </div>
                 <Link href={`/product/${product.slug}`}>
                   <h4 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-1 cursor-pointer">
                     {product.name}

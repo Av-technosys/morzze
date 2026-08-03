@@ -1,21 +1,19 @@
 import BlogDetailPage from "@/components/blogs/blogData";
-import MoreToExploreSection from "@/components/blogs/exploreMore";
 import { db } from "@/db";
 import { blog } from "@/db/schema";
-import { getBlogBySlug, getBlogs } from "@/helper/blog/action";
-import { eq, ne } from "drizzle-orm";
+import { getBlogBySlug } from "@/helper/blog/action";
+import { ne } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
+
+export const dynamic = "force-static";
+export const revalidate = 86400;
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
-  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { slug } = await params;
   const currentBlog = await getBlogBySlug(slug);
-
-  console.log(currentBlog);
-  console.log("Blog titlee");
 
   if (!currentBlog) {
     return {
@@ -54,24 +52,6 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     .from(blog)
     .where(ne(blog.slug, slug))
     .limit(3);
-
-  const sameCategoryBlogs = allBlogs.filter(
-    (item: any) =>
-      item.blogCategory === currentBlog.blogCategory &&
-      item.slug !== currentBlog.slug &&
-      item.isVisible !== false,
-  );
-
-  const fallbackBlogs = allBlogs.filter(
-    (item: any) => item.slug !== currentBlog.slug && item.isVisible !== false,
-  );
-
-  const shuffledFallbackBlogs = [...fallbackBlogs].sort(
-    () => Math.random() - 0.5,
-  );
-
-  const relatedBlogs =
-    sameCategoryBlogs.length > 0 ? sameCategoryBlogs : shuffledFallbackBlogs;
 
   return (
     <div>

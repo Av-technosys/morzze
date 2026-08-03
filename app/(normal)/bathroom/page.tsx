@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: `Bathroom Basins, Accessories, Towel Warmer & more by Morzze`,
   description:
     "Explore premium bathroom accessories by Morzze, including faucets, towel warmer, Floor Drainer, and more. Designed for style, durability, and functionality.",
+  alternates: {
+    canonical: "/bathroom",
+  },
 };
 
 const page = async () => {

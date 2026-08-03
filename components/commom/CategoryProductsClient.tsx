@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,21 +13,49 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import Image from "next/image";
 import { getImageURL } from "@/lib/getImageLin";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
+
+type ProductFilter = {
+  type: string | null;
+  filter: string | null;
+};
+
+type CategoryProduct = {
+  id: string;
+  slug: string;
+  name?: string | null;
+  sku?: string | null;
+  basePrice?: number | null;
+  strikethroughPrice?: number | null;
+  bannerImage?: string | null;
+  rateing1Star?: number | null;
+  rateing2Star?: number | null;
+  rateing3Star?: number | null;
+  rateing4Star?: number | null;
+  rateing5Star?: number | null;
+  size?: string | null;
+  filters?: unknown;
+};
+
+function isProductFilter(value: unknown): value is ProductFilter {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    "filter" in value
+  );
+}
 
 const CategoryProductsClient = ({
   products,
   categoryName,
 }: {
-  products: any[];
+  products: CategoryProduct[];
   categoryName: string;
 }) => {
   const { addToCart, getItemQuantity } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
-
   // Helper to compute average star rating
-  const getAvgRating = (p: any) => {
+  const getAvgRating = (p: CategoryProduct) => {
     const total =
       (p.rateing1Star || 0) +
       (p.rateing2Star || 0) +
@@ -46,14 +72,14 @@ const CategoryProductsClient = ({
     return Math.round(weighted / total);
   };
 
-  const getTotalReviews = (p: any) =>
+  const getTotalReviews = (p: CategoryProduct) =>
     (p.rateing1Star || 0) +
     (p.rateing2Star || 0) +
     (p.rateing3Star || 0) +
     (p.rateing4Star || 0) +
     (p.rateing5Star || 0);
 
-  const getDiscount = (p: any) => {
+  const getDiscount = (p: CategoryProduct) => {
     if (
       p.strikethroughPrice &&
       p.basePrice &&
@@ -91,10 +117,17 @@ const CategoryProductsClient = ({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
-        {products.map((product: any, idx) => {
+        {products.map((product, idx) => {
           const rating = getAvgRating(product);
           const reviews = getTotalReviews(product);
           const discount = getDiscount(product);
+          const productName = product.name ?? "Product";
+          const filters = Array.isArray(product.filters)
+            ? product.filters.filter(isProductFilter)
+            : [];
+          const size =
+            filters.find((filter) => filter.type === "size")?.filter ??
+            product.size;
 
           return (
             <div key={product.id + idx} className="group flex flex-col">
@@ -110,7 +143,7 @@ const CategoryProductsClient = ({
                 <Link href={`/product/${product.slug}`}>
                   <Image
                     src={getImageURL(product.bannerImage || "")}
-                    alt={product.name}
+                    alt={productName}
                     className="w-full h-auto object-contain cursor-pointer"
                     height={500}
                     width={500}
@@ -125,11 +158,11 @@ const CategoryProductsClient = ({
                       onClick={(e) => {
                         e.preventDefault();
                         addToCart(product.slug, 1, {
-                          name: product.name,
-                          price: product.basePrice,
-                          oldPrice: product.strikethroughPrice,
-                          image: product.bannerImage,
-                          sku: product.sku,
+                          name: productName,
+                          price: product.basePrice ?? undefined,
+                          oldPrice: product.strikethroughPrice ?? undefined,
+                          image: product.bannerImage ?? undefined,
+                          sku: product.sku ?? undefined,
                           productId: product.id,
                         });
                       }}
@@ -172,27 +205,32 @@ const CategoryProductsClient = ({
               </div>
 
               <div className="space-y-1.5 px-1 md:px-0">
-                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
-                  {categoryName}
-                </p>
-
                 <Link href={`/product/${product.slug}`}>
                   <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors cursor-pointer">
-                    {product.name}
+                    {productName}
                   </h3>
                 </Link>
 
-                <div className="flex items-center gap-1 py-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <IconStarFilled
-                      key={i}
-                      size={11}
-                      className={i < rating ? "text-[#CBA14D]" : "text-[#333]"}
-                    />
-                  ))}
-                  <span className="text-[10px] text-[#555] ml-1">
-                    ({reviews})
-                  </span>
+                <div className=" flex items-center justify-between">
+                  <div className="flex items-center gap-1 py-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <IconStarFilled
+                        key={i}
+                        size={11}
+                        className={
+                          i < rating ? "text-[#CBA14D]" : "text-[#333]"
+                        }
+                      />
+                    ))}
+                    <span className="text-[10px] text-[#555] ml-1">
+                      ({reviews})
+                    </span>
+                  </div>
+                  {size && (
+                    <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
+                      {size.split(" ")[0] + " inch"}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3">

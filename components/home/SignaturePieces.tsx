@@ -1,9 +1,15 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { motion } from "framer-motion";
-import { IconArrowRight, IconShoppingBag, IconHeart, IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconShoppingBag,
+  IconHeart,
+  IconHeartFilled,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -17,6 +23,7 @@ interface SignatureProduct {
   basePrice: number | null;
   strikethroughPrice: number | null;
   categoryName: string | null;
+  size: string | null;
 }
 
 const SignaturePieces = ({ products }: { products: SignatureProduct[] }) => {
@@ -110,15 +117,19 @@ const SignaturePieces = ({ products }: { products: SignatureProduct[] }) => {
                         e.preventDefault();
                         toggleWishlist(product.slug || "", product.id);
                       }}
-                      className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug || "")
-                        ? "bg-[#FFBF3F] hover:bg-white"
-                        : "bg-[#FFBF3F] cursor-pointer"
-                        }`}
+                      className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                        isInWishlist(product.slug || "")
+                          ? "bg-[#FFBF3F] hover:bg-white"
+                          : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
                     >
                       {isInWishlist(product.slug || "") ? (
                         <IconHeartFilled size={20} className="text-red-500" />
                       ) : (
-                        <IconHeart size={20} className="text-white hover:text-black" />
+                        <IconHeart
+                          size={20}
+                          className="text-white hover:text-black"
+                        />
                       )}
                     </Button>
                   </div>
@@ -127,9 +138,16 @@ const SignaturePieces = ({ products }: { products: SignatureProduct[] }) => {
 
               {/* Product Info */}
               <div className="space-y-1.5 px-1 md:px-0">
-                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
-                  {product.categoryName}
-                </p>
+                <div className=" flex items-center justify-between">
+                  <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
+                    {product.categoryName}
+                  </p>
+                  {product.size && (
+                    <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
+                      {product.size?.split("\n")[0]}
+                    </p>
+                  )}
+                </div>
 
                 <Link href={`/product/${product.slug}`}>
                   <h4 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-1 cursor-pointer">
@@ -152,7 +170,6 @@ const SignaturePieces = ({ products }: { products: SignatureProduct[] }) => {
                   <span className="font-bold text-white font-inter text-sm md:text-base">
                     ₹{product.basePrice?.toLocaleString("en-IN")}
                   </span>
-
                 </div>
               </div>
             </motion.div>
