@@ -42,8 +42,6 @@ jobs:
             git pull
 
             # Install & Build
-            npm ci
-            npm run build
-
-            # Restart PM2
-            pm2 restart my-app
+            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/npm install
+            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/npm run build
+            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/pm2 restart my-app
