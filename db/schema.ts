@@ -251,6 +251,7 @@ export const productMedia = pgTable("product_media", {
   productId: uuid("product_id").references(() => product.id),
   mediaType: varchar("media_type"),
   mediaURL: varchar("media_url"),
+  priority: integer("priority"),
   title: text("title"),
 });
 

@@ -334,6 +334,10 @@ export async function createProduct(formData: FormData): Promise<void> {
             productId,
             mediaType: media.mediaType,
             mediaURL: media.mediaURL,
+            priority:
+              media.mediaType === "image" && media.priority != null
+                ? Number(media.priority)
+                : null,
           })),
         );
       }
@@ -499,6 +503,10 @@ export async function updateProduct(formData: FormData): Promise<void> {
             productId: vId!,
             mediaType: item.mediaType || "image",
             mediaURL: item.mediaURL,
+            priority:
+              (item.mediaType || "image") === "image" && item.priority != null
+                ? Number(item.priority)
+                : null,
           })),
         );
       }
@@ -652,7 +660,11 @@ export async function getFullProductDetails(identifier: string) {
           db
             .select()
             .from(productMedia)
-            .where(eq(productMedia.productId, productId)),
+            .where(eq(productMedia.productId, productId))
+            .orderBy(
+              sql`CASE WHEN ${productMedia.priority} IS NULL THEN 1 ELSE 0 END`,
+              asc(productMedia.priority),
+            ),
 
           db
             .select()
@@ -724,7 +736,11 @@ export async function getFullProduct(identifier: string) {
       db
         .select()
         .from(productMedia)
-        .where(eq(productMedia.productId, productDeails.id)),
+        .where(eq(productMedia.productId, productDeails.id))
+        .orderBy(
+          sql`CASE WHEN ${productMedia.priority} IS NULL THEN 1 ELSE 0 END`,
+          asc(productMedia.priority),
+        ),
 
       db
         .select()

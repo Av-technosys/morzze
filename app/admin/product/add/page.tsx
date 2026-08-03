@@ -33,6 +33,7 @@ import { normalizeSize } from "@/lib/size";
 type ImageItem = {
   key: string;
   preview: string;
+  priority?: number | null;
 };
 
 type DynamicSpecCardProps = {
@@ -367,6 +368,7 @@ export default function AddProductForm() {
         ...variants.gallery.map((g: any) => ({
           mediaType: "image",
           mediaURL: getStoredImageKey(g.key || g.preview),
+          priority: g.priority ?? null,
         })),
         ...videos.map((v: any) => ({
           mediaType: "video",

@@ -57,6 +57,12 @@ const ProductClient = ({ product, slug, reviews }: any) => {
 
   const mediaImages = (product.productMediaRes || [])
     .filter((item: any) => item.mediaType === "image")
+    .sort((a: any, b: any) => {
+      if (a.priority == null && b.priority == null) return 0;
+      if (a.priority == null) return 1;
+      if (b.priority == null) return -1;
+      return Number(a.priority) - Number(b.priority);
+    })
     .map((item: any) => item.mediaURL);
 
   const pdfDocuments = (product.productMediaRes || []).filter(

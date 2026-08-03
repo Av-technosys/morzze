@@ -6,11 +6,12 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { getImageURL } from "@/lib/getImageLin";
 import { ImagePlus, X } from "lucide-react";
 import React, { RefObject } from "react";
 
-type ImageItem = { key: string; preview: string };
+type ImageItem = { key: string; preview: string; priority?: number | null };
 
 type Props = {
   gallery: ImageItem[];
@@ -25,6 +26,16 @@ export default function GallerySection({
   handleGallery,
   setGallery
 }: Props) {
+  const updatePriority = (index: number, value: string) => {
+    const priority = value === "" ? null : Number(value);
+
+    setGallery((prev) =>
+      prev.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, priority } : item,
+      ),
+    );
+  };
+
   return (
     <Card className="m-1">
       <CardHeader>
@@ -84,6 +95,18 @@ export default function GallerySection({
                     >
                       <X size={14} />
                     </Button>
+                  </div>
+
+                  <div className="absolute left-2 bottom-2 right-2">
+                    <Input
+                      type="number"
+                      min={1}
+                      value={img.priority ?? ""}
+                      onChange={(e) => updatePriority(i, e.target.value)}
+                      placeholder="Gallery priority"
+                      className="h-8 bg-white/90 text-xs"
+                      aria-label={`Gallery priority for image ${i + 1}`}
+                    />
                   </div>
 
                   <input type="hidden" name="media" value={img.key} />

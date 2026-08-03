@@ -7,6 +7,7 @@ import ScrollingRibbon from "@/components/category/ScrollingRibbon";
 import { kitchenBathroomRestrictCategories } from "@/const/globalconst";
 import { Metadata } from "next";
 import { imageKitUrl } from "@/lib/imagekit-url";
+import { kitchenLandingSchema } from "@/const/schemas";
 
 export const metadata: Metadata = {
   title: `Premium Kitchen Accessories | Faucets, Sinks & More - Morzze`,
@@ -24,6 +25,13 @@ const page = async () => {
   );
   return (
     <div>
+      {kitchenLandingSchema.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <Suspense fallback={<div>Loading...</div>}>
         <CategoryBanner
           imageSrc={imageKitUrl("kitchen.webp")}
