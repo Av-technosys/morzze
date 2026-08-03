@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Production
 
 on:
   push:
@@ -10,16 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - name: Create .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
 
-      - run: npm run build
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.2.0
@@ -29,6 +37,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd ~/morzze
-            npm install
+
+            # Update code
+            git pull
+
+            # Install & Build
+            npm ci
             npm run build
+
+            # Restart PM2
             pm2 restart my-app
