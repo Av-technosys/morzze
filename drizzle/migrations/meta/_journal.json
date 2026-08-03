@@ -148,6 +148,13 @@
       "when": 1784024172430,
       "tag": "0019_living_diamondback",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1785752175985,
+      "tag": "0020_pale_random",
+      "breakpoints": true
     }
   ]
 }

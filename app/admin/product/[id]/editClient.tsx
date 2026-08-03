@@ -36,6 +36,7 @@ import { normalizeSize } from "@/lib/size";
 type ImageItem = {
   key: string;
   preview: string;
+  priority?: number | null;
 };
 
 type ProductDetailsType = {
@@ -233,6 +234,7 @@ export default function EditProduct({ productDetails }: any) {
       .map((m: any) => ({
         key: m.mediaURL,
         preview: m.mediaURL,
+        priority: m.priority ?? null,
       })),
     attributes: Object.fromEntries(
       (productAttributeRes || []).map((a: any) => [
@@ -514,6 +516,7 @@ export default function EditProduct({ productDetails }: any) {
         ...variants.gallery.map((g: any) => ({
           mediaType: "image",
           mediaURL: getStoredImageKey(g.key || g.preview),
+          priority: g.priority ?? null,
         })),
         ...videos.map((v: any) => ({
           mediaType: "video",

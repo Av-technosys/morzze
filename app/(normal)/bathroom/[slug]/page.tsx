@@ -8,6 +8,7 @@ import Link from "@/hooks/appLink";
 import { getImageURL } from "@/lib/getImageLin";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
 import { Metadata } from "next";
+import { categorySchemas } from "@/const/schemas";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
@@ -51,8 +52,20 @@ export default async function CategoryPage({
     notFound();
   }
 
+  const schemaKey = Object.keys(categorySchemas).find(
+    (key) => key.toLowerCase() === slug.toLowerCase()
+  );
+  const currentSchemas = schemaKey ? categorySchemas[schemaKey] : null;
+
   return (
     <div className="bg-black min-h-screen">
+      {currentSchemas && currentSchemas.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       {/* Hero Banner */}
       <section className="relative h-[340px] md:h-[420px] overflow-hidden">
         {categoryData.bannerImage ? (

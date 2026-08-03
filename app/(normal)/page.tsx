@@ -22,6 +22,8 @@ import TrendingNowServer from "./TrendingNowServer";
 import JustarivedServer from "./JustarivedServer";
 import LandingSectionSkleton from "@/components/LandingSectionSkleton";
 import { Metadata } from "next";
+import { homeSchema } from "@/const/schemas";
+
 
 export const metadata: Metadata = {
   title: `India's Top Premium Kitchen and Bathroom Sinks Manufacturer | Morzze`,
@@ -35,6 +37,10 @@ export const metadata: Metadata = {
 const page = async () => {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
+      />
       <HeroSection />
       <TheStory />
       <Suspense fallback={<LandingSectionSkleton />}>

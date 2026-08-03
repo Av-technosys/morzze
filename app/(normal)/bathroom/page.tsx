@@ -6,6 +6,7 @@ import SimpleCategoryBanner from "@/components/category/SimpleCategoryBanner";
 import ScrollingRibbon from "@/components/category/ScrollingRibbon";
 import { kitchenBathroomRestrictCategories } from "@/const/globalconst";
 import { Metadata } from "next";
+import { bathroomLandingSchema } from "@/const/schemas";
 
 export const metadata: Metadata = {
   title: `Bathroom Basins, Accessories, Towel Warmer & more by Morzze`,
@@ -23,6 +24,13 @@ const page = async () => {
   );
   return (
     <div>
+      {bathroomLandingSchema.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <Suspense fallback={<div>Loading...</div>}>
         <CategoryBanner
           title="Our Bathroom Categories"
