@@ -21,7 +21,6 @@ import { db } from "@/db";
 import { category } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
-import slugify from "slugify";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
@@ -33,16 +32,11 @@ const CATEGORY_META: Record<string, Pick<Metadata, "title" | "description">> = {
   },
 };
 
-function normalizeCategorySlug(slug: string) {
-  return slugify(decodeURIComponent(slug), { lower: true });
-}
-
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const categorySlug = normalizeCategorySlug(slug);
-  const fallbackMeta = CATEGORY_META[categorySlug];
+  const fallbackMeta = CATEGORY_META[slug];
 
   try {
     const [productRes] = await db
@@ -53,7 +47,7 @@ export async function generateMetadata(
         image: category.bannerImage,
       })
       .from(category)
-      .where(eq(category.slug, categorySlug));
+      .where(eq(category.slug, slug));
 
     if (!productRes) {
       return {
@@ -71,7 +65,7 @@ export async function generateMetadata(
         fallbackMeta?.description ||
         `Browse ${productRes.name} products at Morzze.`,
       alternates: {
-        canonical: `/kitchen/${categorySlug}`,
+        canonical: `/kitchen/${slug}`,
       },
       openGraph: {
         images,
@@ -93,15 +87,14 @@ export default async function CategoryPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-  const categorySlug = normalizeCategorySlug(slug);
   const sParams = await searchParams;
 
   const [categoryData, steelSinkCategorySlugs, productsResult] =
     await Promise.all([
-      getCategoryBySlug(categorySlug),
+      getCategoryBySlug(slug),
       getSteelSinkCategorySlugs(),
       getProducts({
-        category: categorySlug,
+        category: slug,
         size: sParams.size as string | string[],
         material: sParams.material as string | string[],
         finish: sParams.finish as string | string[],
