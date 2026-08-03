@@ -36,12 +36,16 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ~/morzze
+            export PATH="/home/ubuntu/.nvm/versions/node/v24.18.0/bin:$PATH"
 
-            # Update code
+            which node
+            which npm
+            node -v
+            npm -v
+
+            cd ~/morzze
             git pull
 
-            # Install & Build
-            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/npm install
-            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/npm run build
-            /home/ubuntu/.nvm/versions/node/v24.18.0/bin/pm2 restart my-app
+            npm ci
+            npm run build
+            pm2 restart my-app
