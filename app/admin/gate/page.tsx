@@ -2,11 +2,9 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { imageKitUrl } from "@/lib/imagekit-url";
 
 export default function AdminGatePage() {
-  const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,8 +25,7 @@ export default function AdminGatePage() {
         setError(data.error ?? "Sign-in failed");
         return;
       }
-      router.replace("/admin");
-      router.refresh();
+      window.location.assign(new URL("/admin", window.location.origin).toString());
     } catch {
       setError("Network error");
     } finally {

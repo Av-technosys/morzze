@@ -100,6 +100,13 @@ const ProductClient = ({ products, total, currentPage }: Props) => {
               Upload CSV
             </Button>
 
+            <Button
+              onClick={() => router.push("/admin/product/image-approval")}
+              variant="outline"
+            >
+              Approve Images
+            </Button>
+
             <Button className="cursor-pointer" onClick={() => router.push("/admin/product/add")}>
               <Plus />
               Add Product

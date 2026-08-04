@@ -10,5 +10,9 @@ export function getImageURL(image: string | null | undefined) {
     return image;
   }
 
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image;
+  }
+
   return `${baseUrl}/${image.replace(/^\/+/, "")}?tr=f-auto,q-auto`;
 }

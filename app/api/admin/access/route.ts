@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
-      secure: process.env.NODE_ENV === "production",
+      secure: request.nextUrl.protocol === "https:",
     });
     return res;
   } catch {
@@ -49,14 +49,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
   const res = NextResponse.json({ ok: true });
   res.cookies.set(COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 0,
-    secure: process.env.NODE_ENV === "production",
+    secure: request.nextUrl.protocol === "https:",
   });
   return res;
 }
