@@ -1,6 +1,15 @@
 "use client";
 
-import { Check, GripVertical, ImageOff, Loader2, RefreshCw, X } from "lucide-react";
+import {
+  Check,
+  GripVertical,
+  ImageOff,
+  Loader2,
+  Plus,
+  RefreshCw,
+  Trash2,
+  X,
+} from "lucide-react";
 import { use, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -130,6 +139,9 @@ export default function CategoryImageApprovalPage({
   const [loading, setLoading] = useState(true);
   const [approving, setApproving] = useState<Record<string, boolean>>({});
   const [savingOrder, setSavingOrder] = useState<Record<string, boolean>>({});
+  const [deletingMedia, setDeletingMedia] = useState<Record<string, boolean>>(
+    {},
+  );
   const [refreshingCache, setRefreshingCache] = useState(false);
   const [selectedImages, setSelectedImages] = useState<Record<string, string[]>>(
     {},
@@ -266,6 +278,30 @@ export default function CategoryImageApprovalPage({
     });
   }
 
+  function toMediaSlotItem(media: ProductMediaImage): PrioritySlotItem {
+    return {
+      kind: "media",
+      id: media.id,
+      mediaURL: media.mediaURL,
+      previewUrl: getImageURL(media.mediaURL || ""),
+    };
+  }
+
+  function addMediaToNextPriority(
+    productId: string,
+    media: ProductMediaImage,
+  ) {
+    const slots = getProductSlots(productId);
+    const nextOpenSlot = slots.findIndex((slot) => !slot);
+
+    if (nextOpenSlot === -1) {
+      toast.info("All priority slots are already filled");
+      return;
+    }
+
+    assignPrioritySlot(productId, nextOpenSlot, toMediaSlotItem(media));
+  }
+
   function clearPrioritySlot(productId: string, slotIndex: number) {
     setPrioritySlots((current) => {
       const next =
@@ -292,6 +328,7 @@ export default function CategoryImageApprovalPage({
           ? [{ imageUrl: slot.downloadUrl, priority: index + 1 }]
           : [],
       );
+      let insertedMedia: ProductMediaImage[] = [];
 
       const res = await fetch("/api/admin/product-images/approval", {
         method: "PATCH",
@@ -325,6 +362,7 @@ export default function CategoryImageApprovalPage({
         const uploadData = (await uploadRes.json()) as {
           success: boolean;
           message?: string;
+          media?: ProductMediaImage[];
           failedImages?: Array<{ imageUrl: string; reason: string }>;
         };
 
@@ -338,10 +376,46 @@ export default function CategoryImageApprovalPage({
             `${productItem.sku} saved, but ${uploadData.failedImages.length} Drive image(s) failed`,
           );
         }
+
+        insertedMedia = uploadData.media ?? [];
+        const insertedMediaByPriority = new Map(
+          insertedMedia
+            .filter((media) => media.priority != null)
+            .map((media) => [media.priority, media]),
+        );
+
+        setPrioritySlots((current) => ({
+          ...current,
+          [productItem.id]: slots.map((slot, index) => {
+            if (slot?.kind !== "drive") return slot;
+
+            const inserted = insertedMediaByPriority.get(index + 1);
+            return inserted ? toMediaSlotItem(inserted) : null;
+          }),
+        }));
       }
 
       toast.success(`${productItem.sku} priority slots saved`);
-      await loadProducts();
+      setProducts((current) =>
+        current.map((product) => {
+          if (product.id !== productItem.id) return product;
+
+          const priorityByMediaId = new Map(
+            mediaOrder.map((item) => [item.id, item.priority]),
+          );
+          const savedMedia = product.currentMediaImages.map((media) => ({
+            ...media,
+            priority: priorityByMediaId.get(media.id) ?? null,
+          }));
+          const nextMedia = orderedMedia([...savedMedia, ...insertedMedia]);
+
+          return {
+            ...product,
+            currentMediaImages: nextMedia,
+            approved: nextMedia.length > 0,
+          };
+        }),
+      );
     } catch {
       toast.error("Unable to save gallery order");
     } finally {
@@ -389,6 +463,60 @@ export default function CategoryImageApprovalPage({
       toast.error("Approval failed");
     } finally {
       setApproving((current) => ({ ...current, [productItem.id]: false }));
+    }
+  }
+
+  async function removeMedia(
+    productItem: ProductImageApprovalItem,
+    media: ProductMediaImage,
+  ) {
+    setDeletingMedia((current) => ({ ...current, [media.id]: true }));
+
+    try {
+      const res = await fetch("/api/admin/product-images/approval", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: productItem.id,
+          mediaId: media.id,
+        }),
+      });
+      const data = (await res.json()) as { success: boolean; message?: string };
+
+      if (!res.ok || !data.success) {
+        toast.error(data.message ?? "Unable to remove image");
+        return;
+      }
+
+      toast.success(`${productItem.sku} image removed`);
+      setProducts((current) =>
+        current.map((product) =>
+          product.id === productItem.id
+            ? {
+                ...product,
+                currentMediaImages: product.currentMediaImages.filter(
+                  (item) => item.id !== media.id,
+                ),
+                approved: product.currentMediaImages.some(
+                  (item) => item.id !== media.id,
+                ),
+              }
+            : product,
+        ),
+      );
+      setPrioritySlots((current) => ({
+        ...current,
+        [productItem.id]: (
+          current[productItem.id] ??
+          Array.from<PrioritySlotItem | null>({ length: SLOT_COUNT }).fill(null)
+        ).map((slot) =>
+          slot?.kind === "media" && slot.id === media.id ? null : slot,
+        ),
+      }));
+    } catch {
+      toast.error("Unable to remove image");
+    } finally {
+      setDeletingMedia((current) => ({ ...current, [media.id]: false }));
     }
   }
 
@@ -519,14 +647,12 @@ export default function CategoryImageApprovalPage({
         <div className="space-y-4">
           {products.map((product) => {
             const slots = getProductSlots(product.id);
-            const slottedMediaIds = new Set(
-              slots.flatMap((slot) =>
-                slot?.kind === "media" ? [slot.id] : [],
+            const mediaSlotNumbers = new Map(
+              slots.flatMap((slot, index) =>
+                slot?.kind === "media" ? [[slot.id, index + 1] as const] : [],
               ),
             );
-            const unslottedMedia = product.currentMediaImages.filter(
-              (media) => !slottedMediaIds.has(media.id),
-            );
+            const sortedMedia = orderedMedia(product.currentMediaImages);
 
             return (
             <div key={product.id} className="rounded-lg border bg-white p-4">
@@ -598,7 +724,7 @@ export default function CategoryImageApprovalPage({
                         }}
                         className="relative flex aspect-square min-h-32 items-center justify-center overflow-hidden rounded-md border-2 border-dashed border-zinc-300 bg-zinc-50"
                       >
-                        <div className="absolute left-2 top-2 z-10 rounded bg-black/75 px-2 py-1 text-xs font-medium text-white">
+                        <div className="absolute left-2 top-2 z-10 rounded bg-black/85 px-2 py-1 text-xs font-medium text-emerald-300">
                           Priority {index + 1}
                         </div>
                         {slot ? (
@@ -638,44 +764,80 @@ export default function CategoryImageApprovalPage({
                   </div>
 
                   <p className="mb-2 mt-4 text-xs font-medium uppercase tracking-wide text-zinc-500">
-                    Other Gallery Images
+                    Existing Gallery Images
                   </p>
-                  {unslottedMedia.length ? (
-                    <div className="grid grid-cols-3 gap-2 md:grid-cols-6">
-                      {unslottedMedia.map((media) => (
+                  {sortedMedia.length ? (
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-4 xl:grid-cols-5">
+                      {sortedMedia.map((media) => (
                         <div
                           key={media.id}
                           draggable
                           onDragStart={() =>
                             setDraggedItem({
                               productId: product.id,
-                              item: {
-                                kind: "media",
-                                id: media.id,
-                                mediaURL: media.mediaURL,
-                                previewUrl: getImageURL(media.mediaURL || ""),
-                              },
+                              item: toMediaSlotItem(media),
                             })
                           }
-                          className="group relative aspect-square cursor-grab overflow-hidden rounded-md border bg-zinc-50 active:cursor-grabbing"
+                          className="group relative overflow-hidden rounded-md border bg-zinc-50"
                         >
-                          <img
-                            src={getImageURL(media.mediaURL || "")}
-                            alt={`${product.sku} gallery image`}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                          <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
-                            <GripVertical size={12} />
-                            Drag
+                          <div className="relative aspect-square cursor-grab active:cursor-grabbing">
+                            <img
+                              src={getImageURL(media.mediaURL || "")}
+                              alt={`${product.sku} gallery image`}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                            <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/85 px-2 py-1 text-xs font-medium text-emerald-300">
+                              <GripVertical size={12} />
+                              {mediaSlotNumbers.has(media.id)
+                                ? `Priority ${mediaSlotNumbers.get(media.id)}`
+                                : "Drag"}
+                            </div>
+                          </div>
+                          <div
+                            className={`grid gap-1 border-t bg-white p-1 ${
+                              mediaSlotNumbers.has(media.id)
+                                ? "grid-cols-1"
+                                : "grid-cols-2"
+                            }`}
+                          >
+                            {!mediaSlotNumbers.has(media.id) && (
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                className="h-8 px-1 text-xs"
+                                onClick={() =>
+                                  addMediaToNextPriority(product.id, media)
+                                }
+                              >
+                                <Plus size={14} />
+                                Priority
+                              </Button>
+                            )}
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 px-1 text-xs text-red-600 hover:text-red-700"
+                              onClick={() => removeMedia(product, media)}
+                              disabled={deletingMedia[media.id]}
+                            >
+                              {deletingMedia[media.id] ? (
+                                <Loader2 size={14} className="animate-spin" />
+                              ) : (
+                                <Trash2 size={14} />
+                              )}
+                              Remove
+                            </Button>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="flex h-20 items-center justify-center rounded-md border text-sm text-zinc-500">
-                      No unassigned gallery images
+                      No gallery images linked yet
                     </div>
                   )}
                 </section>
@@ -686,54 +848,56 @@ export default function CategoryImageApprovalPage({
                   </p>
                   {product.imageCandidates.length ? (
                     <>
-                      <div className="grid grid-cols-3 gap-2 md:grid-cols-4">
-                        {product.imageCandidates.map((candidate) => {
-                          const selected = getSelectedImageUrls(product).includes(
-                            candidate.downloadUrl,
-                          );
+                      <div className="max-h-[520px] overflow-y-auto rounded-md border bg-white p-2 pr-1">
+                        <div className="grid grid-cols-3 gap-2 md:grid-cols-4">
+                          {product.imageCandidates.map((candidate) => {
+                            const selected = getSelectedImageUrls(product).includes(
+                              candidate.downloadUrl,
+                            );
 
-                          return (
-                            <button
-                              key={candidate.id}
-                              type="button"
-                              draggable
-                              onDragStart={() =>
-                                setDraggedItem({
-                                  productId: product.id,
-                                  item: {
-                                    kind: "drive",
-                                    downloadUrl: candidate.downloadUrl,
-                                    previewUrl: candidate.previewUrl,
-                                    title: candidate.title,
-                                  },
-                                })
-                              }
-                              onClick={() =>
-                                toggleSelectedImage(
-                                  product.id,
-                                  candidate.downloadUrl,
-                                )
-                              }
-                              className={`relative aspect-square overflow-hidden rounded border-2 bg-zinc-50 ${
-                                selected
-                                  ? "border-black ring-2 ring-black"
-                                  : "border-zinc-200"
-                              }`}
-                              title={candidate.title}
-                            >
-                              <LazyImage
-                                src={candidate.previewUrl}
-                                alt={candidate.title}
-                                className="h-full w-full object-cover"
-                              />
-                              {selected && (
-                                <span className="absolute right-1 top-1 rounded-full bg-black p-0.5 text-white">
-                                  <Check size={12} />
-                                </span>
-                              )}
-                            </button>
-                          );
-                        })}
+                            return (
+                              <button
+                                key={candidate.id}
+                                type="button"
+                                draggable
+                                onDragStart={() =>
+                                  setDraggedItem({
+                                    productId: product.id,
+                                    item: {
+                                      kind: "drive",
+                                      downloadUrl: candidate.downloadUrl,
+                                      previewUrl: candidate.previewUrl,
+                                      title: candidate.title,
+                                    },
+                                  })
+                                }
+                                onClick={() =>
+                                  toggleSelectedImage(
+                                    product.id,
+                                    candidate.downloadUrl,
+                                  )
+                                }
+                                className={`relative aspect-square overflow-hidden rounded border-2 bg-zinc-50 ${
+                                  selected
+                                    ? "border-black ring-2 ring-black"
+                                    : "border-zinc-200"
+                                }`}
+                                title={candidate.title}
+                              >
+                                <LazyImage
+                                  src={candidate.previewUrl}
+                                  alt={candidate.title}
+                                  className="h-full w-full object-cover"
+                                />
+                                {selected && (
+                                  <span className="absolute right-1 top-1 rounded-full bg-black p-0.5 text-white">
+                                    <Check size={12} />
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                       <Button
                         type="button"

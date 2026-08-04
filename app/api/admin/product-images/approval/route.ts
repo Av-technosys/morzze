@@ -107,6 +107,31 @@ function baseModelFromSku(sku: string) {
   return sku.split("(")[0]?.trim() || sku;
 }
 
+function skuMatchKeys(sku: string) {
+  const keys = new Set<string>();
+  const baseSku = baseModelFromSku(sku);
+
+  for (const value of [sku, baseSku]) {
+    const cleaned = clean(value);
+    if (!cleaned) continue;
+
+    keys.add(cleaned.toUpperCase());
+
+    const parts = cleaned.split("-").filter(Boolean);
+    if (parts.length > 2 && /^\d+$/.test(parts.at(-1) || "")) {
+      const strippedParts = parts.slice(0, -1);
+      keys.add(strippedParts.join("-").toUpperCase());
+      keys.add(strippedParts.at(-1)!.toUpperCase());
+    }
+
+    if (parts.length > 1) {
+      keys.add(parts.at(-1)!.toUpperCase());
+    }
+  }
+
+  return [...keys];
+}
+
 function normalizeMatchKey(value: string) {
   return value.replace(/[^a-z0-9]+/gi, "").toUpperCase();
 }
@@ -118,6 +143,22 @@ function decodeHtml(value: string) {
     .replace(/&#39;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">");
+}
+
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error) {
+    const causeMessage =
+      typeof error.cause === "object" &&
+      error.cause !== null &&
+      "message" in error.cause &&
+      typeof error.cause.message === "string"
+        ? error.cause.message
+        : "";
+
+    return causeMessage || error.message || fallback;
+  }
+
+  return fallback;
 }
 
 async function fetchWithRetry(
@@ -199,12 +240,26 @@ async function getConfiguredDriveCategories() {
   }));
 }
 
-async function getModelFolders(folderId: string) {
+async function getModelFolders(folderId: string, nestedDepth = 2) {
   const entries = await listDriveFolder(folderId);
   const folders = new Map<string, DriveEntry>();
 
   for (const entry of entries) {
     if (entry.isFolder) folders.set(entry.title.toUpperCase(), entry);
+  }
+
+  if (nestedDepth <= 0) return folders;
+
+  const nestedFolders = await Promise.all(
+    entries
+      .filter((entry) => entry.isFolder)
+      .map((entry) => getModelFolders(entry.id, nestedDepth - 1)),
+  );
+
+  for (const nested of nestedFolders) {
+    for (const [title, folder] of nested) {
+      if (!folders.has(title)) folders.set(title, folder);
+    }
   }
 
   return folders;
@@ -214,15 +269,44 @@ function isImageEntry(entry: DriveEntry) {
   return /\.(png|jpe?g|webp|gif)$/i.test(entry.title) && !entry.isFolder;
 }
 
-async function getDriveImageCandidates(folderId: string) {
-  const entries = await listDriveFolder(folderId);
-
-  return entries.filter(isImageEntry).map<ImageCandidate>((entry) => ({
+function toImageCandidate(entry: DriveEntry, parentTitle?: string) {
+  return {
     id: entry.id,
-    title: entry.title,
+    title: parentTitle ? `${parentTitle} / ${entry.title}` : entry.title,
     previewUrl: `https://lh3.googleusercontent.com/d/${entry.id}=w500`,
     downloadUrl: `https://drive.google.com/uc?export=download&id=${entry.id}`,
-  }));
+  };
+}
+
+async function getDriveImageCandidates(
+  folderId: string,
+  nestedDepth = 3,
+  parentTitle?: string,
+): Promise<ImageCandidate[]> {
+  const entries = await listDriveFolder(folderId);
+  const directImages = entries
+    .filter(isImageEntry)
+    .map((entry) => toImageCandidate(entry, parentTitle));
+
+  if (nestedDepth <= 0) return directImages;
+
+  const nestedImages = await Promise.all(
+    entries
+      .filter((entry) => entry.isFolder)
+      .map(async (folder) => {
+        const childTitle = parentTitle
+          ? `${parentTitle} / ${folder.title}`
+          : folder.title;
+
+        return getDriveImageCandidates(
+          folder.id,
+          nestedDepth - 1,
+          childTitle,
+        );
+      }),
+  );
+
+  return [...directImages, ...nestedImages.flat()];
 }
 
 async function revalidateProductImagePages(productId: string, slug: string) {
@@ -366,13 +450,12 @@ export async function GET(req: Request) {
     );
     const candidateCache = new Map<string, ImageCandidate[]>();
     const products = rows.map(async (productRow) => {
+      const matchKeys = skuMatchKeys(productRow.sku);
       const modelFolder =
-        modelFolders.get(productRow.sku.toUpperCase()) ||
-        modelFolders.get(baseModelFromSku(productRow.sku).toUpperCase()) ||
-        normalizedModelFolders.get(normalizeMatchKey(productRow.sku)) ||
-        normalizedModelFolders.get(
-          normalizeMatchKey(baseModelFromSku(productRow.sku)),
-        );
+        matchKeys.map((key) => modelFolders.get(key)).find(Boolean) ||
+        matchKeys
+          .map((key) => normalizedModelFolders.get(normalizeMatchKey(key)))
+          .find(Boolean);
       let imageCandidates: ImageCandidate[] = [];
 
       if (modelFolder) {
@@ -408,11 +491,14 @@ export async function GET(req: Request) {
         totalPages: Math.ceil(totalItems / pageSize),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Product image approval list failed:", error);
 
     return NextResponse.json(
-      { success: false, message: error?.message || "Unable to load products" },
+      {
+        success: false,
+        message: getErrorMessage(error, "Unable to load products"),
+      },
       { status: 500 },
     );
   }
@@ -518,16 +604,18 @@ export async function POST(req: Request) {
         );
 
         mediaItems.push({ mediaURL: storedPath, sourceUrl: imageUrl });
-      } catch (error: any) {
+      } catch (error) {
         failedImages.push({
           imageUrl,
-          reason: error?.message || "Unable to process image",
+          reason: getErrorMessage(error, "Unable to process image"),
         });
       }
     }
 
+    let insertedMedia: ProductMediaImage[] = [];
+
     if (mediaItems.length) {
-      await db.insert(productMedia).values(
+      insertedMedia = await db.insert(productMedia).values(
         mediaItems.map((item, index) => ({
           productId,
           mediaType: "image",
@@ -536,7 +624,11 @@ export async function POST(req: Request) {
             Number(priorityByUrl[item.sourceUrl]) || maxPriority + index + 1,
           title: `${sku || productRow.sku} ${index + 1}`,
         })),
-      );
+      ).returning({
+        id: productMedia.id,
+        mediaURL: productMedia.mediaURL,
+        priority: productMedia.priority,
+      });
 
       await revalidateProductImagePages(productId, productRow.slug);
     }
@@ -556,15 +648,16 @@ export async function POST(req: Request) {
       success: true,
       productId,
       mediaURLs: mediaItems.map((item) => item.mediaURL),
+      media: insertedMedia,
       failedImages,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Product image approval failed:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.cause?.message || error?.message || "Approval failed",
+        message: getErrorMessage(error, "Approval failed"),
       },
       { status: 500 },
     );
@@ -656,16 +749,79 @@ export async function PATCH(req: Request) {
       success: true,
       revalidatedCount: rows.length,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Product image cache refresh failed:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message:
-          error?.cause?.message ||
-          error?.message ||
-          "Cache refresh failed",
+        message: getErrorMessage(error, "Cache refresh failed"),
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const body = (await req.json()) as {
+      productId?: string;
+      mediaId?: string;
+    };
+    const productId = clean(body.productId);
+    const mediaId = clean(body.mediaId);
+
+    if (!productId || !mediaId) {
+      return NextResponse.json(
+        { success: false, message: "productId and mediaId are required" },
+        { status: 400 },
+      );
+    }
+
+    const [mediaRow] = await db
+      .select({
+        id: productMedia.id,
+        productId: productMedia.productId,
+        slug: product.slug,
+      })
+      .from(productMedia)
+      .innerJoin(product, eq(product.id, productMedia.productId))
+      .where(
+        and(
+          eq(productMedia.id, mediaId),
+          eq(productMedia.productId, productId),
+          eq(productMedia.mediaType, "image"),
+        ),
+      )
+      .limit(1);
+
+    if (!mediaRow?.productId) {
+      return NextResponse.json(
+        { success: false, message: "Image not found for this product" },
+        { status: 404 },
+      );
+    }
+
+    await db
+      .delete(productMedia)
+      .where(
+        and(
+          eq(productMedia.id, mediaId),
+          eq(productMedia.productId, productId),
+          eq(productMedia.mediaType, "image"),
+        ),
+      );
+
+    await revalidateProductImagePages(productId, mediaRow.slug);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Product image removal failed:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: getErrorMessage(error, "Image removal failed"),
       },
       { status: 500 },
     );
