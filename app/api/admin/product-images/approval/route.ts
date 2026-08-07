@@ -124,6 +124,17 @@ function skuMatchKeys(sku: string) {
       keys.add(strippedParts.at(-1)!.toUpperCase());
     }
 
+    const numericModel = cleaned.match(/^(.+-\d+)[A-Z]+$/i)?.[1];
+    if (numericModel) {
+      keys.add(numericModel.toUpperCase());
+      keys.add(`${numericModel}LX`.toUpperCase());
+
+      const neoSiblingModel = numericModel.match(/^N01-(\d+)$/i)?.[1];
+      if (neoSiblingModel) {
+        keys.add(`N02-${neoSiblingModel}`.toUpperCase());
+      }
+    }
+
     if (parts.length > 1) {
       keys.add(parts.at(-1)!.toUpperCase());
     }

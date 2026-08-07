@@ -14,5 +14,11 @@ export function getImageURL(image: string | null | undefined) {
     return image;
   }
 
-  return `${baseUrl}/${image.replace(/^\/+/, "")}?tr=f-auto,q-auto`;
+  const imagePath = image
+    .replace(/^\/+/, "")
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+
+  return `${baseUrl}/${imagePath}?tr=f-auto,q-auto`;
 }

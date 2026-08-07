@@ -73,20 +73,42 @@ function LazyImage({
   src,
   alt,
   className,
+  fallbackSrc,
 }: {
   src: string;
   alt: string;
   className: string;
+  fallbackSrc?: string;
 }) {
+  const [usingFallback, setUsingFallback] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const imageSrc = usingFallback && fallbackSrc ? fallbackSrc : src;
+
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
-    />
+    <>
+      {failed ? (
+        <span className="flex h-full w-full items-center justify-center bg-zinc-100 text-zinc-400">
+          <ImageOff size={18} />
+        </span>
+      ) : (
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={className}
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+          onError={() => {
+            if (fallbackSrc && !usingFallback) {
+              setUsingFallback(true);
+              return;
+            }
+
+            setFailed(true);
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -888,6 +910,7 @@ export default function CategoryImageApprovalPage({
                                   src={candidate.previewUrl}
                                   alt={candidate.title}
                                   className="h-full w-full object-cover"
+                                  fallbackSrc={candidate.downloadUrl}
                                 />
                                 {selected && (
                                   <span className="absolute right-1 top-1 rounded-full bg-black p-0.5 text-white">
