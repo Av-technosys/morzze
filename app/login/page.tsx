@@ -15,7 +15,7 @@ import {
   PhoneIcon,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/helper";
@@ -45,7 +45,8 @@ type AuthError = Error & {
 const Page = () => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [confirmationResult, setConfirmationResult] =
+    useState<ConfirmationResult | null>(null);
   const [otpLoading, setOtpLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const router = useRouter();
@@ -56,6 +57,21 @@ const Page = () => {
     general: "",
   });
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const verified = params.get("verified");
+    const email = params.get("email");
+
+    if (email) {
+      setFormData((prev) => ({ ...prev, email }));
+    }
+
+    if (verified === "1") {
+      toast.success("Email verified. Please sign in to continue.");
+      router.replace("/login");
+    }
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -128,10 +144,6 @@ const Page = () => {
     }
   };
 
-
-
-
-
   const setupRecaptcha = () => {
     // Wait for grecaptcha to be available and render verifier once
     if (typeof window === "undefined") return;
@@ -145,9 +157,13 @@ const Page = () => {
 
       if (!window.recaptchaVerifier) {
         try {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-            size: "invisible",
-          });
+          window.recaptchaVerifier = new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "invisible",
+            },
+          );
           console.debug("RecaptchaVerifier initialized");
         } catch (err) {
           console.error("Recaptcha initialization error:", err);
@@ -175,7 +191,7 @@ const Page = () => {
       const result = await signInWithPhoneNumber(
         auth,
         `+91${phone}`,
-        appVerifier
+        appVerifier,
       );
 
       setConfirmationResult(result);
@@ -212,12 +228,15 @@ const Page = () => {
         const currentUser = userCredential.user;
         const idToken = await currentUser.getIdToken();
 
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_AUTH_API_URL}/firebase-login`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idToken }),
-        });
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_AUTH_API_URL}/firebase-login`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idToken }),
+          },
+        );
       } catch (exchangeErr) {
         console.warn("Token exchange failed:", exchangeErr);
       }
@@ -251,7 +270,14 @@ const Page = () => {
       <div className="w-full flex min-h-screen bg-black text-white ">
         <div className=" lg:block hidden min-h-screen w-1/2 z-10">
           <Link href="/">
-            <Image className="h-full" src={imageKitUrl("login.png")} alt="Login Image" width={1600} height={1300} /></Link>
+            <Image
+              className="h-full object-cover content-center"
+              src={imageKitUrl("website-images/login-wallpaper.jpeg")}
+              alt="Login Image"
+              width={1600}
+              height={1300}
+            />
+          </Link>
         </div>
         <div className=" space-y-4  max-w-2xl mx-auto  justify-center text-left items-center my-auto">
           <div className="absolute  -top-20 right-0 w-40 h-40 blur-[110px] bg-[#FFDD00]"></div>
@@ -273,7 +299,10 @@ const Page = () => {
               defaultValue="email"
               className="w-full   border-none  text-center justify-center items-center my-auto"
             >
-              <TabsList variant="line" className="w-full mb-4 max-w-40 justify-between">
+              <TabsList
+                variant="line"
+                className="w-full mb-4 max-w-40 justify-between"
+              >
                 <TabsTrigger
                   className=" !text-white data-[state=active]:!text-white border  data-[state=active]:!border-[#FDB813] after:absolute after:bg-[#FDB813] after:opacity-0 after:transition-opacity"
                   value="email"
@@ -321,18 +350,20 @@ const Page = () => {
                   <InputGroupAddon align="inline-end">
                     <Button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}>
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
                       {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                     </Button>
                   </InputGroupAddon>
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
                   )}
                 </InputGroup>
                 {errors.general && (
                   <p className="text-red-500 text-xs mt-1">{errors.general}</p>
                 )}
-
 
                 <div className="lg:w-96 mb-2">
                   <Link
@@ -343,8 +374,11 @@ const Page = () => {
                   </Link>
                 </div>
 
-                <Button onClick={handleSubmit}
-                  disabled={loading} className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+                >
                   {loading ? "Logging in..." : "Login"}
                 </Button>
 
@@ -379,7 +413,6 @@ const Page = () => {
                 </p>
               </TabsContent> */}
               <TabsContent value="phone" className="grid grid-cols-1 gap-4">
-
                 <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                   <InputGroupInput
                     type="text"
@@ -431,7 +464,6 @@ const Page = () => {
                     Create Account
                   </Link>
                 </p>
-
               </TabsContent>
             </Tabs>
           </div>

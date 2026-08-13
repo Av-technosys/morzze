@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { BASE_AUTH_API_URL } from "@/env";
-
 
 type ApiResponse<T = any> = {
   message?: string;
@@ -26,7 +24,7 @@ async function request<T>(
   options: RequestInit
 ): Promise<ApiResponse<T>> {
   try {
-    const res = await fetch(`${BASE_AUTH_API_URL}${endpoint}`, {
+    const res = await fetch(`/api/auth${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -82,10 +80,25 @@ export async function signIn(payload: {
   email: string;
   password: string;
 }) {
-  return request("/sign-in", {
-    method: "POST",
-    body: JSON.stringify(payload),
+  const { signIn: nextAuthSignIn } = await import("next-auth/react");
+  const result = await nextAuthSignIn("credentials", {
+    email: payload.email,
+    password: payload.password,
+    redirect: false,
   });
+
+  if (result?.error) {
+    const error = new Error(
+      result.code === "UserNotConfirmedException"
+        ? "Please verify your email first. A new OTP has been sent."
+        : "Incorrect email or password",
+    ) as Error & { code?: string; status?: number };
+    error.code = result.code ?? result.error;
+    error.status = result.status;
+    throw error;
+  }
+
+  return { message: "Login successful" };
 }
 
 export async function forgotPassword(email: string) {
@@ -156,15 +169,33 @@ export async function refreshToken(payload: {
 }
 
 export async function logout() {
-  await request("/logout", {
-    method: "POST",
-  });
-
+  const { signOut } = await import("next-auth/react");
+  await signOut({ redirect: false });
 }
 export async function session(): Promise<AuthSessionResponse> {
-  return request('/session' ,{
-    method: "GET"
-  }) as Promise<AuthSessionResponse>;
+  const res = await fetch("/api/auth/session", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    return { authenticated: false };
+  }
+
+  const data = await res.json();
+  const userId = data?.user?.id;
+
+  return {
+    authenticated: Boolean(userId),
+    accessToken: data?.accessToken,
+    idToken: data?.idToken,
+    refreshToken: data?.refreshToken,
+    userId,
+    user: {
+      userId,
+      email: data?.user?.email,
+    },
+  };
 }
 
 export async function isUserLoggedIn(): Promise<boolean> {

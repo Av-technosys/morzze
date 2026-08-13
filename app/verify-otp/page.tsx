@@ -104,7 +104,7 @@ const VerifyOtpContent = () => {
       });
 
       sessionStorage.removeItem(PENDING_SIGNUP_EMAIL_KEY);
-      router.push("/dashboard");
+      router.push(`/login?verified=1&email=${encodeURIComponent(email)}`);
     } catch (err: unknown) {
       const error = err as AuthError;
       console.error("OTP verification error:", error);

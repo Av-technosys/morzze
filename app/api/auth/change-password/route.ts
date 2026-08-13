@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cognito } from "@/helper/cognito";
 import { ChangePasswordCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { auth } from "@/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +14,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const accessToken = req.cookies.get("accessToken")?.value;
+    const session = await auth();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       return NextResponse.json(
@@ -31,17 +33,18 @@ export async function POST(req: NextRequest) {
     await cognito.send(command);
 
     return NextResponse.json({ message: "Password changed successfully." });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Change password error:", error);
+    const authError = error as { name?: string; message?: string };
 
     const message =
-      error.name === "NotAuthorizedException"
+      authError.name === "NotAuthorizedException"
         ? "Current password is incorrect."
-        : error.name === "InvalidPasswordException"
+        : authError.name === "InvalidPasswordException"
         ? "New password does not meet requirements."
-        : error.name === "LimitExceededException"
+        : authError.name === "LimitExceededException"
         ? "Too many attempts. Please try again later."
-        : error.message || "Failed to change password.";
+        : authError.message || "Failed to change password.";
 
     return NextResponse.json({ message }, { status: 400 });
   }

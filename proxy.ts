@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { getAdminAccessCookieName, verifyAdminSession } from "@/lib/admin-access-cookie";
 
 const ADMIN_COOKIE = getAdminAccessCookieName();
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   if (pathname.startsWith("/api/admin")) {
@@ -42,8 +43,11 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const accessToken = req.cookies.get("accessToken");
-  const isAuth = !!accessToken;
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  });
+  const isAuth = Boolean(token?.userId ?? token?.sub);
 
   const isAuthPage =
     pathname.startsWith("/login") ||

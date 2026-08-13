@@ -23,7 +23,7 @@ import JustarivedServer from "./JustarivedServer";
 import LandingSectionSkleton from "@/components/LandingSectionSkleton";
 import { Metadata } from "next";
 import { homeSchema } from "@/const/schemas";
-
+import { ExploreCollectionCTABtn } from "./ExploreCollectionBtn";
 
 export const metadata: Metadata = {
   title: `India's Top Premium Kitchen and Bathroom Sinks Manufacturer | Morzze`,
@@ -36,16 +36,18 @@ export const metadata: Metadata = {
 
 const page = async () => {
   return (
-    <main>
+    <main className=" bg-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
       />
       <HeroSection />
-      <TheStory />
+      <ExploreCollectionCTABtn />
       <Suspense fallback={<LandingSectionSkleton />}>
         <SignaturePiecesServer />
       </Suspense>
+      <TheStory />
+
       <Suspense fallback={<Spinner />}>
         <ShopCategoryServer />
       </Suspense>

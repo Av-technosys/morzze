@@ -3,10 +3,8 @@
 import { db } from "@/db";
 import { address, subscriptionPayment, users } from "@/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { cookies } from "next/headers";
-import { CognitoJwtVerifier } from "aws-jwt-verify";
-import jwt from "jsonwebtoken";
 import { emailRegex } from "@/const/globalconst";
+import { auth } from "@/auth";
 
 type NewAddressInput = {
   fullName: string;
@@ -20,136 +18,46 @@ type NewAddressInput = {
   isDefault?: boolean;
 };
 
-type DecodedAuthToken = {
-  email?: string;
-  "custom:userId"?: string;
-  "custom:user_id"?: string;
-};
-
-function isJwtLike(token: string) {
-  return token.split(".").length === 3;
-}
-
-const verifier = CognitoJwtVerifier.create({
-  userPoolId: process.env.USER_POOL_ID!,
-  tokenUse: "access",
-  clientId: process.env.COGNITO_CLIENT_ID!,
-});
-
-async function getUserFromDecodedToken(decoded: DecodedAuthToken | null) {
-  const tokenUserId = decoded?.["custom:userId"] ?? decoded?.["custom:user_id"];
-  const email = decoded?.email;
-
-  if (tokenUserId) {
-    return {
-      userId: tokenUserId,
-      email,
-    };
-  }
-
-  if (!email) {
-    return null;
-  }
-
-  const [user] = await db
-    .select({
-      id: users.id,
-      email: users.email,
-    })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (!user?.id) {
-    return null;
-  }
-
-  return {
-    userId: user.id,
-    email: user.email ?? email,
-  };
-}
-
-async function refreshUserTokens() {
-  const cookieStore = await cookies();
-
-  const refreshToken = cookieStore.get("refreshToken")?.value;
-  const idToken = cookieStore.get("idToken")?.value;
-
-  if (!refreshToken || !idToken) return null;
-
-  try {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_AUTH_API_URL}/refersh-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken, idToken }),
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-
-    return data; // { accessToken, idToken }
-
-  } catch {
-    return null;
-  }
-}
-
-
 export async function requireUserWithRefresh() {
-
-
   const user = await getCurrentUser();
 
   if (user?.userId) {
     return user;
   }
 
-  const refreshed = await refreshUserTokens();
-
-  if (!refreshed) {
-    throw new Error("UNAUTHORIZED");
-  }
-
-  const idToken =
-    refreshed?.response?.AuthenticationResult?.IdToken;
-
-  const decoded = idToken ? jwt.decode(idToken) as DecodedAuthToken | null : null;
-  const refreshedUser = await getUserFromDecodedToken(decoded);
-
-  if (!refreshedUser?.userId) {
-    throw new Error("USER_ID_MISSING");
-  }
-
-  return refreshedUser;
+  throw new Error("UNAUTHORIZED");
 }
 export async function getCurrentUser() {
 
   try {
-    const cookieStore = await cookies();
+    const session = await auth();
+    const userId = session?.user?.id;
+    const email = session?.user?.email ?? undefined;
 
-    const accessToken = cookieStore.get("accessToken")?.value;
-    const idToken = cookieStore.get("idToken")?.value;
+    if (userId) {
+      return { userId, email };
+    }
 
-    if (!accessToken || !idToken) return null;
+    if (!email) return null;
 
-    if (!isJwtLike(accessToken)) return null;
+    const [user] = await db
+      .select({
+        id: users.id,
+        email: users.email,
+      })
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
-    await verifier.verify(accessToken);
+    if (!user?.id) return null;
 
-    const decoded = jwt.decode(idToken) as DecodedAuthToken | null;
-    return await getUserFromDecodedToken(decoded);
+    return {
+      userId: user.id,
+      email: user.email ?? email,
+    };
   } catch (error) {
     const message = (error as Error)?.message;
-    if (
-      message !== "USER_ID_MISSING" &&
-      !message?.includes("JWT string does not consist of exactly 3 parts") &&
-      !message?.includes("Token expired")
-    ) {
+    if (message !== "UNAUTHORIZED") {
       console.error(error)
     }
     return null;
