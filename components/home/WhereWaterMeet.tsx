@@ -1,34 +1,32 @@
-"use client"
-import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
+"use client";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import { imageKitUrl } from "@/lib/imagekit-url";
 
 const WhereWaterMeet = () => {
   return (
     <section className="relative w-full h-[70vh] md:h-[70vh] lg:h-[100vh] flex items-center justify-center overflow-hidden">
-
       {/* -- Background Image with Zoom-In Animation -- */}
       <motion.div
         initial={{ scale: 1.15 }}
         animate={{ scale: 1 }}
         transition={{
           duration: 3,
-          ease: [0.16, 1, 0.3, 1] // Heavy cinematic easing
+          ease: [0.16, 1, 0.3, 1], // Heavy cinematic easing
         }}
         className="absolute inset-0 z-0"
       >
-        <Image
-          src={imageKitUrl("watermeet.png")} // Apni image का sahi path public folder se check karein (jpg/png)
-          alt="Luxury Sink and Faucet closeup"
-          height={500}
-          width={500}
-          className="object-cover h-full w-full object-center"
-          priority
+        <video
+          src="https://d2icu6klh68l1z.cloudfront.net/hero-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="object-cover object-center w-full h-full"
         />
-        {/* Dark Cinematic Overlay to blend and blend readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/40 md:bg-black/20"></div>
       </motion.div>
 
       {/* -- Content Wrapper (Centrally Aligned) -- */}
@@ -39,12 +37,11 @@ const WhereWaterMeet = () => {
           viewport={{ once: false }}
           className="max-w-3xl mx-auto"
         >
-
           {/* Main Heading Reveal - Montserrat Font with Color Gradient blend */}
           <motion.h2
             variants={{
               initial: { opacity: 0, y: 40 },
-              animate: { opacity: 1, y: 0 }
+              animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="font-montserrat text-3xl md:text-5xl lg:text-6xl font-medium text-white mb-6 leading-tight tracking-tight"
@@ -57,19 +54,20 @@ const WhereWaterMeet = () => {
           <motion.p
             variants={{
               initial: { opacity: 0, y: 30 },
-              animate: { opacity: 1, y: 0 }
+              animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
             className="font-inter text-xs md:text-sm text-[#EDEBE9CC] leading-relaxed max-w-xl mx-auto mb-12 tracking-wide"
           >
-            Every fixture tells a story of precision, passion, and uncompromising quality.
+            Every fixture tells a story of precision, passion, and
+            uncompromising quality.
           </motion.p>
 
           {/* CTA Button Reveal */}
           <motion.div
             variants={{
               initial: { opacity: 0, y: 20 },
-              animate: { opacity: 1, y: 0 }
+              animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
             className="flex justify-center"
@@ -83,12 +81,10 @@ const WhereWaterMeet = () => {
               </span>
             </Link>
           </motion.div>
-
         </motion.div>
       </div>
-
     </section>
-  )
-}
+  );
+};
 
 export default WhereWaterMeet;

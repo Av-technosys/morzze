@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { preload } from "react-dom";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
-  preload("https://d2icu6klh68l1z.cloudfront.net/hero-video.mp4", { as: "video" });
+  preload(
+    "https://d2icu6klh68l1z.cloudfront.net/website-images/MORZZE-DEALER_compressed.mp4",
+    { as: "video" },
+  );
   return (
     <section className="relative min-h-screen w-full md:py-8 py-18  flex items-center overflow-hidden">
       <motion.div
@@ -15,7 +18,7 @@ const HeroSection = () => {
         className="absolute inset-0 z-0"
       >
         <video
-          src="https://d2icu6klh68l1z.cloudfront.net/hero-video.mp4"
+          src="https://d2icu6klh68l1z.cloudfront.net/website-images/MORZZE-DEALER_compressed.mp4"
           autoPlay
           loop
           muted

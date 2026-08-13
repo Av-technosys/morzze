@@ -405,7 +405,113 @@ const ContactClient = () => {
                                     {loading ? "Sending..." : "Send"}
                                 </Button>
                             </form> */}
-              <ContactClientFrom />
+              {/* <ContactClientFrom /> */}
+              <form
+                action="https://forms.zohopublic.in/Morzze/form/WebsiteForm/formperma/aXUf0Vt7j_5Fi5XmomE0M1xHyYShMNujEYLfdpFG9Y0/htmlRecords/submit"
+                name="form"
+                id="form"
+                method="POST"
+                acceptCharset="UTF-8"
+                encType="multipart/form-data"
+                className="space-y-6"
+              >
+                <input type="hidden" name="zf_referrer_name" value="" />
+                <input type="hidden" name="zf_redirect_url" value="" />
+                <input type="hidden" name="zc_gad" value="" />
+                <input type="hidden" name="utm_source" value="" />
+                <input type="hidden" name="utm_medium" value="" />
+                <input type="hidden" name="utm_campaign" value="" />
+                <input type="hidden" name="utm_term" value="" />
+                <input type="hidden" name="utm_content" value="" />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="text-white mb-3 block text-sm font-medium">
+                      First Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="SingleLine2"
+                      maxLength={255}
+                      placeholder="First Name"
+                      required
+                      className="w-full bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-4 rounded-xs focus:border-yellow-400 focus:outline-none transition"
+                      {...{ fieldType: "1" }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-white mb-3 block text-sm font-medium">
+                      Last Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="SingleLine3"
+                      maxLength={255}
+                      placeholder="Last Name"
+                      required
+                      className="w-full bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-4 rounded-xs focus:border-yellow-400 focus:outline-none transition"
+                      {...{ fieldType: "1" }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-white mb-3 block text-sm font-medium">
+                    Mobile Number *
+                  </label>
+                  <input
+                    type="text"
+                    name="PhoneNumber_countrycode"
+                    maxLength={20}
+                    id="international_PhoneNumber_countrycode"
+                    placeholder="10 digit Mobile Number"
+                    required
+                    className="w-full bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-4 rounded-xs focus:border-yellow-400 focus:outline-none transition"
+                    {...{
+                      compname: "PhoneNumber",
+                      phoneFormat: "1",
+                      isCountryCodeEnabled: "false",
+                      fieldType: "11",
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-white mb-3 block text-sm font-medium">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="Email"
+                    maxLength={255}
+                    placeholder="your@email.com"
+                    required
+                    className="w-full bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-4 rounded-xs focus:border-yellow-400 focus:outline-none transition"
+                    {...{ fieldType: "9" }}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-white mb-3 block text-sm font-medium">
+                    Message *
+                  </label>
+                  <textarea
+                    name="MultiLine"
+                    maxLength={65535}
+                    placeholder="Tell us more about your inquiry..."
+                    required
+                    className="w-full bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-4 rounded-xs focus:border-yellow-400 focus:outline-none transition min-h-32 resize-none"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 w-full py-5 rounded-xs mt-6"
+                >
+                  Submit
+                </Button>
+              </form>
             </div>
 
             {/* Right Section - Map, Business Hours, WhatsApp */}
