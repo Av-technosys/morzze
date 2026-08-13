@@ -1,5 +1,6 @@
 import ProductCatalogueHero from "@/components/catalogue/banner";
 import CatalogueGridDownloads from "@/components/catalogue/cataloguegrid";
+import CatalogueMissedCallBanner from "@/components/catalogue/CatalogueMissedCallBanner";
 import { CatalogueForm } from "@/components/CatalogueForm";
 import { getActiveCatalogues } from "@/helper/catalogue/action";
 import { Metadata } from "next";
@@ -35,6 +36,7 @@ const page = async () => {
       <div className=" bg-black w-full py-12">
         <CatalogueForm />
       </div>
+      <CatalogueMissedCallBanner />
     </div>
   );
 };
