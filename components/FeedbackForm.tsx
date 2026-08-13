@@ -2,7 +2,7 @@ import React from "react";
 
 export function FeedbackForm() {
   return (
-    <div className="max-w-4xl bg-black mx-auto w-full px-4">
+    <div className="max-w-4xl mx-auto w-full px-4">
       <iframe
         aria-label="Feedback Form"
         frameBorder="0"

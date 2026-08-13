@@ -11,14 +11,10 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  EyeIcon,
-  LockIcon,
-  MailIcon,
-} from "lucide-react";
+import { EyeIcon, LockIcon, MailIcon } from "lucide-react";
 import Image from "next/image";
 import React, { Suspense, useState } from "react";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { resendOtp, signIn, verifyOtp } from "@/helper";
@@ -39,7 +35,11 @@ const VerifyOtpContent = () => {
 
   // Email login state
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState({ email: "", password: "", general: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
   const [emailLoading, setEmailLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -190,7 +190,10 @@ const VerifyOtpContent = () => {
       }
 
       toast.error(error.message || "Login failed");
-      setErrors((prev) => ({ ...prev, general: error.message || "Login failed" }));
+      setErrors((prev) => ({
+        ...prev,
+        general: error.message || "Login failed",
+      }));
     } finally {
       setEmailLoading(false);
     }
@@ -203,7 +206,7 @@ const VerifyOtpContent = () => {
           <Link href="/">
             <Image
               className="h-full"
-              src={imageKitUrl("verify.png")}
+              src={imageKitUrl("website-images/otp.jpeg")}
               alt="Login Image"
               width={1300}
               height={800}
@@ -220,7 +223,8 @@ const VerifyOtpContent = () => {
               className="w-full   border-none  text-center justify-center items-center my-auto"
             >
               <TabsList variant="line" className="w-full mb-4 justify-between">
-                <TabsTrigger disabled
+                <TabsTrigger
+                  disabled
                   className=" !text-white data-[state=active]:!text-white border  data-[state=active]:!border-[#FDB813] after:absolute after:bg-[#FDB813] after:opacity-0 after:transition-opacity"
                   value="email"
                 >
@@ -268,7 +272,9 @@ const VerifyOtpContent = () => {
                     <EyeIcon />
                   </InputGroupAddon>
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
                   )}
                 </InputGroup>
                 {errors.general && (
@@ -347,13 +353,15 @@ const VerifyOtpContent = () => {
                   <button
                     onClick={handleResend}
                     disabled={!canResend}
-                    className={`font-medium ${canResend ? "text-yellow-500" : "text-gray-400 cursor-not-allowed"
-                      }`}
+                    className={`font-medium ${
+                      canResend
+                        ? "text-yellow-500"
+                        : "text-gray-400 cursor-not-allowed"
+                    }`}
                   >
                     Resend
                   </button>
                 </div>
-
               </TabsContent>
             </Tabs>
           </div>
@@ -365,13 +373,15 @@ const VerifyOtpContent = () => {
 
 export default function VerifyOtpPage() {
   return (
-    <Suspense fallback={
-      <section>
-        <div className="w-full flex h-screen bg-black text-white items-center justify-center">
-          <p>Loading...</p>
-        </div>
-      </section>
-    }>
+    <Suspense
+      fallback={
+        <section>
+          <div className="w-full flex h-screen bg-black text-white items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        </section>
+      }
+    >
       <VerifyOtpContent />
     </Suspense>
   );
