@@ -228,7 +228,7 @@ const Footer = async () => {
                 { name: "Contact Us", link: "/contact" },
                 { name: "Warranty", link: "/warranty" },
                 { name: "Become a Dealer", link: "/dealer" },
-                { name: "Find a Store", link: "/stores" },
+                // { name: "Find a Store", link: "/stores" },
                 // { name: "Returns & Exchange", link: "/return-exchange" },
                 { name: "Support", link: "/support" },
               ].map((item) => (
