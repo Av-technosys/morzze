@@ -10,9 +10,11 @@ import { eq } from "drizzle-orm";
 export const dynamic = "force-static";
 export const revalidate = 86400;
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ productslug: string }> },
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ productslug: string }>;
+}): Promise<Metadata> {
   const { productslug } = await params;
 
   try {
@@ -66,7 +68,7 @@ const page = async ({
     if (!product || Object.keys(product).length === 0) {
       return notFound();
     }
-
+    console.log(product);
     return (
       <ProductClient product={product} slug={productslug} reviews={reviews} />
     );

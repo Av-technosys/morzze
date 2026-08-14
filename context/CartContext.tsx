@@ -31,6 +31,7 @@ export type CartItem = {
   sku?: string;
   productId?: string;
   productVarientBox?: string | null;
+  selectedSize?: string | null;
   isTypeSubscription?: boolean;
   frequencyInMonths?: number | null;
   clientCartItemId?: string | null;
@@ -51,7 +52,7 @@ type CartContextType = {
   removeFromCart: (itemOrSlug: CartItem | string) => void;
   updateQuantity: (itemOrSlug: CartItem | string, quantity: number) => void;
   clearCart: () => void;
-  getItemQuantity: (slug: string) => number;
+  getItemQuantity: (slug: string, selectedSize?: string | null) => number;
   totalItems: number;
   appliedCoupon: AppliedCoupon | null;
   setAppliedCoupon: (coupon: AppliedCoupon | null) => void;
@@ -93,8 +94,8 @@ function setLocalCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
-function getItemKey(item: Pick<CartItem, "slug" | "productId" | "productVarientBox">) {
-  return `${item.productId ?? item.slug}:${item.productVarientBox ?? "default"}`;
+function getItemKey(item: Pick<CartItem, "slug" | "productId" | "productVarientBox" | "selectedSize">) {
+  return `${item.productId ?? item.slug}:${item.productVarientBox ?? "default"}:${item.selectedSize ?? "default"}`;
 }
 
 function matchesCartItem(item: CartItem, itemOrSlug: CartItem | string) {
@@ -115,6 +116,7 @@ function mapDbCartItems(items: unknown[]): CartItem[] {
     const row = item as {
       productId?: string;
       productVarientBox?: string | null;
+      selectedSize?: string | null;
       isTypeSubscription?: boolean;
       frequencyInMonths?: number | null;
       quantity?: number | null;
@@ -131,6 +133,7 @@ function mapDbCartItems(items: unknown[]): CartItem[] {
     mappedItems.push({
         productId: row.productId,
         productVarientBox: row.productVarientBox ?? null,
+        selectedSize: row.selectedSize ?? null,
         isTypeSubscription: row.isTypeSubscription,
         frequencyInMonths: row.frequencyInMonths ?? null,
         slug: row.slug || row.productId,
@@ -182,6 +185,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const result = await setUserCartItemQuantity({
           productId: item.productId,
           productVarientBox: item.productVarientBox ?? null,
+          selectedSize: item.selectedSize ?? null,
           quantity,
           isTypeSubscription: item.isTypeSubscription,
           frequencyInMonths: item.frequencyInMonths ?? null,
@@ -238,6 +242,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const result = await setUserCartItemQuantity({
             productId: item.productId,
             productVarientBox: item.productVarientBox ?? null,
+            selectedSize: item.selectedSize ?? null,
             quantity,
             isTypeSubscription: item.isTypeSubscription,
             frequencyInMonths: item.frequencyInMonths ?? null,
@@ -372,8 +377,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const getItemQuantity = useCallback(
-    (slug: string) => {
-      return cartItems.find((item) => item.slug === slug)?.quantity ?? 0;
+    (slug: string, selectedSize?: string | null) => {
+      return cartItems.find(
+        (item) => item.slug === slug && (!selectedSize || item.selectedSize === selectedSize)
+      )?.quantity ?? 0;
     },
     [cartItems],
   );

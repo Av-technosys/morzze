@@ -310,6 +310,7 @@ export async function createProduct(formData: FormData): Promise<void> {
           hasVarientBox: variants.hasVarientBox,
           highlights: variants.highlights || [],
           size: canonicalSize,
+          sizePrices: variants.sizePrices || null,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -481,6 +482,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
             hasVarientBox: variants.hasVarientBox,
             highlights: variants.highlights || [],
             size: updCanonicalSize,
+            sizePrices: variants.sizePrices || null,
             updatedAt: new Date(),
           })
           .where(eq(product.id, vId));

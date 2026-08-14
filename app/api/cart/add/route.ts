@@ -6,6 +6,7 @@ export async function POST(req: Request) {
     const result = await setUserCartItemQuantity({
       productId: body.productId,
       productVarientBox: body.productVarientBox ?? null,
+      selectedSize: body.selectedSize ?? null,
       quantity: body.quantity,
       isTypeSubscription: body.isTypeSubscription,
       frequencyInMonths: body.frequencyInMonths ?? null,

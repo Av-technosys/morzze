@@ -155,6 +155,20 @@
       "when": 1785752175985,
       "tag": "0020_pale_random",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1786706426187,
+      "tag": "0021_lush_leo",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1786707776480,
+      "tag": "0022_supreme_madripoor",
+      "breakpoints": true
     }
   ]
 }

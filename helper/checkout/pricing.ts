@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 export type CheckoutPriceItem = {
   productId: string;
   productVarientBox?: string | null;
+  selectedSize?: string | null;
   quantity: number;
   price: number;
   product: typeof product.$inferSelect;
@@ -61,6 +62,7 @@ export async function calculateCheckoutPricing({
     .select({
       productId: cartItem.productId,
       productVarientBox: cartItem.productVarientBox,
+      selectedSize: cartItem.selectedSize,
       quantity: cartItem.quantity,
       product,
     })
@@ -74,7 +76,14 @@ export async function calculateCheckoutPricing({
 
   const items = cartRows.map((row) => {
     const quantity = Math.max(1, Math.trunc(Number(row.quantity ?? 1)));
-    const price = Math.max(0, Math.round(Number(row.product.basePrice ?? 0)));
+    let price = Math.max(0, Math.round(Number(row.product.basePrice ?? 0)));
+
+    if (row.selectedSize && row.product.sizePrices && row.product.sizePrices.length > 0) {
+      const matched = (row.product.sizePrices as any[]).find((sp: any) => sp.size === row.selectedSize);
+      if (matched) {
+        price = Math.max(0, Math.round(Number(matched.price ?? 0)));
+      }
+    }
 
     if (!row.product.id || !row.product.name || !row.product.slug || price <= 0) {
       throw new Error("Invalid product in cart");
@@ -83,6 +92,7 @@ export async function calculateCheckoutPricing({
     return {
       productId: row.productId,
       productVarientBox: row.productVarientBox,
+      selectedSize: row.selectedSize,
       quantity,
       price,
       product: row.product,

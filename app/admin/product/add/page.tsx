@@ -156,6 +156,8 @@ export default function AddProductForm() {
   const [newFinish, setNewFinish] = useState("");
   const [newSize, setNewSize] = useState("");
   const [newMaterial, setNewMaterial] = useState("");
+  const [newSizePriceSize, setNewSizePriceSize] = useState("");
+  const [newSizePricePrice, setNewSizePricePrice] = useState("");
   const [videos, setVideos] = useState<any[]>([]);
   const [varientBox, setVarientBox] = useState(false);
   const [variantBoxes, setVariantBoxes] = useState<any[]>([]);
@@ -185,6 +187,7 @@ export default function AddProductForm() {
     attributes: {},
     isInStock: true,
     highlights: [],
+    sizePrices: [],
   });
 
   useEffect(() => {
@@ -344,6 +347,32 @@ export default function AddProductForm() {
     } catch (err: any) {
       toast.error(err.message);
     }
+  };
+
+  const handleAddSizePrice = () => {
+    if (!newSizePriceSize.trim()) {
+      return toast.error("Size is required");
+    }
+    const priceVal = Number(newSizePricePrice);
+    if (isNaN(priceVal) || priceVal < 0 || newSizePricePrice === "") {
+      return toast.error("Please enter a valid price");
+    }
+    setVariants((prev: any) => ({
+      ...prev,
+      sizePrices: [
+        ...(prev.sizePrices || []),
+        { size: newSizePriceSize.trim(), price: priceVal }
+      ]
+    }));
+    setNewSizePriceSize("");
+    setNewSizePricePrice("");
+  };
+
+  const handleRemoveSizePrice = (index: number) => {
+    setVariants((prev: any) => ({
+      ...prev,
+      sizePrices: (prev.sizePrices || []).filter((_: any, i: number) => i !== index)
+    }));
   };
 
   const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -738,6 +767,70 @@ export default function AddProductForm() {
                       className="h-32 w-24 object-cover rounded-md border mt-2"
                       alt="Preview"
                     />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Size & Price Options</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Size (Text)</Label>
+                    <Input
+                      placeholder='e.g. 18"top, 20'
+                      value={newSizePriceSize}
+                      onChange={(e) => setNewSizePriceSize(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Price (Number)</Label>
+                    <Input
+                      type="number"
+                      placeholder="e.g. 28000"
+                      value={newSizePricePrice}
+                      onChange={(e) => setNewSizePricePrice(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  onClick={handleAddSizePrice}
+                  className="w-full"
+                >
+                  <Plus size={16} className="mr-2" /> Add Size & Price
+                </Button>
+
+                <div className="space-y-2 mt-4">
+                  {variants.sizePrices && variants.sizePrices.length > 0 ? (
+                    variants.sizePrices.map((sp: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2 border rounded-md"
+                      >
+                        <div className="flex gap-4">
+                          <span className="font-medium">Size: {sp.size}</span>
+                          <span className="text-muted-foreground">
+                            Price: {sp.price}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleRemoveSizePrice(idx)}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No size & price options added yet.
+                    </p>
                   )}
                 </div>
               </CardContent>

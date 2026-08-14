@@ -187,7 +187,7 @@ export const product = pgTable("products", {
 
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-
+  sizePrices: jsonb("size_prices").array(),
   metaTitle: varchar("meta_title"),
   metaDescription: varchar("meta_description"),
   metaOgImage: varchar("meta_og_image")
@@ -321,6 +321,7 @@ export const cartItem = pgTable("cart_item", {
   cartId: uuid("cart_id").references(() => cart.id).notNull(),
   productId: uuid("product_id").references(() => product.id).notNull(),
   productVarientBox: uuid("product_varient_box_id").references(() => productVarientBox.id),
+  selectedSize: varchar("selected_size"),
   isTypeSubscription: boolean("is_type_subscription").default(false),
   frequencyInMonths: integer("frequency_in_months"),
   clientCartItemId: uuid("client_cart_item_id"), //can be same for different varient for same product item added at a time which means a single cart item.

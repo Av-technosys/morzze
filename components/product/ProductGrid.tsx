@@ -1,6 +1,5 @@
 "use client";
 
-
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import Pagination from "../commom/Pagination";
@@ -112,7 +111,6 @@ const ProductGrid = ({
                   className="w-full hover:scale-105 duration-200 h-full object-contain cursor-pointer"
                   width={800}
                   height={800}
-                  
                 />
               </Link>
 
@@ -141,7 +139,9 @@ const ProductGrid = ({
                     ) : (
                       <>
                         <IconShoppingBag className=" size-4 sm:size-5" />
-                        <span className=" text-[8px] sm:text-xs">Add to cart</span>
+                        <span className=" text-[8px] sm:text-xs">
+                          Add to cart
+                        </span>
                       </>
                     )}
                   </Button>
@@ -152,17 +152,16 @@ const ProductGrid = ({
                       e.preventDefault();
                       toggleWishlist(product.slug, product.id);
                     }}
-                    className={` p-1! sm:p-2! h-8! sm:h-10! shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug)
-                      ? "bg-[#FFBF3F] hover:bg-white "
-                      : "bg-[#FFBF3F] cursor-pointer"
-                      }`}
+                    className={` p-1! sm:p-2! h-8! sm:h-10! shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                      isInWishlist(product.slug)
+                        ? "bg-[#FFBF3F] hover:bg-white "
+                        : "bg-[#FFBF3F] cursor-pointer"
+                    }`}
                   >
                     {isInWishlist(product.slug) ? (
                       <IconHeartFilled className=" size-4 sm:size-5 text-red-500" />
                     ) : (
-                      <IconHeart
-                        className=" size-4 sm:size-5 text-white hover:text-black"
-                      />
+                      <IconHeart className=" size-4 sm:size-5 text-white hover:text-black" />
                     )}
                   </Button>
                 </div>
@@ -175,35 +174,15 @@ const ProductGrid = ({
               </p>
 
               <Link href={`/product/${product.slug}`}>
-                <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-1 cursor-pointer">
+                <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-2 cursor-pointer">
                   {product.name}
                 </h3>
               </Link>
-
-              {/* <div className="flex items-center gap-1 py-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <IconStarFilled
-                    key={i}
-                    size={11}
-                    className={
-                      i < product.rating ? "text-[#CBA14D]" : "text-[#333]"
-                    }
-                  />
-                ))}
-
-                <span className="text-[10px] text-[#555] ml-1">
-                  ({product.reviews})
-                </span>
-              </div> */}
 
               <div className="flex items-center mt-2 gap-3">
                 <span className="font-bold text-white font-inter text-sm md:text-base">
                   ₹{product.basePrice}
                 </span>
-
-                {/* <span className="text-[11px] md:text-sm text-[#555] line-through">
-                  ₹{product.strikethroughPrice}
-                </span> */}
               </div>
             </div>
           </div>

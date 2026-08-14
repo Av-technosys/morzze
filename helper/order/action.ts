@@ -364,7 +364,7 @@ export async function createOrder({
         productId: item.product.id,
         quantity: item.quantity,
         productVarientBox: item.productVarientBox,
-        productName: item.product.name,
+        productName: item.selectedSize ? `${item.product.name} (${item.selectedSize})` : item.product.name,
         productSlug: item.product.slug,
         productImage: item.product.bannerImage ?? null,
         productSKU: item.product.sku ?? null,

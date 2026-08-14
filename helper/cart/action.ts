@@ -10,6 +10,7 @@ import { requireUserWithRefresh } from "../user/action";
 type CartMutationInput = {
   productId?: string;
   productVarientBox?: string | null;
+  selectedSize?: string | null;
   quantity?: number;
   isTypeSubscription?: boolean;
   frequencyInMonths?: number | null;
@@ -71,6 +72,7 @@ function getCartItemWhere(
   cartId: string,
   productId: string,
   productVarientBox?: string | null,
+  selectedSize?: string | null,
 ) {
   return and(
     eq(cartItem.cartId, cartId),
@@ -78,6 +80,9 @@ function getCartItemWhere(
     productVarientBox
       ? eq(cartItem.productVarientBox, productVarientBox)
       : sql`${cartItem.productVarientBox} IS NULL`,
+    selectedSize
+      ? eq(cartItem.selectedSize, selectedSize)
+      : sql`${cartItem.selectedSize} IS NULL`,
   );
 }
 
@@ -115,6 +120,7 @@ export async function setUserCartItemQuantity(input: CartMutationInput) {
         userCart.id,
         input.productId!,
         input.productVarientBox ?? null,
+        input.selectedSize ?? null,
       );
 
       if (quantity <= 0) {
@@ -148,6 +154,7 @@ export async function setUserCartItemQuantity(input: CartMutationInput) {
         cartId: userCart.id,
         productId: input.productId!,
         productVarientBox: input.productVarientBox ?? null,
+        selectedSize: input.selectedSize ?? null,
         quantity,
         isTypeSubscription: input.isTypeSubscription ?? false,
         frequencyInMonths: input.frequencyInMonths ?? null,
@@ -190,12 +197,14 @@ export async function getCart() {
       .select({
         productId: cartItem.productId,
         productVarientBox: cartItem.productVarientBox,
+        selectedSize: cartItem.selectedSize,
         isTypeSubscription: cartItem.isTypeSubscription,
         frequencyInMonths: cartItem.frequencyInMonths,
         quantity: cartItem.quantity,
         title: product.name,
         image: product.bannerImage,
         price: product.basePrice,
+        sizePrices: product.sizePrices,
         originalPrice: product.strikethroughPrice,
         slug: product.slug,
         sku: product.sku,
@@ -204,7 +213,22 @@ export async function getCart() {
       .leftJoin(product, eq(cartItem.productId, product.id))
       .where(eq(cartItem.cartId, userCart.id));
 
-    return { success: true, items: itemsWithDetails };
+    // Resolve size-specific prices
+    const resolvedItems = itemsWithDetails.map((item: any) => {
+      let finalPrice = item.price;
+      if (item.selectedSize && item.sizePrices && item.sizePrices.length > 0) {
+        const matched = item.sizePrices.find((sp: any) => sp.size === item.selectedSize);
+        if (matched) {
+          finalPrice = matched.price;
+        }
+      }
+      return {
+        ...item,
+        price: finalPrice,
+      };
+    });
+
+    return { success: true, items: resolvedItems };
   } catch (error) {
     console.error("Error fetching cart:", error);
     return { success: false, error: "Failed to fetch cart" };

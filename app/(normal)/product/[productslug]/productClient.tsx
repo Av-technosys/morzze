@@ -37,16 +37,58 @@ const ProductClient = ({ product, slug, reviews }: any) => {
   const descriptionTabsRef = useRef<ChildRef>(null);
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart, getItemQuantity } = useCart();
+  const imageZoomRef = useRef<HTMLDivElement>(null);
+  const zoomFrameRef = useRef<number | null>(null);
 
   const isSingleSize = product?.filters?.find(
     (it: any) => it.type === "size",
   )?.filter;
 
+  const hasSizePrices =
+    Array.isArray(product?.sizePrices) && product.sizePrices.length > 0;
+  const defaultSize = hasSizePrices ? product.sizePrices[0].size : isSingleSize;
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedFinish, setSelectedFinish] = useState("");
-  const [selectedSize, setSelectedSize] = useState(isSingleSize);
+  const [selectedSize, setSelectedSize] = useState(defaultSize);
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [quantity, setQuantity] = useState(1);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const zoomEl = imageZoomRef.current;
+    if (!zoomEl) return;
+
+    if (zoomFrameRef.current !== null) {
+      window.cancelAnimationFrame(zoomFrameRef.current);
+    }
+
+    const { left, top, width, height } = zoomEl.getBoundingClientRect();
+    const x = Math.min(Math.max(((e.clientX - left) / width) * 100, 0), 100);
+    const y = Math.min(Math.max(((e.clientY - top) / height) * 100, 0), 100);
+
+    zoomFrameRef.current = window.requestAnimationFrame(() => {
+      zoomEl.style.setProperty("--zoom-origin", `${x}% ${y}%`);
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (zoomFrameRef.current !== null) {
+      window.cancelAnimationFrame(zoomFrameRef.current);
+      zoomFrameRef.current = null;
+    }
+
+    imageZoomRef.current?.style.setProperty("--zoom-origin", "center center");
+  };
+
+  const currentPrice = (() => {
+    if (hasSizePrices) {
+      const matched = product.sizePrices.find(
+        (sp: any) => sp.size === selectedSize,
+      );
+      if (matched) return matched.price;
+    }
+    return product.basePrice;
+  })();
 
   // Colour variant state
   const colourVariants = product?.prodcutVarientBoxRes || [];
@@ -86,14 +128,6 @@ const ProductClient = ({ product, slug, reviews }: any) => {
   const productVideos = (product.productMediaRes || [])
     .filter((item: any) => item.mediaType === "video")
     .map((item: any) => item.mediaURL);
-  // 1. Sare Attributes ko as variables nikal lo
-  // const attributes = product.productAttributeRes || [];
-
-  // const tabDescription = attributes.find((a: any) => a.attribute === "DESCRIPTION")?.value;
-  // const tabDimensions = attributes.find((a: any) => a.attribute === "DIMENSIONS")?.value;
-  // const tabFeatures = attributes.find((a: any) => a.attribute === "FEATURES")?.value;
-  // const tabAccessories = attributes.find((a: any) => a.attribute === "Accessories Included")?.value;
-  // const tabDocumentation = attributes.find((a: any) => a.attribute === "Documentation")?.value;
 
   // Extract filters by type from product.filters
   const filters = product.filters || [];
@@ -124,15 +158,25 @@ const ProductClient = ({ product, slug, reviews }: any) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* LEFT - IMAGES */}
           <div className="space-y-6">
-            <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden group">
+            <div
+              ref={imageZoomRef}
+              className="relative aspect-square bg-[#1A1A1A] overflow-hidden group cursor-zoom-in"
+              style={
+                { "--zoom-origin": "center center" } as React.CSSProperties
+              }
+              onMouseEnter={handleMouseMove}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
               <AnimatePresence mode="wait">
-             <Image
-              src={getImageURL(displayImages[selectedImage] || "")}
-              alt={product.name}
-              width={800}
-              height={800}
-              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-            />
+                <Image
+                  src={getImageURL(displayImages[selectedImage] || "")}
+                  alt={product.name}
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-cover scale-100 transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.85]"
+                  style={{ transformOrigin: "var(--zoom-origin)" }}
+                />
               </AnimatePresence>
 
               {/* ARROWS */}
@@ -223,7 +267,7 @@ const ProductClient = ({ product, slug, reviews }: any) => {
 
             {/* PRICE */}
             <div className="flex items-baseline gap-4">
-              <span className="text-3xl font-bold">₹{product.basePrice}</span>
+              <span className="text-3xl font-bold">₹{currentPrice}</span>
               {/* <span className="text-lg text-[#555] line-through">
                 ₹{product.strikethroughPrice}
               </span>
@@ -303,7 +347,7 @@ const ProductClient = ({ product, slug, reviews }: any) => {
             )}
 
             {/* SIZE */}
-            {sizeFilters.length > 0 && (
+            {(hasSizePrices || sizeFilters.length > 0) && (
               <div>
                 <p className="text-sm text-white/90 mb-2 uppercase tracking-widest font-bold">
                   Size:{" "}
@@ -312,23 +356,43 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                   </span>
                 </p>
 
-                {sizeFilters.length > 1 && (
+                {hasSizePrices ? (
                   <div className="flex gap-2 flex-wrap">
-                    {sizeFilters.map((size: string) => (
+                    {product.sizePrices.map((sp: any) => (
                       <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
+                        key={sp.size}
+                        onClick={() => setSelectedSize(sp.size)}
                         className={cn(
-                          "px-4 py-2 border text-sm rounded-md transition-all",
-                          selectedSize === size
+                          "px-4 py-2 border text-sm rounded-md transition-all flex flex-col items-center",
+                          selectedSize === sp.size
                             ? "border-yellow-400 text-yellow-400 bg-yellow-400/10"
-                            : "border-white/10 text-white/85 hover:border-white/30",
+                            : "border-white/10 text-white/85 hover:border-[#FFBF3F]/50",
                         )}
                       >
-                        {size}
+                        <span>{sp.size}</span>
+                        <span className="text-[10px] opacity-75 mt-0.5">₹{sp.price}</span>
                       </button>
                     ))}
                   </div>
+                ) : (
+                  sizeFilters.length > 1 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {sizeFilters.map((size: string) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={cn(
+                            "px-4 py-2 border text-sm rounded-md transition-all",
+                            selectedSize === size
+                              ? "border-yellow-400 text-yellow-400 bg-yellow-400/10"
+                              : "border-white/10 text-white/85 hover:border-white/30",
+                          )}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  )
                 )}
               </div>
             )}
@@ -410,18 +474,19 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                 type="button"
                 onClick={() => {
                   addToCart(slug, quantity, {
-                    name: product.name,
-                    price: product.basePrice,
+                    name: selectedSize ? `${product.name} (${selectedSize})` : product.name,
+                    price: currentPrice,
                     oldPrice: product.strikethroughPrice,
                     image: currentHeroImage,
                     sku: product.sku,
                     productId: product.id,
+                    selectedSize,
                   });
                 }}
-                disabled={getItemQuantity(product.slug) > 0}
+                disabled={getItemQuantity(product.slug, selectedSize) > 0}
                 className="flex-1 py-5 bg-[#FDB813] hover:ring-[#FDB813] hover:ring hover:text-[#FDB813] text-black disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {getItemQuantity(product.slug) > 0 ? (
+                {getItemQuantity(product.slug, selectedSize) > 0 ? (
                   <>
                     <IconShoppingBag size={18} /> In Cart ✓
                   </>
@@ -436,12 +501,13 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                 type="button"
                 onClick={() => {
                   addToCart(slug, quantity, {
-                    name: product.name,
-                    price: product.basePrice,
+                    name: selectedSize ? `${product.name} (${selectedSize})` : product.name,
+                    price: currentPrice,
                     oldPrice: product.strikethroughPrice,
                     image: currentHeroImage,
                     sku: product.sku,
                     productId: product.id,
+                    selectedSize,
                   });
                   router.push("/checkout");
                 }}
