@@ -1,15 +1,14 @@
-"use client"
-import React from 'react'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import Link from 'next/link'
+"use client";
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { imageKitUrl } from "@/lib/imagekit-url";
 
 const NaturalElegance = () => {
   return (
     <section className="relative w-full py-8 md:py-20 flex items-center bg-black overflow-hidden">
-
       {/* -- BACKGROUND IMAGE -- */}
       {/* Iska container 'absolute inset-0' hai taaki ye poore section mein fail jaye */}
       <div className="absolute inset-0 z-0">
@@ -21,15 +20,10 @@ const NaturalElegance = () => {
           className="object-cover w-full h-full" // Opacity thodi badha di hai taaki background dikhe
           priority
         />
-
-
       </div>
 
       <div className="container mx-auto px-6 md:px-10 relative z-10 h-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 h-full items-center">
-
-
-
           {/* -- RIGHT IMAGE (lg:col-span-5) -- */}
           {/* Alignment Fix: Isko absolute positioning di hai lg screen par taaki ye right edge se match kare */}
           <motion.div
@@ -69,13 +63,15 @@ const NaturalElegance = () => {
             </h2>
 
             <p className="font-inter text-[#FEFFF1] text-base md:text-md leading-relaxed max-w-2xl">
-              Experience the perfect water flow with our flagship kitchen faucet, featuring 360-degree swivel and precision temperature control.
+              Experience the perfect water flow with our flagship kitchen
+              faucet, featuring 360-degree swivel and precision temperature
+              control.
             </p>
 
-            <div className="flex items-center gap-6 py-4">
+            {/* <div className="flex items-center gap-6 py-4">
               <span className="font-montserrat  text-3xl md:text-2xl font-bold text-white tracking-tight">₹22,999</span>
               <span className="font-montserrat text-3xl md:text-2xl text-zinc-500 line-through">₹27,899</span>
-            </div>
+            </div> */}
             <Link href={"kitchen/Granite-Sinks"}>
               <Button
                 variant="outline"
@@ -88,7 +84,7 @@ const NaturalElegance = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default NaturalElegance;

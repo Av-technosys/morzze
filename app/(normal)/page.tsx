@@ -42,11 +42,12 @@ const page = async () => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
       />
       <HeroSection />
-      <ExploreCollectionCTABtn />
+      <TheStory />
+
+      {/* <ExploreCollectionCTABtn /> */}
       <Suspense fallback={<LandingSectionSkleton />}>
         <SignaturePiecesServer />
       </Suspense>
-      <TheStory />
 
       <Suspense fallback={<Spinner />}>
         <ShopCategoryServer />
@@ -56,6 +57,7 @@ const page = async () => {
       <ScheduleCall />
 
       <WhereWaterMeet />
+      <ExploreCollectionCTABtn />
       <Suspense fallback={<LandingSectionSkleton />}>
         <CategoryShowcaseServer />
       </Suspense>
