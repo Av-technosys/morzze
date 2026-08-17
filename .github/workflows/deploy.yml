@@ -48,4 +48,4 @@ jobs:
 
             npm ci
             npm run build
-            pm2 restart my-app
+            pm2 restart my-app --update-env

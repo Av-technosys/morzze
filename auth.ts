@@ -2,12 +2,20 @@ import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { JWT } from "next-auth/jwt";
 import jwt from "jsonwebtoken";
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { authSingIn, cognito, cognitoResendConfirmationCode, generateSecretHash } from "@/helper/cognito";
 import { COGNITO_CLIENT_ID } from "@/env";
 import { InitiateAuthCommand } from "@aws-sdk/client-cognito-identity-provider";
+
+const productionAuthUrl = "https://www.morzze.com";
+const authUrl =
+  process.env.AUTH_URL ??
+  process.env.NEXTAUTH_URL ??
+  (process.env.NODE_ENV === "production" ? productionAuthUrl : undefined);
+
+if (authUrl) {
+  process.env.AUTH_URL ??= authUrl;
+  process.env.NEXTAUTH_URL ??= authUrl;
+}
 
 type CognitoIdToken = {
   email?: string;
@@ -50,6 +58,11 @@ async function resendConfirmationCode(email: string) {
 }
 
 async function getOrCreateDbUser(decoded: CognitoIdToken | null) {
+  const [{ db }, { users }, { eq }] = await Promise.all([
+    import("@/db"),
+    import("@/db/schema"),
+    import("drizzle-orm"),
+  ]);
   const email = decoded?.email;
   const tokenUserId = decoded?.["custom:userId"] ?? decoded?.["custom:user_id"];
 
@@ -178,6 +191,7 @@ export const {
             throw new CognitoCredentialsError(code);
           }
 
+          console.error("Cognito credentials sign-in failed:", error);
           throw new CognitoCredentialsError("credentials");
         }
       },
