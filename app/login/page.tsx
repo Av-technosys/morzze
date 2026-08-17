@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "@/hooks/appLink";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/helper";
+import { credentialsSignIn } from "@/helper/auth/credentials-sign-in";
 import { toast } from "sonner";
 import {
   type ConfirmationResult,
@@ -37,10 +37,6 @@ declare global {
     recaptchaVerifier?: RecaptchaVerifier;
   }
 }
-
-type AuthError = Error & {
-  code?: string;
-};
 
 const Page = () => {
   const [phone, setPhone] = useState("");
@@ -118,28 +114,47 @@ const Page = () => {
     setLoading(true);
 
     try {
-      await signIn({
+      const result = await credentialsSignIn({
         email: formData.email,
         password: formData.password,
       });
 
-      toast.success("Login successful");
-      router.push("/");
-      setLoading(false);
-    } catch (err: unknown) {
-      const error = err as AuthError;
-      setLoading(false);
-      if (error.code === "UserNotConfirmedException") {
-        sessionStorage.setItem(PENDING_SIGNUP_EMAIL_KEY, formData.email);
-        toast.info("Please verify your email first.");
-        router.push("/verify-otp");
+      if (!result.success) {
+        setLoading(false);
+
+        if (result.code === "UserNotConfirmedException") {
+          sessionStorage.setItem(PENDING_SIGNUP_EMAIL_KEY, formData.email);
+          toast.info("Please verify your email first.");
+          router.push("/verify-otp");
+          return;
+        }
+
+        toast.error(result.error || "Login failed");
+        setErrors((prev) => ({
+          ...prev,
+          general: result.error || "Login failed",
+        }));
         return;
       }
 
-      toast.error(error.message || "Login failed");
+      toast.success("Login successful");
+      router.push("/");
+      router.refresh();
+      setLoading(false);
+    } catch (err: unknown) {
+      // NEXT_REDIRECT errors are re-thrown by the server action on successful login
+      // Let them propagate naturally — Next.js handles the redirect
+      const error = err as Error & { digest?: string };
+      if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+        toast.success("Login successful");
+        return;
+      }
+
+      setLoading(false);
+      toast.error("Login failed");
       setErrors((prev) => ({
         ...prev,
-        general: error.message || "Login failed",
+        general: "Login failed",
       }));
     }
   };
