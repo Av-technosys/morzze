@@ -2,6 +2,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { signOut as nextAuthSignOut } from "next-auth/react"
 import {
   IconLayoutDashboard,
   IconUser,
@@ -9,13 +10,11 @@ import {
   IconAddressBook,
   IconHeart,
   IconStar,
-  IconBell,
   IconLogout,
   IconChevronRight,
   IconMenu2,
 } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
-import { logout } from "@/helper"
 import { getProfile } from "@/helper/user/action"
 import { toast } from "sonner"
 import {
@@ -68,9 +67,20 @@ export default function AppSidebar() {
     const toastId = toast.loading("Signing out...")
 
     try {
-      await logout()
+      await nextAuthSignOut({
+        redirect: false,
+        callbackUrl: "/login",
+      })
+
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      }).catch(() => undefined)
+
       toast.success("Signed out successfully", { id: toastId })
-      router.push("/login")
+      setOpen(false)
+      router.replace("/login")
+      router.refresh()
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to sign out"
 

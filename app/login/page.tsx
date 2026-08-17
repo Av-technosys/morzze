@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "@/hooks/appLink";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { credentialsSignIn } from "@/helper/auth/credentials-sign-in";
+import { signIn as nextAuthSignIn } from "next-auth/react";
 import { toast } from "sonner";
 import {
   type ConfirmationResult,
@@ -114,15 +114,20 @@ const Page = () => {
     setLoading(true);
 
     try {
-      const result = await credentialsSignIn({
+      const result = await nextAuthSignIn("credentials", {
         email: formData.email,
         password: formData.password,
+        redirect: false,
       });
 
-      if (!result.success) {
+      if (result?.error) {
         setLoading(false);
+        const code =
+          "code" in result && typeof result.code === "string"
+            ? result.code
+            : result.error;
 
-        if (result.code === "UserNotConfirmedException") {
+        if (code === "UserNotConfirmedException") {
           sessionStorage.setItem(PENDING_SIGNUP_EMAIL_KEY, formData.email);
           toast.info("Please verify your email first.");
           router.push("/verify-otp");
@@ -132,7 +137,10 @@ const Page = () => {
         toast.error(result.error || "Login failed");
         setErrors((prev) => ({
           ...prev,
-          general: result.error || "Login failed",
+          general:
+            code === "CredentialsSignin"
+              ? "Incorrect email or password"
+              : result.error || "Login failed",
         }));
         return;
       }

@@ -68,7 +68,6 @@ const page = async ({
     if (!product || Object.keys(product).length === 0) {
       return notFound();
     }
-    console.log(product);
     return (
       <ProductClient product={product} slug={productslug} reviews={reviews} />
     );

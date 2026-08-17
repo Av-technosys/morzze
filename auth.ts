@@ -41,6 +41,14 @@ function decodeIdToken(idToken?: string): CognitoIdToken | null {
   return jwt.decode(idToken) as CognitoIdToken | null;
 }
 
+async function resendConfirmationCode(email: string) {
+  try {
+    await cognitoResendConfirmationCode({ email });
+  } catch (error) {
+    console.error("Failed to resend Cognito confirmation code:", error);
+  }
+}
+
 async function getOrCreateDbUser(decoded: CognitoIdToken | null) {
   const email = decoded?.email;
   const tokenUserId = decoded?.["custom:userId"] ?? decoded?.["custom:user_id"];
@@ -166,7 +174,7 @@ export const {
                 : "credentials";
 
           if (code === "UserNotConfirmedException") {
-            await cognitoResendConfirmationCode({ email });
+            await resendConfirmationCode(email);
             throw new CognitoCredentialsError(code);
           }
 
