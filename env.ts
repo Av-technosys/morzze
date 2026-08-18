@@ -9,6 +9,10 @@ export const RAZORPAY_KEY_SECRET: string = process.env.RAZORPAY_KEY_SECRET!;
 export const NEXT_PUBLIC_RAZORPAY_KEY_ID: string = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!;
 export const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID!;
 export const AWS_SECRET_ACCESS_KEY: string = process.env.AWS_SECRET_ACCESS_KEY!;
+
+export const AWS_AVT_COGNITO_ACCESS_KEY: string = process.env.AWS_AVT_COGNITO_ACCESS_KEY!;
+export const AWS_AVT_COGNITO_SECRET_ACCESS_KEY: string = process.env.AWS_AVT_COGNITO_SECRET_ACCESS_KEY!;
+
 export const COGNITO_CLIENT_ID: string = (process.env.COGNITO_CLIENT_ID ?? process.env.USER_POOL_CLIENT_ID)!;
 export const COGNITO_CLIENT_SECRET: string = (process.env.COGNITO_CLIENT_SECRET ?? process.env.USER_POOL_CLIENT_SECRET)!;
 export const USER_POOL_ID: string = process.env.USER_POOL_ID!;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET, USER_POOL_ID } from '@/env';
+import { AWS_ACCESS_KEY_ID, AWS_AVT_COGNITO_ACCESS_KEY, AWS_AVT_COGNITO_SECRET_ACCESS_KEY, AWS_REGION, AWS_SECRET_ACCESS_KEY, COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET, USER_POOL_ID } from '@/env';
 import { AdminGetUserCommand, AdminUpdateUserAttributesCommand, AuthFlowType, CognitoIdentityProviderClient, ConfirmForgotPasswordCommand, ConfirmSignUpCommand, ForgotPasswordCommand, InitiateAuthCommand, ResendConfirmationCodeCommand, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
 import crypto from 'crypto';
 
@@ -14,8 +14,8 @@ export const generateSecretHash = async (username: string) => {
 export const cognito = new CognitoIdentityProviderClient({
     region: AWS_REGION,
     credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        accessKeyId: AWS_AVT_COGNITO_ACCESS_KEY,
+        secretAccessKey: AWS_AVT_COGNITO_SECRET_ACCESS_KEY,
     },
 });
 

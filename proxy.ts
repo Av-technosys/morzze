@@ -1,10 +1,15 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "admin@example.com")
-  .split(",")
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean);
+const ADMIN_EMAILS = [
+  "bishnoi11011@gmail.com",
+  "karishmaavtechnosys@gmail.com",
+  "morzzeindia@gmail.com",
+  ...(process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean),
+];
 
 function withCallback(pathname: string, requestUrl: string) {
   const loginUrl = new URL("/sign-in", requestUrl);
