@@ -20,7 +20,7 @@ const WhereWaterMeet = () => {
     if (!video) return;
 
     // Start video playback
-    video.muted = true;
+    video.muted = false;
     const playPromise = video.play();
 
     if (playPromise !== undefined) {

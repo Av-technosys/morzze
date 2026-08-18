@@ -29,6 +29,15 @@ export async function cognitoAdminGetUser({ email }: { email: string }) {
     return cognito.send(commandLogin);
 }
 
+async function getCognitoAuthUsername(email: string) {
+    try {
+        const user = await cognitoAdminGetUser({ email });
+        return user.Username ?? email;
+    } catch {
+        return email;
+    }
+}
+
 
 export async function cognitoSignUp({ email, userAttribute, password }: { email: string, userAttribute: any, password: string }) {
     const createUserParams = {
@@ -100,13 +109,14 @@ export async function authSingIn({ email, password }: { email: string, password:
 
 
 export async function cognitoInitiateAuth({ email, password }: { email: string, password: string }) {
+    const username = await getCognitoAuthUsername(email);
     const paramsLogin = {
         AuthFlow: 'USER_PASSWORD_AUTH' as AuthFlowType,
         ClientId: COGNITO_CLIENT_ID,
         AuthParameters: {
-            USERNAME: email,
+            USERNAME: username,
             PASSWORD: password,
-            SECRET_HASH: await generateSecretHash(email),
+            SECRET_HASH: await generateSecretHash(username),
         },
     };
     const commandLogin = new InitiateAuthCommand(paramsLogin);

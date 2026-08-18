@@ -1,62 +1,58 @@
 "use client";
 
-import Image from "next/image";
-import Link from "@/hooks/appLink"
+import { forgotPasswordWithCognito } from "@/lib/actions/auth";
+import Link from "@/hooks/appLink";
+import { ArrowLeft, MailIcon } from "lucide-react";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { forgotPassword } from "@/helper";
-import { ArrowLeft, MailIcon, MoveLeftIcon } from "lucide-react";
 
-const ForgotPassword = () => {
+export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.error("Email is required ❌");
+      toast.error("Email is required");
       return;
     }
 
     if (loading) return;
-
     setLoading(true);
-
     const toastId = toast.loading("Sending OTP...");
 
     try {
-      await forgotPassword(email);
+      const result = await forgotPasswordWithCognito(email);
 
-      toast.success("OTP sent to your email 📩", {
-        id: toastId,
-      });
+      if (result?.error) {
+        toast.error(result.error, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error) {
+      const nextError = error as Error & { digest?: string };
 
-      router.push(`/forgot-otp?email=${email}`);
-    } catch (err: any) {
-      console.error("Error:", err);
+      if (nextError.digest?.startsWith("NEXT_REDIRECT")) {
+        toast.success("OTP sent to your email", { id: toastId });
+        return;
+      }
 
-      toast.error(err.message || "Something went wrong ❌", {
-        id: toastId,
-      });
-    } finally {
+      toast.error(nextError.message || "Something went wrong", { id: toastId });
       setLoading(false);
     }
   };
+
   return (
     <section className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
       <div className="w-full max-w-md space-y-6">
-
-        {/* Back Link */}
-        <Link href={"/login"} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+        <Link
+          href="/sign-in"
+          className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+        >
           <ArrowLeft size={18} />
           <span>Back to Login</span>
         </Link>
 
-        {/* Header */}
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight">Forgot Password</h1>
           <p className="text-gray-400 text-sm">
@@ -64,8 +60,7 @@ const ForgotPassword = () => {
           </p>
         </div>
 
-        {/* Form Group */}
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <MailIcon size={18} className="text-gray-500" />
@@ -79,24 +74,25 @@ const ForgotPassword = () => {
             />
           </div>
 
-          <button type="submit"
+          <button
+            type="submit"
             disabled={loading}
-            onClick={handleSubmit}
-            className="w-full bg-[#FFB800] hover:bg-[#e5a600] text-black font-bold py-3.5 rounded-md transition-colors">
+            className="w-full bg-[#FFB800] hover:bg-[#e5a600] text-black font-bold py-3.5 rounded-md transition-colors"
+          >
             {loading ? "Sending..." : "Confirm"}
           </button>
-        </div>
+        </form>
 
-        {/* Footer */}
         <p className="text-center text-sm text-gray-400">
-          Don't Have An Account?{" "}
-          <a href="/login" className="text-[#FFB800] font-medium hover:underline">
-            Login
-          </a>
+          Don&apos;t Have An Account?{" "}
+          <Link
+            href="/sign-up"
+            className="text-[#FFB800] font-medium hover:underline"
+          >
+            Create Account
+          </Link>
         </p>
       </div>
     </section>
   );
-};
-
-export default ForgotPassword;
+}

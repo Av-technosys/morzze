@@ -69,7 +69,7 @@ export default function AppSidebar() {
     try {
       await nextAuthSignOut({
         redirect: false,
-        callbackUrl: "/login",
+        callbackUrl: "/sign-in",
       })
 
       await fetch("/api/auth/logout", {
@@ -79,7 +79,7 @@ export default function AppSidebar() {
 
       toast.success("Signed out successfully", { id: toastId })
       setOpen(false)
-      router.replace("/login")
+      router.replace("/sign-in")
       router.refresh()
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to sign out"

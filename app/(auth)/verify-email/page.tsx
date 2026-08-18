@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 
-export default function VerifyOtpPage() {
+export default function VerifyEmailPage() {
   return (
     <Suspense fallback={null}>
       <VerifyEmailForm />

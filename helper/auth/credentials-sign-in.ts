@@ -59,23 +59,25 @@ export async function credentialsSignIn(payload: {
     }
 
     if (error instanceof AuthError) {
+      const cause = error.cause as { err?: Error } | undefined;
       const code =
         "code" in error
           ? (error as AuthError & { code?: string }).code
           : undefined;
+      const nextCode = code ?? cause?.err?.message ?? error.type;
 
-      if (code === "UserNotConfirmedException") {
+      if (nextCode === "UserNotConfirmedException") {
         return {
           success: false,
           error: "Please verify your email first. A new OTP has been sent.",
-          code,
+          code: nextCode,
         };
       }
 
       return {
         success: false,
         error: "Incorrect email or password",
-        code: code ?? error.type,
+        code: nextCode,
       };
     }
 
