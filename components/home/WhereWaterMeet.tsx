@@ -19,36 +19,10 @@ const WhereWaterMeet = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Start video playback
-    video.muted = false;
-    const playPromise = video.play();
-
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Attempt to unmute if the browser permits it
-          video.muted = false;
-          // Verify if it continues playing with audio
-          if (video.paused) {
-            video.muted = true;
-            video
-              .play()
-              .catch((err) => console.log("Muted autoplay failed:", err));
-          } else {
-            setIsMuted(false);
-          }
-        })
-        .catch((error) => {
-          // Autoplay with audio was blocked, fallback to muted autoplay
-          video.muted = true;
-          setIsMuted(true);
-          video
-            .play()
-            .catch((err) =>
-              console.log("Muted fallback autoplay failed:", err),
-            );
-        });
-    }
+    video.muted = true;
+    video.play().catch(() => {
+      // Autoplay blocked — nothing to do
+    });
   }, []);
 
   const toggleMute = () => {
