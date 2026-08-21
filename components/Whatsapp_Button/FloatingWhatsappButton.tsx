@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 
 export default function FloatingWhatsappButton() {
   const phoneNumber = "918800026878";
-  const message = "Hi Morzze, please send me the catalogue";
+  const message =
+    "Hi Morzze! 👋 I’d love to explore your collection. I’m looking for some products. Can you help me get started?";
 
   return (
     <motion.a
