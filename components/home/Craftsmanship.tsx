@@ -1,15 +1,14 @@
-"use client"
-import React from 'react'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import Link from 'next/link'
+"use client";
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { imageKitUrl } from "@/lib/imagekit-url";
 
 const VertexShowcase = () => {
   return (
     <section className="relative w-full md:py-20 py-8 px-2 flex items-center bg-black overflow-hidden">
-
       {/* -- BACKGROUND IMAGE -- */}
       {/* Iska container 'absolute inset-0' hai taaki ye poore section mein fail jaye */}
       <div className="absolute inset-0 z-0">
@@ -22,12 +21,10 @@ const VertexShowcase = () => {
           priority
         />
         {/* Dark Overlay taaki text clear dikhe */}
-
       </div>
 
       <div className="container mx-auto px-6 md:px-10 relative z-10 h-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 h-full items-center">
-
           {/* -- LEFT CONTENT (lg:col-span-7) -- */}
           <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -41,17 +38,22 @@ const VertexShowcase = () => {
             </span>
 
             <h2 className="font-montserrat text-3xl md:text-5xl font-bold text-white leading-tight">
-              Vertex Pro Faucet
+              Touchless Kitchen Faucet <br /> with Filtered Water
             </h2>
 
             <p className="font-inter text-[#D1D1D1] text-base md:text-md leading-relaxed max-w-2xl">
-              Experience the perfect water flow with our flagship kitchen faucet,
-              featuring 360-degree swivel and precision temperature control.
+              Experience the perfect water flow with our flagship kitchen
+              faucet, featuring 360-degree swivel and precision temperature
+              control.
             </p>
 
             <div className="flex items-center gap-6 py-4">
-              <span className="font-montserrat text-3xl md:text-2xl font-bold text-white tracking-tight">₹64,999</span>
-              <span className="font-montserrat text-3xl md:text-2xl text-zinc-500 line-through">₹67,999</span>
+              <span className="font-montserrat text-3xl md:text-2xl font-bold text-white tracking-tight">
+                ₹64,999
+              </span>
+              <span className="font-montserrat text-3xl md:text-2xl text-zinc-500 line-through">
+                ₹67,999
+              </span>
             </div>
             <Link href={"product/Kitchen-Faucet-MKF-30422-11111"}>
               <Button
@@ -85,11 +87,10 @@ const VertexShowcase = () => {
               </div>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default VertexShowcase;

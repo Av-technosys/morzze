@@ -40,9 +40,9 @@ export function SubscribeForm() {
   return (
     <div className="max-w-xl mx-auto bg-[#0A0A0A] border border-white/5 p-8 sm:p-10 shadow-2xl shadow-black backdrop-blur-md">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white tracking-tight uppercase">
+        <h5 className="text-2xl font-bold text-white tracking-tight uppercase">
           Subscribe Us
-        </h2>
+        </h5>
         <p className="text-zinc-400 text-sm mt-2 leading-relaxed">
           Join for the latest news and product updates.
         </p>

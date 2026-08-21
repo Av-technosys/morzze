@@ -70,7 +70,7 @@ const Footer = async () => {
             {/* Social Icons Stacked like Mobile Screenshot */}
             <div className=" mt-4 flex items-center space-x-5 pt-2">
               <a
-                href="http://instagram.com/morzzeindia/"
+                href="https://instagram.com/morzzeindia/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our Instagram page"
@@ -291,9 +291,15 @@ const Footer = async () => {
             </Link>
           </div>
 
-          <p className="text-[11px] text-white/60 font-inter text-center md:text-right order-2 md:order-3 max-w-[200px] md:max-w-none">
-            A-42, Phase-1, Naraina Industrial Area, New Delhi, 110028
-          </p>
+          <Link
+            target="_blank"
+            className="order-2 md:order-3 max-w-[200px] md:max-w-none"
+            href={"https://maps.app.goo.gl/ptd71yv9nQ2tJM4cA"}
+          >
+            <p className="text-[11px] text-white/60 font-inter text-center md:text-right ">
+              A-42, Phase-1, Naraina Industrial Area, New Delhi, India, 110028
+            </p>
+          </Link>
         </div>
       </div>
     </footer>

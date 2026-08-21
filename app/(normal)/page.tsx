@@ -29,11 +29,38 @@ export const metadata: Metadata = {
   title: `India's Top Premium Kitchen and Bathroom Sinks Manufacturer | Morzze`,
   description:
     "Morzze offers a diverse range of high-quality kitchen and bathroom sinks. Our range of stylish and functional sinks is designed to complement any decor. Explore our collection today and transform your space.",
+
   alternates: {
     canonical: "/",
   },
-};
 
+  openGraph: {
+    type: "website",
+    url: "https://www.morzze.com/",
+    siteName: "Morzze",
+    title:
+      "India's Top Premium Kitchen and Bathroom Product Manufacturer | Morzze",
+    description:
+      "Morzze offers a diverse range of premium kitchen sinks, bathroom fittings, faucets, air taps, and more. Our range of stylish and functional products is designed to complement any decor. Explore our collection today and transform your space.",
+    images: [
+      {
+        url: "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
+      },
+    ],
+    locale: "en_IN",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "India's Top Premium Kitchen and Bathroom Product Manufacturer | Morzze",
+    description:
+      "Morzze offers a diverse range of premium kitchen sinks, bathroom fittings, faucets, air taps, and more. Our range of stylish and functional products is designed to complement any decor. Explore our collection today and transform your space.",
+    images: [
+      "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
+    ],
+  },
+};
 const page = async () => {
   return (
     <main className=" bg-black">

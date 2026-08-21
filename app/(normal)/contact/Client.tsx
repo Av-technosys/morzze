@@ -570,7 +570,7 @@ const ContactClient = () => {
                   <IconBrandLinkedin className="text-[#4B5563] w-5 h-5" />
                 </a>
                 <a
-                  href="http://instagram.com/morzzeindia/"
+                  href="https://instagram.com/morzzeindia/"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center transition"
                 >
                   <IconBrandInstagram className="text-[#4B5563] w-5 h-5" />

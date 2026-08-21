@@ -31,6 +31,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import ProductSpecificationSection from "../ProductSpecificationSection";
 import ProductFaqSection from "../ProductFaqSection";
+import SeoSchemaSection from "../SeoSchemaSection";
 import { normalizeSize } from "@/lib/size";
 
 type ImageItem = {
@@ -186,6 +187,10 @@ export default function EditProduct({ productDetails }: any) {
           answer: "",
         },
       ]
+  );
+
+  const [seoSchemas, setSeoSchemas] = useState<any[]>(
+    Array.isArray(productDetails.seoSchema) ? productDetails.seoSchema : []
   );
 
   const {
@@ -582,6 +587,7 @@ export default function EditProduct({ productDetails }: any) {
         : [],
       hasVarientBox: varientBox,
       isHidden: variants.isHide,
+      seoSchema: seoSchemas.length > 0 ? seoSchemas : null,
     };
     //  console.log("sending this payload",payload)
     formData.set("variants", JSON.stringify(payload));
@@ -1224,6 +1230,8 @@ function getVideoURL(path: string | null | undefined) {
             />
 
             <ProductFaqSection faqs={faqs} setFaqs={setFaqs} />
+
+            <SeoSchemaSection seoSchemas={seoSchemas} setSeoSchemas={setSeoSchemas} />
           </div>
         </div>
       </form>

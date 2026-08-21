@@ -311,6 +311,7 @@ export async function createProduct(formData: FormData): Promise<void> {
           highlights: variants.highlights || [],
           size: canonicalSize,
           sizePrices: variants.sizePrices || null,
+          seoSchema: variants.seoSchema || null,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -483,6 +484,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
             highlights: variants.highlights || [],
             size: updCanonicalSize,
             sizePrices: variants.sizePrices || null,
+            seoSchema: variants.seoSchema || null,
             updatedAt: new Date(),
           })
           .where(eq(product.id, vId));

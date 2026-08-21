@@ -28,6 +28,7 @@ import { apiFetch } from "@/lib/apiFetch";
 import ProductFilters from "../productFilter";
 import ProductSpecificationSection from "../ProductSpecificationSection";
 import ProductFaqSection from "../ProductFaqSection";
+import SeoSchemaSection from "../SeoSchemaSection";
 import { normalizeSize } from "@/lib/size";
 
 type ImageItem = {
@@ -173,6 +174,8 @@ export default function AddProductForm() {
       answer: "",
     },
   ]);
+
+  const [seoSchemas, setSeoSchemas] = useState<any[]>([]);
 
   const [variants, setVariants] = useState<any>({
     isExisting: true,
@@ -420,6 +423,7 @@ export default function AddProductForm() {
       faqs: faqs.filter(
         (f) => f.question.trim().length > 0 && f.answer.trim().length > 0
       ),
+      seoSchema: seoSchemas.length > 0 ? seoSchemas : null,
       filters: [
         ...(productType || []).map((item: any) => ({
           ...item,
@@ -1047,6 +1051,8 @@ export default function AddProductForm() {
             />
 
             <ProductFaqSection faqs={faqs} setFaqs={setFaqs} />
+
+            <SeoSchemaSection seoSchemas={seoSchemas} setSeoSchemas={setSeoSchemas} />
           </div>
         </div>
       </form>

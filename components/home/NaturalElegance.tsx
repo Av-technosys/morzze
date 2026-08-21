@@ -59,20 +59,20 @@ const NaturalElegance = () => {
             </span>
 
             <h2 className="font-montserrat text-3xl md:text-5xl font-bold text-white leading-tight">
-              Onyx Granite Basin
+              Onyx Granite Wash Basin
             </h2>
 
             <p className="font-inter text-[#FEFFF1] text-base md:text-md leading-relaxed max-w-2xl">
-              Experience the perfect water flow with our flagship kitchen
-              faucet, featuring 360-degree swivel and precision temperature
-              control.
+              Elegant granite wash basin crafted for durability and a refined
+              bathroom aesthetic, designed to complement modern interiors with a
+              smooth, stain-resistant finish.
             </p>
 
             {/* <div className="flex items-center gap-6 py-4">
               <span className="font-montserrat  text-3xl md:text-2xl font-bold text-white tracking-tight">₹22,999</span>
               <span className="font-montserrat text-3xl md:text-2xl text-zinc-500 line-through">₹27,899</span>
             </div> */}
-            <Link href={"kitchen/Granite-Sinks"}>
+            <Link href={"/bathroom/Bathroom-Basins"}>
               <Button
                 variant="outline"
                 className=" border-[#CBA14D] rounded-md text-[#CBA14D] hover:bg-[#CBA14D] hover:text-black font-bold uppercase tracking-widest px-12 h-14 transition-all duration-500 bg-transparent"

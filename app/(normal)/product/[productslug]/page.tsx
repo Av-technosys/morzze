@@ -68,8 +68,22 @@ const page = async ({
     if (!product || Object.keys(product).length === 0) {
       return notFound();
     }
+
+    const seoSchemas = Array.isArray(product.seoSchema)
+      ? product.seoSchema
+      : [];
+
     return (
-      <ProductClient product={product} slug={productslug} reviews={reviews} />
+      <>
+        {seoSchemas.map((schema: any, idx: number) => (
+          <script
+            key={idx}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
+        <ProductClient product={product} slug={productslug} reviews={reviews} />
+      </>
     );
   } catch {
     return notFound();
