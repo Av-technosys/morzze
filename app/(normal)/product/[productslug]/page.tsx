@@ -73,15 +73,18 @@ const page = async ({
       ? product.seoSchema
       : [];
 
+
     return (
       <>
-        {seoSchemas.map((schema: any, idx: number) => (
-          <script
-            key={idx}
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-          />
-        ))}
+        <head>
+          {seoSchemas.map((schema: any, idx: number) => (
+            <script
+              key={idx}
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            />
+          ))}
+        </head>
         <ProductClient product={product} slug={productslug} reviews={reviews} />
       </>
     );

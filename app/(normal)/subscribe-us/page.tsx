@@ -19,8 +19,8 @@ const page = () => {
         className=" w-full h-full"
         alt="subs-image"
       />
-      <div className="h-12"></div>
-      <div className=" flex items-center pb-12 flex-col gap-4">
+      <div className="h-12 bg-black"></div>
+      <div className=" flex items-center pb-6 bg-black flex-col gap-4">
         <p className=" text-white text-3xl font-semibold">Stay Updated</p>
         <p className=" text-white">
           Join for the latest news and product updates.
