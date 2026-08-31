@@ -44,7 +44,7 @@ const DealerHero = () => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="font-montserrat text-[10px] sm:text-xs font-bold text-[#FDB813] uppercase tracking-[0.28em] mb-4 md:mb-5 block"
           >
-            Partnership Opportunity
+            Trusted by 500+ Dealers Nationwide
           </motion.span>
 
           {/* Main Heading */}
@@ -54,9 +54,12 @@ const DealerHero = () => {
               animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-            className="font-inter text-[34px] sm:text-[42px] md:text-[58px] lg:text-[76px] leading-[1.08] font-semibold text-white tracking-[-0.03em] mb-5 md:mb-7"
+            className="font-inter text-5xl lg:text-7xl  font-semibold text-white mb-5 md:mb-7"
           >
-            Become a Morzze Dealer
+            Partner with India's Leading{" "}
+            <span className=" text-4xl md:text-6xl text-[#CBA14D]">
+              Kitchen & Bath Manufacturer
+            </span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -68,9 +71,8 @@ const DealerHero = () => {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
             className="max-w-[860px] mx-auto font-inter text-[14px] sm:text-[15px] md:text-[18px] leading-7 md:leading-8 text-[#FFFFFFCC] mb-8 md:mb-10 px-2"
           >
-            Join our network of premium kitchen and bathroom solution dealers.
-            Partner with one of India's fastest-growing brands and deliver
-            quality, innovation, and style to your customers.
+            Join Morzze's growing dealer network and carry premium, innovative
+            products in your territory.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -84,21 +86,21 @@ const DealerHero = () => {
           >
             <Link
               href="#dealer-form"
-              className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 hover:bg-[#CBA14D] overflow-hidden"
+              className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 bg-[#CBA14D] hover:bg-[#ab915e] overflow-hidden"
             >
-              <span className="flex items-center relative z-10 font-inter text-[11px] md:text-xs font-bold text-[#CBA14D] group-hover:text-black uppercase tracking-[0.22em]">
-                Apply Now <MoveRight className="ml-2" size={16} />
+              <span className="flex items-center relative z-10 font-inter text-[11px] md:text-xs font-bold text-black uppercase tracking-[0.22em]">
+                Become a dealer <MoveRight className="ml-2" size={16} />
               </span>
             </Link>
 
-            {/* <Link
+            <Link
               href="/products"
               className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 hover:bg-[#CBA14D] overflow-hidden"
             >
               <span className="relative z-10 font-inter text-[11px] md:text-xs font-bold text-[#CBA14D] group-hover:text-black uppercase tracking-[0.22em]">
-                Learn More
+                View our products
               </span>
-            </Link> */}
+            </Link>
           </motion.div>
         </motion.div>
       </div>

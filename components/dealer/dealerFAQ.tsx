@@ -10,12 +10,20 @@ const faqs = [
     a: "We look for established kitchen and bathroom solution retailers, interior solution providers, and showroom owners with a strong local customer base, adequate display space, and commitment to premium product presentation.",
   },
   {
-    q: "How long does the application process take?",
-    a: "The initial review takes 3-5 business days. If approved, we'll schedule a site visit and interview within 2 weeks. The complete onboarding process typically takes 4-6 weeks from application to first order.",
+    q: "What is the minimum order quantity (MOQ)?",
+    a: "MOQ varies by product category. Typically, kitchen sinks require 50-100 units minimum, faucets 100-200 units, and accessories 200-500 units. Exact requirements will be shared during partnership discussions based on your territory and business size.",
   },
   {
-    q: "What is the minimum order quantity?",
-    a: "Minimum opening order requirements depend on territory and selected product categories, but we offer scalable inventory plans for both emerging and established partners.",
+    q: "Do you offer exclusive territories?",
+    a: "Yes, we provide exclusive distribution rights for specific territories. Territory assignment is based on market potential, your business capacity, and commitment to performance targets. We ensure no overlap to protect your investment and market share.",
+  },
+  {
+    q: "Can products be customized with different colors or finishes?",
+    a: "Yes, we offer multiple finish options including chrome, matte black, brushed nickel, gold, and custom colors for bulk orders. Customization availability depends on the product line and order quantity. Our team will share the full customization catalogue during onboarding.",
+  },
+  {
+    q: "How long does the application process take?",
+    a: "The initial review takes 3-5 business days. If approved, we'll schedule a site visit and interview within 2 weeks. The complete onboarding process typically takes 4-6 weeks from application to first order.",
   },
   {
     q: "Do you provide training for dealers?",

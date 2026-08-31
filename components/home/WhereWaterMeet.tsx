@@ -33,12 +33,12 @@ const WhereWaterMeet = () => {
   };
 
   return (
-    <section className="relative min-h-screen w-full md:py-8 py-18  flex items-center overflow-hidden">
+    <section className="relative w-full md:py-8 py-18  flex items-center overflow-hidden">
       <motion.div
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0"
+        className=" w-full h-auto"
       >
         <video
           ref={videoRef}
@@ -49,7 +49,7 @@ const WhereWaterMeet = () => {
           playsInline
           className="object-cover object-center w-full h-full"
         />
-        <div className="absolute inset-0 bg-black/40 md:bg-black/20"></div>
+        <div className="absolute inset-0 w-full h-full bg-black/40 md:bg-black/20"></div>
       </motion.div>
 
       {/* Floating Unmute Control */}

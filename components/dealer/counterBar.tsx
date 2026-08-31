@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const stats = [
-  { value: 500, suffix: "+", label: "Dealer Partners" },
-  { value: 150, suffix: "+", label: "Cities Covered" },
-  { value: 50, prefix: "₹", suffix: "Cr+", label: "Annual Sales" },
-  { value: 40, suffix: "%", label: "Avg. Margins" },
+  { value: 15, suffix: "+", label: "Years of Excellence" },
+  { value: 200, suffix: "+", label: "Product Variants" },
+  { value: 500, suffix: "+", label: "Active Dealers" },
+  { value: 100, suffix: "+", label: "Cities Covered" },
 ];
 
 function useCountUp(
@@ -66,7 +66,6 @@ function CounterItem({
       className="flex flex-col items-center justify-center text-center"
     >
       <div className="text-4xl md:text-5xl font-bold text-amber-400 tracking-tight">
-        {item.prefix}
         {count}
         {item.suffix}
       </div>
