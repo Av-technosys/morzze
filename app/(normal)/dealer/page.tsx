@@ -173,7 +173,7 @@ const products = [
     ],
   },
   {
-    image: "/img1.jpeg",
+    image: "/basin.jpeg",
     title: "Bathroom Basins",
     text: "Contemporary granite and ceramic basins for modern bathrooms",
     items: ["Designer styles", "Easy maintenance", "Durable materials"],
