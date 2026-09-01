@@ -1,42 +1,10 @@
-"use client";
-
-import { useEffect } from "react";
-import Script from "next/script";
-
-declare global {
-    interface Window {
-        fdforms: any[];
-        createForm?: (form: any) => void;
-    }
-}
-
 export function BecomeADealerFrom() {
-    useEffect(() => {
-        const config = {
-            formId: 233938,
-            host: "formdesigner.pro",
-            formHeight: 100,
-            el: "form_233938_1",
-            center: 1,
-            scroll: 0,
-        };
-
-        if (typeof window.createForm === "function") {
-            window.createForm(config);
-        } else {
-            window.fdforms = window.fdforms || [];
-            window.fdforms.push(config);
-        }
-    }, []);
-
-    return (
-        <>
-            <div id="form_233938_1" />
-
-            <Script
-                src="https://formdesigner.pro/js/iform.js?v=0.0.3"
-                strategy="afterInteractive"
-            />
-        </>
-    );
+  return (
+    <iframe
+      aria-label="Apply to Become a Dealer"
+      frameBorder="0"
+      style={{ height: "1000px", width: "99%", border: "none" }}
+      src="https://forms.zohopublic.in/Morzze/form/ApplytoBecomeaDealer/formperma/IxXraR23gdZ7eS80mHsRpMX6raJWKA2xPFr22OJowno"
+    />
+  );
 }

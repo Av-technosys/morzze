@@ -6,7 +6,7 @@ import { Mail, Phone } from "lucide-react";
 
 export default function ContactCTASection() {
   return (
-    <section className="w-full bg-black text-white  py-4">
+    <section className="w-full bg-[#111] text-white  py-4">
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}

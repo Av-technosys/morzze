@@ -43,7 +43,7 @@ export default function FAQSection() {
   const [open, setOpen] = useState(1);
 
   return (
-    <section className="w-full bg-black text-white py-20 px-4 md:px-8 lg:px-10">
+    <section className="w-full bg-[#111] text-white py-20 px-4 md:px-8 lg:px-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
