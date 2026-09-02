@@ -13,7 +13,7 @@ export function CatalogueForm() {
 
   return (
     <div className="max-w-xl mx-auto bg-[#0A0A0A] border border-white/5 p-8 sm:p-10 shadow-2xl shadow-black backdrop-blur-md">
-      <div className="text-center mb-8">
+      {/* <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-white tracking-tight uppercase">
           Catalogue Request Form
         </h2>
@@ -21,9 +21,9 @@ export function CatalogueForm() {
           Fill the form below and get our Master Catalogue <br /> on your
           WhatsApp instantly.
         </p>
-      </div>
+      </div> */}
 
-      <form
+      {/* <form
         action="https://forms.zohopublic.in/Morzze/form/CatalogueRequestForm/formperma/aaJeHS_jKm-4xgtYNUya6YSjEQmogCB0dm1KgJ2C0kg/htmlRecords/submit"
         name="form"
         id="form"
@@ -97,7 +97,14 @@ export function CatalogueForm() {
         >
           Submit
         </Button>
-      </form>
+      </form> */}
+
+      <iframe
+        aria-label="Catalogue Request Form"
+        frameBorder="0"
+        style={{ height: "750px", width: "99%", border: "none" }}
+        src="https://forms.zohopublic.in/Morzze/form/CatalogueRequestForm/formperma/LVHmF6rfQ55kLcL2G5RapiM2vYOY3-rVUp3l510EGeU"
+      ></iframe>
     </div>
   );
 }

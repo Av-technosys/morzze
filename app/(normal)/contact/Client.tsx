@@ -46,115 +46,115 @@ const ContactClient = () => {
     zc_gad: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
+  // const handleChange = (
+  //   e: React.ChangeEvent<
+  //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  //   >,
+  // ) => {
+  //   const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
 
-    if (name === "message") {
-      setMessageLength(value.length);
-    }
+  //   if (name === "message") {
+  //     setMessageLength(value.length);
+  //   }
 
-    setError("");
-    setSuccess("");
-  };
+  //   setError("");
+  //   setSuccess("");
+  // };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const payload = {
-      ...formData,
-      zc_gad:
-        (document.getElementById("zc_gad") as HTMLInputElement)?.value || "",
-    };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   const payload = {
+  //     ...formData,
+  //     zc_gad:
+  //       (document.getElementById("zc_gad") as HTMLInputElement)?.value || "",
+  //   };
 
-    setError("");
-    setSuccess("");
+  //   setError("");
+  //   setSuccess("");
 
-    if (!formData.fullName.trim()) {
-      setError("Full name is required");
-      return;
-    }
+  //   if (!formData.fullName.trim()) {
+  //     setError("Full name is required");
+  //     return;
+  //   }
 
-    if (!formData.email.trim()) {
-      setError("Email address is required");
-      return;
-    }
+  //   if (!formData.email.trim()) {
+  //     setError("Email address is required");
+  //     return;
+  //   }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+  //   if (!emailRegex.test(formData.email)) {
+  //     setError("Please enter a valid email address.");
+  //     return;
+  //   }
 
-    if (formData.phone.trim()) {
-      const phoneRegex = /^[0-9+\-\s()]{9,15}$/;
+  //   if (formData.phone.trim()) {
+  //     const phoneRegex = /^[0-9+\-\s()]{9,15}$/;
 
-      if (!phoneRegex.test(formData.phone)) {
-        setError("Please enter a valid phone number");
-        return;
-      }
-    }
+  //     if (!phoneRegex.test(formData.phone)) {
+  //       setError("Please enter a valid phone number");
+  //       return;
+  //     }
+  //   }
 
-    if (!formData.category) {
-      setError("Please select a category");
-      return;
-    }
+  //   if (!formData.category) {
+  //     setError("Please select a category");
+  //     return;
+  //   }
 
-    if (!formData.subject.trim()) {
-      setError("Subject is required");
-      return;
-    }
+  //   if (!formData.subject.trim()) {
+  //     setError("Subject is required");
+  //     return;
+  //   }
 
-    if (!formData.message.trim()) {
-      setError("Message is required");
-      return;
-    }
+  //   if (!formData.message.trim()) {
+  //     setError("Message is required");
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
+  //   try {
+  //     setLoading(true);
 
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+  //     const response = await fetch("/api/contact", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (data.success) {
-        setSuccess("Message sent successfully!");
+  //     if (data.success) {
+  //       setSuccess("Message sent successfully!");
 
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          category: "",
-          subject: "",
-          message: "",
-          zc_gad: "",
-        });
+  //       setFormData({
+  //         fullName: "",
+  //         email: "",
+  //         phone: "",
+  //         category: "",
+  //         subject: "",
+  //         message: "",
+  //         zc_gad: "",
+  //       });
 
-        setMessageLength(0);
-      } else {
-        setError(data.message || "Something went wrong");
-      }
-    } catch (error) {
-      console.log(error);
-      setError("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //       setMessageLength(0);
+  //     } else {
+  //       setError(data.message || "Something went wrong");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setError("Something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <section className="relative w-full bg-black text-white">
@@ -169,8 +169,8 @@ const ContactClient = () => {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 z-40">
           <p className="text-xl text-yellow-400">Get in Touch</p>
-          <h1 className="text-5xl font-bold">Contact Us</h1>
-          <p className="text-lg max-w-2xl">
+          <h1 className=" text-2xl md:text-5xl font-bold">Contact Us</h1>
+          <p className=" text-base md:text-lg max-w-2xl">
             We'd love to hear from you. Reach out for inquiries, support, or
             partnership opportunities.
           </p>
@@ -262,11 +262,11 @@ const ContactClient = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Form Section */}
             <div>
-              <p className="text-yellow-600 text-xs font-semibold mb-4 tracking-widest">
+              {/* <p className="text-yellow-600 text-xs font-semibold mb-4 tracking-widest">
                 SEND A MESSAGE
               </p>
 
-              <h2 className="text-4xl font-bold mb-10">Get In Touch</h2>
+              <h2 className="text-4xl font-bold mb-10">Get In Touch</h2> */}
 
               {error && (
                 <div className="mb-6 flex items-center gap-3 rounded-md border border-gray-300 bg-white px-4 py-3 shadow-lg">
@@ -286,127 +286,8 @@ const ContactClient = () => {
                 </div>
               )}
 
-              {/* <form className="space-y-6" id="zoho-form" onSubmit={handleSubmit}>
-                                <input
-                                    type="hidden"
-                                    id="zc_gad"
-                                    name="zc_gad"
-                                    value={formData.zc_gad}
-                                />
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                            Full Name *
-                                        </FieldLabel>
-                                        <Input
-                                            name="fullName"
-                                            value={formData.fullName}
-                                            onChange={handleChange}
-                                            placeholder="Your name"
-                                            className="bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-5 rounded-xs focus:border-yellow-400 focus:outline-none transition"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                            Email Address *
-                                        </FieldLabel>
-                                        <Input
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="your@email.com"
-                                            className="bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-5 rounded-xs focus:border-yellow-400 focus:outline-none transition"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                            Phone Number
-                                        </FieldLabel>
-                                        <Input
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            placeholder="+91 98765 43210"
-                                            className="bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-5 rounded-xs focus:border-yellow-400 focus:outline-none transition"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                            Category *
-                                        </FieldLabel>
-                                        <select
-                                            name="category"
-                                            value={formData.category}
-                                            onChange={handleChange}
-                                            className="w-full bg-[#171717] border border-[#928E87] text-white/80 placeholder:text-gray-500 px-4 py-3 rounded-xs focus:border-yellow-400 focus:outline-none transition"
-                                        >
-                                            <option value="" className="text-gray-500">
-                                                Select a category
-                                            </option>
-                                            <option value="inquiry" className="text-white">
-                                                General Inquiry
-                                            </option>
-                                            <option value="support" className="text-white">
-                                                Support
-                                            </option>
-                                            <option value="partnership" className="text-white">
-                                                Partnership
-                                            </option>
-                                            <option value="other" className="text-white">
-                                                Other
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                        Subject *
-                                    </FieldLabel>
-                                    <Input
-                                        name="subject"
-                                        value={formData.subject}
-                                        onChange={handleChange}
-                                        placeholder="How can we help you"
-                                        className="bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-5 rounded-xs focus:border-yellow-400 focus:outline-none transition"
-                                    />
-                                </div>
-
-                                <div>
-                                    <FieldLabel className="text-white mb-3 block text-sm font-medium">
-                                        Message *
-                                    </FieldLabel>
-                                    <div className="relative">
-                                        <Textarea
-                                            name="message"
-                                            value={formData.message}
-                                            placeholder="Tell us more about your inquiry..."
-                                            maxLength={maxLength}
-                                            onChange={handleChange}
-                                            className="bg-[#171717] border border-[#928E87] text-white placeholder:text-gray-500 px-4 py-5 rounded-xs focus:border-yellow-400 focus:outline-none transition min-h-32 resize-none"
-                                        />
-
-                                        <span className="absolute bottom-3 right-4 text-sm text-gray-500">
-                                            {messageLength}/{maxLength}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <Button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 w-full py-5 rounded-xs mt-6"
-                                >
-                                    {loading ? "Sending..." : "Send"}
-                                </Button>
-                            </form> */}
               {/* <ContactClientFrom /> */}
-              <form
+              {/* <form
                 action="https://forms.zohopublic.in/Morzze/form/WebsiteForm/formperma/aXUf0Vt7j_5Fi5XmomE0M1xHyYShMNujEYLfdpFG9Y0/htmlRecords/submit"
                 name="form"
                 id="form"
@@ -511,11 +392,18 @@ const ContactClient = () => {
                 >
                   Submit
                 </Button>
-              </form>
+              </form> */}
+
+              <iframe
+                aria-label="Contact Us"
+                frameBorder="0"
+                style={{ height: "800px", width: "99%", border: "none" }}
+                src="https://forms.zohopublic.in/Morzze/form/WebsiteForm/formperma/Ys4xR9hcTyDYh1jPbEPMsVMEcUTW47-BTmUYddDgKgQ"
+              ></iframe>
             </div>
 
             {/* Right Section - Map, Business Hours, WhatsApp */}
-            <div className="space-y-6">
+            <div className="space-y-6 pt-20">
               <div className="rounded-lg overflow-hidden h-64 lg:h-72">
                 <iframe
                   src="https://www.google.com/maps?q=A-42,+Phase-1,+Naraina+Industrial+Area,+New+Delhi+-+110028&output=embed"
