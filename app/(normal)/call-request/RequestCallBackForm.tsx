@@ -57,7 +57,7 @@ export function RequestCallbackFrom() {
       id="ziframe_548622"
       aria-label="Call Back Request"
       frameBorder="0"
-      style={{ height: 700, width: "99%", border: "none" }}
+      style={{ height: 1200, width: "99%", border: "none" }}
       src="https://forms.zohopublic.in/Morzze/form/CallBackRequest/formperma/ByCNX0v_rW3Z2B8vXz2Cr_0YcgXJC7TtWZDoUAM7sSE"
     />
   );
