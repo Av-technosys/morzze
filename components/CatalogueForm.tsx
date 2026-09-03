@@ -12,7 +12,7 @@ export function CatalogueForm() {
   const [whatsAppNumber, setWhatsAppNumber] = useState("");
 
   return (
-    <div className="max-w-xl mx-auto bg-[#0A0A0A] border border-white/5 p-8 sm:p-10 shadow-2xl shadow-black backdrop-blur-md">
+    <div className="max-w-xl mx-auto ">
       {/* <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-white tracking-tight uppercase">
           Catalogue Request Form
