@@ -1,9 +1,9 @@
-"use client"
-import React from 'react'
-import { motion } from 'framer-motion'
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
-import { SubscribeForm } from '../SubscribeForm';
+import { SubscribeForm } from "../SubscribeForm";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
@@ -43,9 +43,7 @@ const NewsletterSection = () => {
   };
   return (
     <section className="bg-[#050505] text-white py-24 px-6 overflow-hidden relative border-t border-white/5">
-
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center">
-
         {/* Animated Wrapper for all content */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -54,9 +52,8 @@ const NewsletterSection = () => {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="space-y-8 w-full flex flex-col items-center"
         >
-
           {/* Header Section */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <motion.span
               initial={{ opacity: 0, letterSpacing: "0.2em" }}
               whileInView={{ opacity: 1, letterSpacing: "0.5em" }}
@@ -73,14 +70,13 @@ const NewsletterSection = () => {
             <p className="font-inter text-white/80 text-sm md:text-md max-w-xl mx-auto leading-relaxed">
               Be the first to discover new collections, exclusive offers, and design inspiration.
             </p>
-          </div>
+          </div> */}
 
           <SubscribeForm />
         </motion.div>
       </div>
-
     </section>
-  )
-}
+  );
+};
 
-export default NewsletterSection
+export default NewsletterSection;
