@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const stats = [
-  { value: 15, suffix: "+", label: "Years of Excellence" },
-  { value: 200, suffix: "+", label: "Product Variants" },
-  { value: 500, suffix: "+", label: "Active Dealers" },
-  { value: 100, suffix: "+", label: "Cities Covered" },
+  { value: 700, suffix: "+", label: "DEALER NETWORK" },
+  { value: 200, suffix: "+", label: "Collaborations with Architects" },
+  { value: 100, suffix: "+", label: "Collaborations with Builders" },
+  { value: 35, suffix: "+", label: "Years of Experience" },
 ];
 
 function useCountUp(
