@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "@/hooks/appLink"
+import Link from "@/hooks/appLink";
 import { motion } from "framer-motion";
 import { Mail, X } from "lucide-react";
 import { toast } from "sonner";
@@ -111,8 +111,14 @@ export default function BlogDetailPage({
                   ? blog.data
                       .replace(/<div[^>]*>\s*<br\s*\/?>\s*<\/div>/gi, "")
                       .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, "")
-                      .replace(/<div[^>]*>\s*<span[^>]*>\s*<br\s*\/?>\s*<\/span>\s*<\/div>/gi, "")
-                      .replace(/<p[^>]*>\s*<span[^>]*>\s*<br\s*\/?>\s*<\/span>\s*<\/p>/gi, "")
+                      .replace(
+                        /<div[^>]*>\s*<span[^>]*>\s*<br\s*\/?>\s*<\/span>\s*<\/div>/gi,
+                        "",
+                      )
+                      .replace(
+                        /<p[^>]*>\s*<span[^>]*>\s*<br\s*\/?>\s*<\/span>\s*<\/p>/gi,
+                        "",
+                      )
                       .replace(/<div[^>]*>\s*&nbsp;\s*<\/div>/gi, "")
                       .replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/gi, "")
                   : "",
@@ -140,28 +146,31 @@ export default function BlogDetailPage({
                   {
                     icon: IconBrandFacebook,
                     link: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                      typeof window !== "undefined" ? window.location.href : ""
+                      typeof window !== "undefined" ? window.location.href : "",
                     )}`,
                   },
                   {
                     icon: X,
                     link: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                      typeof window !== "undefined" ? window.location.href : ""
+                      typeof window !== "undefined" ? window.location.href : "",
                     )}&text=${encodeURIComponent(blog.title)}`,
                   },
                   {
                     icon: IconBrandLinkedin,
                     link: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                      typeof window !== "undefined" ? window.location.href : ""
+                      typeof window !== "undefined" ? window.location.href : "",
                     )}`,
                   },
                   {
                     icon: Mail,
                     link: `mailto:?subject=${encodeURIComponent(
-                      blog.title
+                      blog.title,
                     )}&body=${encodeURIComponent(
-                      `Check out this article: ${typeof window !== "undefined" ? window.location.href : ""
-                      }`
+                      `Check out this article: ${
+                        typeof window !== "undefined"
+                          ? window.location.href
+                          : ""
+                      }`,
                     )}`,
                   },
                 ].map((item, i) => {
@@ -219,7 +228,7 @@ export default function BlogDetailPage({
                 {relatedBlogs.length > 0 ? (
                   relatedBlogs.map((item: any) => (
                     <Link
-                      href={`/blogs/${item.slug}`}
+                      href={`/article/${item.slug}`}
                       key={item.id}
                       className="flex gap-3 group"
                     >
@@ -229,7 +238,6 @@ export default function BlogDetailPage({
                             height={200}
                             width={200}
                             src={getImageURL(item.image)}
-
                             alt={item.title}
                             className="w-full h-full object-contain group-hover:scale-105 transition duration-500"
                           />
@@ -261,7 +269,7 @@ export default function BlogDetailPage({
                 Get design tips and inspiration delivered to your inbox.
               </p>
 
-                 <SubscribeForm />
+              <SubscribeForm />
               {/* <input
                 type="email"
                 placeholder="Your email"
