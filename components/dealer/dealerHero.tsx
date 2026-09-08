@@ -5,37 +5,76 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { imageKitUrl } from "@/lib/imagekit-url";
+import { DriftWall } from "@/components/DriftWall";
+
+const ids = [
+  "/dealer/image 229.png",
+  "/dealer/image 230.png",
+  "/dealer/image 232.png",
+  "/dealer/image 233.png",
+  "/dealer/image 234.png",
+  "/dealer/image 235.png",
+  "/dealer/image 236.png",
+  "/dealer/image 237.png",
+  "/dealer/image 238.png",
+  "/dealer/image 239.png",
+  "/dealer/image 240.png",
+  "/dealer/image 241.png",
+  "/dealer/image 242.png",
+  "/dealer/image 243.png",
+  "/dealer/image 244.png",
+  "/dealer/image 245.png",
+  "/dealer/image 246.png",
+  "/dealer/image 247.png",
+  "/dealer/image 248.png",
+  "/dealer/image 249.png",
+];
+
+const items = ids.map((id) => ({
+  image: id,
+  title: "title",
+  href: undefined,
+}));
 
 const DealerHero = () => {
   return (
-    <section className="relative w-full min-h-[78vh] md:min-h-[88vh] lg:min-h-screen flex items-center overflow-hidden">
+    <section className="relative bg-black w-full min-h-[78vh] md:min-h-[88vh] lg:min-h-screen">
       {/* Background Zoom Image */}
-      <motion.div
-        initial={{ scale: 1.08 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0"
-      >
-        <Image
-          src={imageKitUrl("dealerhero.png")}
-          alt="Luxury Bathroom Collection"
-          height={1600}
-          width={1600}
-          priority
-          className="object-cover w-full h-full object-center"
+      <div style={{ height: 700 }}>
+        {/* @ts-ignore */}
+        <DriftWall
+          items={items}
+          columns={5}
+          tileWidth={200}
+          tileHeight={132}
+          gap={18}
+          tilt={16}
+          turn={-14}
+          perspective={1200}
+          depth={120}
+          speed={42}
+          direction="up"
+          variance={0.45}
+          parallax={0.6}
+          lift={64}
+          fade={0.6}
+          dim={0.55}
+          overlayColor="#060010"
+          radius={14}
+          roll={0}
+          pauseOnHover={false}
+          grayscale={false}
         />
-        <div className="absolute inset-0 bg-black/55 md:bg-black/40" />
-      </motion.div>
+      </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 md:px-10 lg:px-12 w-full">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/3 z-10 max-w-6xl mx-auto px-5 sm:px-8 w-full sm:w-fit">
         <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
-          className="w-full text-center pt-16 md:pt-24"
+          className="w-full text-center"
         >
-          {/* Top Label */}
           <motion.span
             variants={{
               initial: { opacity: 0, y: 20 },
@@ -44,25 +83,23 @@ const DealerHero = () => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="font-montserrat text-[10px] sm:text-xs font-bold text-[#FDB813] uppercase tracking-[0.28em] mb-4 md:mb-5 block"
           >
-            Trusted by 500+ Dealers Nationwide
+            Trusted by 700+ Dealers Nationwide
           </motion.span>
 
-          {/* Main Heading */}
           <motion.h1
             variants={{
               initial: { opacity: 0, y: 30 },
               animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-            className="font-inter text-5xl lg:text-7xl  font-semibold text-white mb-5 md:mb-7"
+            className="font-inter text-2xl lg:text-5xl  font-semibold text-white mb-5 md:mb-7"
           >
-            Partner with India's Leading{" "}
-            <span className=" text-4xl md:text-6xl text-[#CBA14D]">
-              Kitchen & Bath Manufacturer
+            Partner with India's Leading <br />
+            <span className=" text-2xl lg:text-4xl text-[#CBA14D]">
+              Kitchen & Bathroom Product Manufacturer
             </span>
           </motion.h1>
-
-          {/* Subtitle */}
+          {/* 
           <motion.p
             variants={{
               initial: { opacity: 0, y: 25 },
@@ -73,9 +110,8 @@ const DealerHero = () => {
           >
             Join Morzze's growing dealer network and carry premium, innovative
             products in your territory.
-          </motion.p>
+          </motion.p> */}
 
-          {/* CTA Buttons */}
           <motion.div
             variants={{
               initial: { opacity: 0, y: 20 },
@@ -86,7 +122,7 @@ const DealerHero = () => {
           >
             <Link
               href="#dealer-form"
-              className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 bg-[#CBA14D] hover:bg-[#ab915e] overflow-hidden"
+              className="w-full sm:w-auto min-w-[190px] md:min-w-[200px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 bg-[#CBA14D] hover:bg-[#ab915e] overflow-hidden"
             >
               <span className="flex items-center relative z-10 font-inter text-[11px] md:text-xs font-bold text-black uppercase tracking-[0.22em]">
                 Become a dealer <MoveRight className="ml-2" size={16} />
@@ -106,7 +142,7 @@ const DealerHero = () => {
       </div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-24 md:h-32 bg-gradient-to-t from-black to-transparent" />
+      {/* <div className="absolute bottom-0 left-0 w-full h-24 md:h-32 bg-gradient-to-t from-black to-transparent" /> */}
     </section>
   );
 };

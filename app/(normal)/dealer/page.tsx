@@ -61,7 +61,7 @@ export function AboutMorzze() {
         </header>
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2">
           <img
-            src="/img1.jpeg"
+            src="/whay_choose_use_dealer.jpg"
             alt="Morzze kitchen sink"
             className="h-[420px] w-full rounded-2xl object-cover md:h-[650px]"
           />
@@ -70,7 +70,7 @@ export function AboutMorzze() {
               Why Choose Morzze?
             </h3>
             <p className="mt-6 text-lg leading-8 text-zinc-400">
-              With over 15 years of excellence in the industry, Morzze has
+              With over 35 years of excellence in the industry, Morzze has
               established itself as a trusted name in premium kitchen and
               bathroom fixtures. Our in-house manufacturing ensures quality
               control, faster delivery, and competitive pricing for our
@@ -328,7 +328,7 @@ export function DealerBenefits() {
         <div className="mt-16 rounded-2xl bg-gradient-to-r from-[#d4b477] to-[#dda83e] p-10 text-center text-[#161616]">
           <h3 className="text-3xl font-bold">Ready to Grow Your Business?</h3>
           <p className="mt-5 text-lg">
-            Join 500+ successful dealers who trust Morzze for their premium
+            Join 700+ successful dealers who trust Morzze for their premium
             product needs
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-8 font-bold">
