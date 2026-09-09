@@ -51,12 +51,12 @@ export function AboutMorzze() {
     <section className="bg-[#111] px-6 py-20 text-white">
       <div className="mx-auto max-w-7xl">
         <header className="text-center">
-          <h2 className="text-4xl font-bold md:text-6xl">
+          <h2 className="text-4xl font-bold md:text-5xl">
             About <span className="text-[#d2ad6b]">Morzze</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-lg text-zinc-400 md:text-2xl">
+          <p className="mx-auto mt-5 max-w-3xl text-base text-gray-300 md:text-lg">
             Delivering premium kitchen and bathroom solutions that blend
-            impeccable design, innovation, and quality
+            impeccable design, innovation, and quality.
           </p>
         </header>
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2">
@@ -69,7 +69,7 @@ export function AboutMorzze() {
             <h3 className="text-3xl font-bold md:text-4xl">
               Why Choose Morzze?
             </h3>
-            <p className="mt-6 text-lg leading-8 text-zinc-400">
+            <p className="mt-6 text-base leading-8 text-gray-300">
               With over 35 years of excellence in the industry, Morzze has
               established itself as a trusted name in premium kitchen and
               bathroom fixtures. Our in-house manufacturing ensures quality
@@ -78,7 +78,7 @@ export function AboutMorzze() {
             </p>
             <ul className="mt-8 space-y-5">
               {points.map((x) => (
-                <li key={x} className="flex gap-4 text-lg font-semibold">
+                <li key={x} className="flex gap-4 text-base font-semibold">
                   <span className="text-[#d2ad6b]">●</span>
                   {x}
                 </li>
@@ -134,7 +134,7 @@ export function BrandFeatures() {
             >
               <Icon className="mx-auto size-10 text-[#d2ad6b] transition-transform group-hover:scale-110" />
               <h3 className="mt-7 text-2xl font-bold">{title}</h3>
-              <p className="mt-4 text-lg text-zinc-400">{text}</p>
+              <p className="mt-4 text-base text-gray-300">{text}</p>
             </article>
           ))}
         </div>
@@ -193,10 +193,10 @@ export function ProductRange() {
     <section className="bg-[#111] px-6 py-20 text-white">
       <div className="mx-auto max-w-7xl">
         <header className="text-center">
-          <h2 className="text-4xl font-bold md:text-6xl">
+          <h2 className="text-4xl font-bold md:text-5xl">
             Our <span className="text-[#d2ad6b]">Product Range</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-4xl text-lg text-zinc-400 md:text-2xl">
+          <p className="mx-auto mt-5 max-w-4xl text-base text-gray-300 md:text-lg">
             A comprehensive portfolio of premium kitchen and bathroom fixtures
             designed for modern living
           </p>
@@ -219,10 +219,10 @@ export function ProductRange() {
               </div>
               <div className="p-7">
                 <h3 className="text-2xl font-bold">{p.title}</h3>
-                <p className="mt-4 text-lg text-zinc-400">{p.text}</p>
+                <p className="mt-4 text-base text-gray-300">{p.text}</p>
                 <ul className="mt-5 space-y-3">
                   {p.items.map((x) => (
-                    <li key={x} className="flex gap-3">
+                    <li key={x} className="flex gap-3 text-base">
                       <span className="text-[#d2ad6b]">●</span>
                       {x}
                     </li>
@@ -238,16 +238,16 @@ export function ProductRange() {
             {categories.map((x) => (
               <span
                 key={x}
-                className="rounded-full border border-[#d2ad6b]/20 bg-[#211e19] px-5 py-2 text-sm"
+                className="rounded-full border border-[#d2ad6b]/20 bg-[#211e19] px-5 py-2 text-base"
               >
                 {x}
               </span>
             ))}
           </div>
           <a
-            href="https://becomeadealer.morzze.com/catelogue.pdf"
+            href="https://d2icu6klh68l1z.cloudfront.net/Morzze+Catalogue.pdf"
             target="_blank"
-            className="mt-8 inline-flex items-center gap-5 rounded-xl border border-[#d2ad6b]/30 px-8 py-3 font-semibold hover:bg-[#d2ad6b] hover:text-black"
+            className="mt-8 inline-flex items-center gap-5 rounded-xl border border-[#d2ad6b]/30 px-8 py-3 font-semibold hover:bg-[#d2ad6b] hover:text-black duration-200"
           >
             Download Complete Catalogue <ArrowRight size={18} />
           </a>
@@ -303,10 +303,10 @@ export function DealerBenefits() {
     <section className="bg-[#111] px-6 py-20 text-white">
       <div className="mx-auto max-w-7xl">
         <header className="text-center">
-          <h2 className="text-4xl font-bold md:text-6xl">
+          <h2 className="text-4xl font-bold md:text-5xl">
             Dealer <span className="text-[#d2ad6b]">Benefits</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-xl text-zinc-400">
+          <p className="mx-auto mt-5 max-w-3xl text-lg text-gray-300">
             Join our network and unlock a complete ecosystem of support designed
             for your success
           </p>
@@ -320,21 +320,23 @@ export function DealerBenefits() {
               <span className="inline-grid size-16 place-items-center rounded-xl bg-[#29261f]">
                 <Icon className="text-[#d2ad6b]" />
               </span>
-              <h3 className="mt-6 text-2xl font-bold">{title}</h3>
-              <p className="mt-3 text-lg leading-7 text-zinc-400">{text}</p>
+              <h3 className="mt-6 text-xl font-bold">{title}</h3>
+              <p className="mt-3 text-base leading-7 text-gray-300">{text}</p>
             </article>
           ))}
         </div>
-        <div className="mt-16 rounded-2xl bg-gradient-to-r from-[#d4b477] to-[#dda83e] p-10 text-center text-[#161616]">
-          <h3 className="text-3xl font-bold">Ready to Grow Your Business?</h3>
-          <p className="mt-5 text-lg">
+        <div className="mt-16 md:mt-20 rounded-3xl bg-gradient-to-r from-[#d4b477] to-[#dda83e] p-10 py-20 text-center text-[#161616]">
+          <h3 style={{ fontWeight: 500 }} className="text-5xl">
+            Ready to Grow Your Business?
+          </h3>
+          <p className="mt-6 text-lg text-gray-800">
             Join 700+ successful dealers who trust Morzze for their premium
-            product needs
+            product needs.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-8 font-bold">
+          {/* <div className="mt-6 flex flex-wrap justify-center gap-8 font-bold">
             <span>↗ 30–40% Average Margins</span>
             <span>♢ 5-Year Warranty Support</span>
-          </div>
+          </div> */}
         </div>
         <div className="mt-7 text-center">
           <a
@@ -407,7 +409,7 @@ export function BecomeDealer() {
           <h2 className="text-4xl font-bold md:text-5xl">
             How to <span className="text-[#d2ad6b]">Become a Dealer</span>
           </h2>
-          <p className="mt-5 text-xl text-zinc-400">
+          <p className="mt-5 text-lg text-gray-300">
             A simple, transparent process to get you started in just a few weeks
           </p>
         </header>
@@ -415,7 +417,7 @@ export function BecomeDealer() {
           {steps.map(({ icon: Icon, time, title, text }, i) => (
             <article
               key={title}
-              className="group relative rounded-2xl border border-zinc-800 bg-[#191919] p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#d2ad6b]/60 hover:shadow-[0_0_36px_rgba(210,173,107,.22)]"
+              className="group relative rounded-2xl border border-zinc-800 bg-[#191919] p-3 md:p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#d2ad6b]/60 hover:shadow-[0_0_36px_rgba(210,173,107,.22)]"
             >
               <span className="absolute right-5 top-4 text-6xl font-bold text-[#d2ad6b]/5">
                 {i + 1}
@@ -427,15 +429,15 @@ export function BecomeDealer() {
                 {time}
               </span>
               <h3 className="mt-4 text-lg font-bold">{title}</h3>
-              <p className="mt-3 leading-6 text-zinc-400">{text}</p>
+              <p className="mt-3 leading-6 text-gray-300">{text}</p>
             </article>
           ))}
         </div>
-        <div className="mt-16 rounded-2xl border border-[#d2ad6b]/20 p-9">
-          <h3 className="text-center text-3xl font-bold">
+        <div className="mt-16 md:mt-20 rounded-2xl border border-[#d2ad6b]/20 p-9">
+          <h3 className="text-center text-5xl font-bold">
             Common Requirements
           </h3>
-          <div className="mt-8 grid gap-10 md:grid-cols-2">
+          <div className="mt-12 grid gap-10 md:grid-cols-2">
             <Requirement title="Business Prerequisites" items={prereq} />
             <Requirement title="Partnership Terms" items={terms} />
           </div>
@@ -449,7 +451,7 @@ function Requirement({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
       <h4 className="text-xl font-bold text-[#d2ad6b]">{title}</h4>
-      <ul className="mt-5 space-y-4 text-zinc-400">
+      <ul className="mt-5 space-y-4 text-gray-300">
         {items.map((x) => (
           <li key={x} className="flex gap-3">
             <span className="text-[#d2ad6b]">●</span>

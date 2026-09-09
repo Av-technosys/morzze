@@ -43,7 +43,7 @@ export default function FAQSection() {
   const [open, setOpen] = useState(1);
 
   return (
-    <section className="w-full bg-[#111] text-white py-20 px-4 md:px-8 lg:px-10">
+    <section className="w-full bg-[#111] text-white py-16 px-4 md:px-8 lg:px-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,10 +52,10 @@ export default function FAQSection() {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <h2 className="text-[42px] leading-none font-semibold tracking-[-0.03em] text-[#f5f2ea] mb-4">
+          <h2 className="text-4xl md:text-5xl leading-none font-semibold tracking-[-0.03em] text-[#f5f2ea] mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-[14px] text-[#7d7d7d]">
+          <p className="text-base font-semibold text-gray-300">
             Everything you need to know about becoming a Morzze dealer.
           </p>
         </motion.div>
@@ -99,7 +99,7 @@ export default function FAQSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.45, ease: "easeInOut" }}
                     >
-                      <div className="px-5 md:px-6 pb-5 text-[14px] leading-8 text-[#7f7f7f] max-w-[92%]">
+                      <div className="px-5 md:px-6 pb-5 text-[14px] leading-8 text-gray-300 max-w-[92%]">
                         {item.a}
                       </div>
                     </motion.div>

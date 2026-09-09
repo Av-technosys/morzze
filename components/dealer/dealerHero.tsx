@@ -81,7 +81,7 @@ const DealerHero = () => {
               animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="font-montserrat text-[10px] sm:text-xs font-bold text-[#FDB813] uppercase tracking-[0.28em] mb-4 md:mb-5 block"
+            className="font-montserrat text-xs sm:text-xs font-bold text-[#FDB813] uppercase tracking-[0.28em] mb-4 md:mb-5 block"
           >
             Trusted by 700+ Dealers Nationwide
           </motion.span>

@@ -69,7 +69,7 @@ function CounterItem({
         {count}
         {item.suffix}
       </div>
-      <div className="mt-1 text-sm md:text-base text-white font-medium">
+      <div className="mt-1 text-xs md:text-base text-white font-medium">
         {item.label}
       </div>
     </motion.div>

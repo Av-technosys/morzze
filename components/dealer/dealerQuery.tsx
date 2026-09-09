@@ -19,7 +19,7 @@ export default function ContactCTASection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
           viewport={{ once: true }}
-          className="text-[42px] font-semibold tracking-[-0.03em] text-[#f5f2ea] mb-4"
+          className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-white mb-4"
         >
           Have Questions?
         </motion.h2>
@@ -29,7 +29,7 @@ export default function ContactCTASection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto text-[14px] leading-7 text-[#7c7c7c] mb-10"
+          className="max-w-lg mx-auto text-base leading-7 text-gray-300 mb-10"
         >
           Our partnership team is here to help. Reach out for more information
           about the dealer program.
@@ -40,7 +40,7 @@ export default function ContactCTASection() {
             href="mailto:info@morzze.com"
             whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-[255px] h-[48px] rounded-[6px] bg-[#e6aa12] text-black flex items-center justify-center gap-3 text-[14px] font-semibold shadow-[0_0_30px_rgba(230,170,18,0.12)]"
+            className="w-full sm:w-[255px] h-[48px] rounded-[6px] bg-[#CBA14D] text-black flex items-center justify-center gap-3 text-[14px] font-semibold shadow-[0_0_30px_rgba(230,170,18,0.12)]"
           >
             <Mail size={15} />
             info@morzze.com
@@ -50,7 +50,7 @@ export default function ContactCTASection() {
             href="tel:+1800 110 123"
             whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-[255px] h-[48px] rounded-[6px] border border-[#b07b12] text-[#e6aa12] flex items-center justify-center gap-3 text-[14px] font-semibold hover:bg-[#1a1407] transition-colors duration-500"
+            className="w-full sm:w-[255px] h-[48px] rounded-[6px] border border-[#CBA14D] text-[#CBA14D] flex items-center justify-center gap-3 text-[14px] font-semibold hover:bg-[#1a1407] transition-colors duration-500"
           >
             <Phone size={15} />
             1800 110 123

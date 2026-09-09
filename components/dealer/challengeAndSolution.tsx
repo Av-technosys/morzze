@@ -41,7 +41,7 @@ export function ChallengeAndSolution() {
             The Premium Kitchen &amp; Bath Market is Booming
           </h1>
 
-          <p className="mx-auto mt-5 max-w-4xl text-lg leading-relaxed text-[#9d9d9d]">
+          <p className="mx-auto mt-5 max-w-4xl text-base leading-relaxed text-[#9d9d9d] md:text-lg">
             Rising demand in residential and commercial sectors creates
             unprecedented opportunities for dealers
           </p>
@@ -50,19 +50,19 @@ export function ChallengeAndSolution() {
         {/* Cards */}
         <div className="mt-16 grid gap-8 lg:mt-24 lg:grid-cols-2">
           {/* Challenges */}
-          <article className="min-h-[450px] rounded-2xl border border-[#5a2424] bg-gradient-to-br from-[#211819] to-[#191616] p-7 md:p-10">
-            <div className="flex items-start gap-5">
+          <article className="rounded-2xl border border-[#5a2424] bg-gradient-to-br from-[#211819] to-[#191616] p-6 md:p-8">
+            <div className="flex items-start gap-3">
               <CircleAlert className="mt-1 size-10 shrink-0 text-[#ff4d52]" />
 
               <div>
                 <h2 className="text-xl font-bold">Market Challenges</h2>
-                <p className="mt-3  text-[#a4a4a4]">
+                <p className="mt-0.5 text-base  text-[#a4a4a4]">
                   Common pain points for local dealers
                 </p>
               </div>
             </div>
 
-            <ul className="mt-10 space-y-5">
+            <ul className="mt-8 space-y-5">
               {challenges.map((challenge) => (
                 <li
                   key={challenge}
@@ -76,26 +76,28 @@ export function ChallengeAndSolution() {
           </article>
 
           {/* Solution */}
-          <article className="min-h-[450px] rounded-2xl border border-[#51452d] bg-gradient-to-br from-[#201f1b] to-[#1b1a17] p-7 md:p-10">
-            <div className="flex items-start gap-5">
+          <article className=" rounded-2xl border border-[#51452d] bg-gradient-to-br from-[#201f1b] to-[#1b1a17] p-6 md:p-8">
+            <div className="flex items-start gap-3">
               <BadgeCheck className="mt-1 size-10 shrink-0 text-[#cba966]" />
 
               <div>
                 <h2 className="text-xl font-bold">Morzze Solution</h2>
-                <p className="mt-2 text-[#a4a4a4]">
+                <p className=" text-base text-[#a4a4a4]">
                   Why partnering with Morzze is your competitive advantage
                 </p>
               </div>
             </div>
 
-            <div className="mt-9 space-y-7">
+            <div className="mt-8 space-y-7">
               {solutions.map((solution) => (
-                <div key={solution.title} className="flex items-start gap-4">
+                <div key={solution.title} className="flex items-start gap-3">
                   <CircleCheck className="mt-1 size-6 shrink-0 text-[#cba966]" />
 
                   <div>
-                    <h3 className="text-sm font-semibold ">{solution.title}</h3>
-                    <p className="mt-1 text-base text-[#a4a4a4] ">
+                    <h3 className="text-base font-semibold ">
+                      {solution.title}
+                    </h3>
+                    <p className=" text-xs text-[#a4a4a4] ">
                       {solution.description}
                     </p>
                   </div>
