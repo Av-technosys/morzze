@@ -193,9 +193,9 @@ export const product = pgTable("products", {
   metaOgImage: varchar("meta_og_image"),
   seoSchema: jsonb("seo_schema"),
   
-  width: integer("width"),
-  length: integer("length"),
-  depth: integer("depth")
+  width: decimal("width"),
+  length: decimal("length"),
+  depth: decimal("depth")
 },
   (table) => [
     index("hidden_idx").on(table.isHidden),
