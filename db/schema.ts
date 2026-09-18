@@ -191,7 +191,11 @@ export const product = pgTable("products", {
   metaTitle: varchar("meta_title"),
   metaDescription: varchar("meta_description"),
   metaOgImage: varchar("meta_og_image"),
-  seoSchema: jsonb("seo_schema")
+  seoSchema: jsonb("seo_schema"),
+  
+  width: integer("width"),
+  length: integer("length"),
+  depth: integer("depth")
 },
   (table) => [
     index("hidden_idx").on(table.isHidden),

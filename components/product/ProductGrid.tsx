@@ -87,106 +87,125 @@ const ProductGrid = ({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
-        {products.map((product: any) => (
-          <div key={product.id} className="group flex flex-col">
-            <div className="relative bg-[#111] overflow-hidden mb-4">
-              <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 font-montserrat">
-                {product.isNew && (
-                  <Badge className="bg-[#CBA14D] text-black hover:bg-[#CBA14D] rounded-none px-2 py-0.5 text-[9px] font-semibold">
-                    NEW
-                  </Badge>
-                )}
-              </div>
+        {products.map((product: any) => {
+          const filters = Array.isArray(product.filters)
+            ? product.filters.filter(
+                (f: any) =>
+                  typeof f === "object" &&
+                  f !== null &&
+                  "type" in f &&
+                  "filter" in f,
+              )
+            : [];
+          const size =
+            filters.find((f: any) => f.type === "size")?.filter ?? product.size;
 
-              {/* <div className="absolute top-2 right-3 z-20">
+          return (
+            <div key={product.id} className="group flex flex-col">
+              <div className="relative bg-[#111] overflow-hidden mb-4">
+                <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 font-montserrat">
+                  {product.isNew && (
+                    <Badge className="bg-[#CBA14D] text-black hover:bg-[#CBA14D] rounded-none px-2 py-0.5 text-[9px] font-semibold">
+                      NEW
+                    </Badge>
+                  )}
+                </div>
+
+                {/* <div className="absolute top-2 right-3 z-20">
                 <Badge className="bg-[#EF4444] text-white hover:bg-[#EF4444] rounded-none px-2 py-0.5 text-[9px] font-semibold">
                   {product.discount}
                 </Badge>
               </div> */}
 
-              <Link href={`/product/${product.slug}`}>
-                <Image
-                  src={getImageURL(product.bannerImage || "")}
-                  alt={product.name}
-                  className="w-full hover:scale-105 duration-200 h-full object-contain cursor-pointer"
-                  width={800}
-                  height={800}
-                />
-              </Link>
+                <Link href={`/product/${product.slug}`}>
+                  <Image
+                    src={getImageURL(product.bannerImage || "")}
+                    alt={product.name}
+                    className="w-full hover:scale-105 duration-200 h-full object-contain cursor-pointer"
+                    width={800}
+                    height={800}
+                  />
+                </Link>
 
-              <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-1 sm:p-2 group-hover:translate-y-0 transition-transform duration-300">
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    disabled={getItemQuantity(product.slug) > 0}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      addToCart(product.slug, 1, {
-                        name: product.name,
-                        price: product.basePrice,
-                        oldPrice: product.strikethroughPrice,
-                        image: product.bannerImage,
-                        sku: product.sku,
-                        productId: product.id,
-                      });
-                    }}
-                    className="flex-1 p-1! sm:p-2! h-8! sm:h-10! bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
-                  >
-                    {getItemQuantity(product.slug) > 0 ? (
-                      <>
-                        <IconShoppingBag size={18} /> In Cart ✓
-                      </>
-                    ) : (
-                      <>
-                        <IconShoppingBag className=" size-4 sm:size-5" />
-                        <span className=" text-[8px] sm:text-xs">
-                          Add to cart
-                        </span>
-                      </>
-                    )}
-                  </Button>
+                <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-1 sm:p-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      disabled={getItemQuantity(product.slug) > 0}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(product.slug, 1, {
+                          name: product.name,
+                          price: product.basePrice,
+                          oldPrice: product.strikethroughPrice,
+                          image: product.bannerImage,
+                          sku: product.sku,
+                          productId: product.id,
+                        });
+                      }}
+                      className="flex-1 p-1! sm:p-2! h-8! sm:h-10! bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
+                    >
+                      {getItemQuantity(product.slug) > 0 ? (
+                        <>
+                          <IconShoppingBag size={18} /> In Cart ✓
+                        </>
+                      ) : (
+                        <>
+                          <IconShoppingBag className=" size-4 sm:size-5" />
+                          <span className=" text-[8px] sm:text-xs">
+                            Add to cart
+                          </span>
+                        </>
+                      )}
+                    </Button>
 
-                  <Button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleWishlist(product.slug, product.id);
-                    }}
-                    className={` p-1! sm:p-2! h-8! sm:h-10! shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
-                      isInWishlist(product.slug)
-                        ? "bg-[#FFBF3F] hover:bg-white "
-                        : "bg-[#FFBF3F] cursor-pointer"
-                    }`}
-                  >
-                    {isInWishlist(product.slug) ? (
-                      <IconHeartFilled className=" size-4 sm:size-5 text-red-500" />
-                    ) : (
-                      <IconHeart className=" size-4 sm:size-5 text-white hover:text-black" />
-                    )}
-                  </Button>
+                    <Button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleWishlist(product.slug, product.id);
+                      }}
+                      className={` p-1! sm:p-2! h-8! sm:h-10! shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                        isInWishlist(product.slug)
+                          ? "bg-[#FFBF3F] hover:bg-white "
+                          : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
+                    >
+                      {isInWishlist(product.slug) ? (
+                        <IconHeartFilled className=" size-4 sm:size-5 text-red-500" />
+                      ) : (
+                        <IconHeart className=" size-4 sm:size-5 text-white hover:text-black" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 px-1 md:px-0">
+                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
+                  {product.category}
+                </p>
+
+                <Link href={`/product/${product.slug}`}>
+                  <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-2 cursor-pointer">
+                    {product.name}
+                  </h3>
+                </Link>
+
+                <div className="flex items-center justify-between mt-2 gap-3">
+                  <span className="font-bold text-white font-inter text-sm md:text-base">
+                    ₹{product.basePrice}
+                  </span>
+                  <span className="font-bold text-gray-300 font-inter text-xs">
+                    {product.size
+                      ? product.size.replace("inch", "") + " Inches"
+                      : ""}
+                  </span>
                 </div>
               </div>
             </div>
-
-            <div className="space-y-1.5 px-1 md:px-0">
-              <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
-                {product.category}
-              </p>
-
-              <Link href={`/product/${product.slug}`}>
-                <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-2 cursor-pointer">
-                  {product.name}
-                </h3>
-              </Link>
-
-              <div className="flex items-center mt-2 gap-3">
-                <span className="font-bold text-white font-inter text-sm md:text-base">
-                  ₹{product.basePrice}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">

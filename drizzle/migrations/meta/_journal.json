@@ -176,6 +176,13 @@
       "when": 1787303868250,
       "tag": "0023_shiny_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789721948131,
+      "tag": "0024_smiling_phalanx",
+      "breakpoints": true
     }
   ]
 }

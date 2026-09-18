@@ -125,6 +125,7 @@ const CategoryProductsClient = ({
           const filters = Array.isArray(product.filters)
             ? product.filters.filter(isProductFilter)
             : [];
+          console.log(filters);
           const size =
             filters.find((filter) => filter.type === "size")?.filter ??
             product.size;
@@ -207,40 +208,24 @@ const CategoryProductsClient = ({
               <div className="space-y-1.5 px-1 md:px-0">
                 <Link href={`/product/${product.slug}`}>
                   <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors cursor-pointer">
-                    {productName}
+                    {product.sku ? product.sku : productName}
                   </h3>
                 </Link>
 
+                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
+                  20 X 22 X 32 Inches
+                </p>
+
                 <div className=" flex items-center justify-between">
-                  <div className="flex items-center gap-1 py-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <IconStarFilled
-                        key={i}
-                        size={11}
-                        className={
-                          i < rating ? "text-[#CBA14D]" : "text-[#333]"
-                        }
-                      />
-                    ))}
-                    <span className="text-[10px] text-[#555] ml-1">
-                      ({reviews})
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-white font-inter text-sm md:text-base">
+                      ₹{product.basePrice}
                     </span>
                   </div>
                   {size && (
                     <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
                       {size.split(" ")[0] + " inch"}
                     </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-white font-inter text-sm md:text-base">
-                    ₹{product.basePrice}
-                  </span>
-                  {product.strikethroughPrice && (
-                    <span className="text-[11px] md:text-sm text-[#555] line-through">
-                      ₹{product.strikethroughPrice}
-                    </span>
                   )}
                 </div>
               </div>
