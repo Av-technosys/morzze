@@ -1148,6 +1148,9 @@ export async function getProducts({
             isInStock: product.isInStock,
             isHidden: product.isHidden,
             size: product.size,
+            width: product.width,
+            length: product.length,
+            depth: product.depth,
             filters: sql`
               COALESCE(
                 json_agg(
@@ -1176,6 +1179,9 @@ export async function getProducts({
             product.isInStock,
             product.isHidden,
             product.size,
+            product.width,
+            product.length,
+            product.depth,
           )
           .orderBy(...orderBy)
           .limit(pageSize)

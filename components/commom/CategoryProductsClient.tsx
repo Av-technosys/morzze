@@ -33,6 +33,9 @@ type CategoryProduct = {
   rateing4Star?: number | null;
   rateing5Star?: number | null;
   size?: string | null;
+  width?: string | null;
+  length?: string | null;
+  depth?: string | null;
   filters?: unknown;
 };
 
@@ -212,9 +215,11 @@ const CategoryProductsClient = ({
                   </h3>
                 </Link>
 
-                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
-                  20 X 22 X 32 Inches
-                </p>
+                {(product.width || product.length || product.depth) && (
+                  <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
+                    {[product.width, product.length, product.depth].filter(Boolean).join(" X ")} Inches
+                  </p>
+                )}
 
                 <div className=" flex items-center justify-between">
                   <div className="flex items-center gap-3">

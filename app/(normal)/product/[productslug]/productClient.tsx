@@ -48,10 +48,14 @@ const ProductClient = ({ product, slug, reviews }: any) => {
     Array.isArray(product?.sizePrices) && product.sizePrices.length > 0;
   const defaultSize = hasSizePrices ? product.sizePrices[0].size : isSingleSize;
 
+  const defaultMaterial = product?.filters?.find(
+    (it: any) => it.type === "material",
+  )?.filter ?? "";
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedFinish, setSelectedFinish] = useState("");
   const [selectedSize, setSelectedSize] = useState(defaultSize);
-  const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [selectedMaterial, setSelectedMaterial] = useState(defaultMaterial);
   const [quantity, setQuantity] = useState(1);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
