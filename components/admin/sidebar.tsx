@@ -21,6 +21,7 @@ import {
   BookOpen,
   MapPin,
   LogOut,
+  HelpCircle,
 } from "lucide-react";
 
 import {
@@ -46,6 +47,7 @@ const navItems = [
   { label: "Payments", href: "/admin/payment", icon: IndianRupee },
   { label: "Categories", href: "/admin/category", icon: List },
   { label: "Blogs", href: "/admin/blog", icon: File },
+  { label: "FAQs", href: "/admin/faq", icon: HelpCircle },
   { label: "Catalogue", href: "/admin/catalogue", icon: BookOpen },
   { label: "Stores", href: "/admin/stores", icon: MapPin },
   { label: "Videos", href: "/admin/videos", icon: Video },

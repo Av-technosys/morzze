@@ -190,6 +190,13 @@
       "when": 1789729288813,
       "tag": "0025_simple_karnak",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1790158193272,
+      "tag": "0026_chief_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

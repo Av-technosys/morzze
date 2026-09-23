@@ -22,6 +22,8 @@ import { category } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
 import { categorySchemas } from "@/const/schemas";
+import { getFaqsByCategory } from "@/helper/faq/action";
+import FAQSection from "@/components/FAQSection";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
@@ -90,7 +92,7 @@ export default async function CategoryPage({
   const { slug } = await params;
   const sParams = await searchParams;
 
-  const [categoryData, steelSinkCategorySlugs, productsResult] =
+  const [categoryData, steelSinkCategorySlugs, productsResult, faqs] =
     await Promise.all([
       getCategoryBySlug(slug),
       getSteelSinkCategorySlugs(),
@@ -104,6 +106,7 @@ export default async function CategoryPage({
         page: 1,
         pageSize: 100,
       }),
+      getFaqsByCategory(slug),
     ]);
 
   const products = productsResult?.products || [];
@@ -243,6 +246,9 @@ export default async function CategoryPage({
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection faqs={faqs} />
     </div>
   );
 }
