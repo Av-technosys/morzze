@@ -28,7 +28,7 @@ async function Page() {
         </h1>
 
         <Link href="/admin/coupons/new">
-          <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+          <Button >
             <PlusCircle className="w-4 h-4 mr-2" />
             Add New Coupon
           </Button>

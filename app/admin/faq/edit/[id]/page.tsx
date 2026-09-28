@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getFaqById } from "@/helper/faq/action";
 import FaqForm from "@/components/admin/FaqForm";
+import { getCategories } from "@/helper/category/action";
 
 export default async function EditFaqPage({
   params,
@@ -8,7 +9,10 @@ export default async function EditFaqPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const faq = await getFaqById(id);
+  const [faq, categories] = await Promise.all([
+    getFaqById(id),
+    getCategories(),
+  ]);
 
   if (!faq) {
     notFound();
@@ -16,7 +20,8 @@ export default async function EditFaqPage({
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <FaqForm mode="edit" initialData={faq} />
+      <FaqForm mode="edit" initialData={faq} categories={categories} />
     </div>
   );
 }
+

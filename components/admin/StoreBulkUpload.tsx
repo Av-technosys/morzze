@@ -93,7 +93,7 @@ export function StoreBulkUpload() {
       {/* Trigger button */}
       <Button
         variant="outline"
-        className="border-[#2D5A5D] text-[#2D5A5D] hover:bg-[#2D5A5D]/10"
+        
         onClick={() => setOpen(true)}
       >
         <Upload className="w-4 h-4 mr-2" />
@@ -226,7 +226,7 @@ export function StoreBulkUpload() {
                 </Button>
                 {!result && (
                   <Button
-                    className="bg-[#2D5A5D] hover:bg-[#234749]"
+                    
                     disabled={!file || loading}
                     onClick={handleUpload}
                   >
@@ -246,7 +246,7 @@ export function StoreBulkUpload() {
                 {result && (
                   <Button
                     variant="outline"
-                    className="border-[#2D5A5D] text-[#2D5A5D]"
+                    
                     onClick={resetDialog}
                   >
                     Upload Another

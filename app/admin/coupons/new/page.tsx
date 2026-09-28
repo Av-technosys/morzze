@@ -271,7 +271,7 @@ export default function CouponForm() {
 
           <Button
             type="submit"
-            className="w-full bg-[#2D5A5D] hover:bg-[#234749] h-14 text-lg font-medium shadow-lg"
+            className="w-full  h-14 text-lg font-medium shadow-lg"
             disabled={loading || uploading}
           >
             {loading ? (

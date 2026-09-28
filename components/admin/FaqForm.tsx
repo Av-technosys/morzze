@@ -9,21 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createFaq, updateFaq } from "@/helper/faq/action";
 
-// All category slugs available for FAQ assignment
-const CATEGORY_OPTIONS = [
-  { label: "Air Tap", value: "air-tap" },
-  { label: "Granite Sinks", value: "Granite-Sinks" },
-  { label: "Steel Sinks", value: "Steel-Sinks" },
-  { label: "Kitchen Faucets", value: "Kitchen-Faucets" },
-  { label: "Bathroom Faucets", value: "Bathroom-Faucets" },
-  { label: "Bathroom Basins", value: "Bathroom-Basins" },
-  { label: "Towel Warmers", value: "Towel-Warmers" },
-  { label: "Food Waste Disposers", value: "Food-Waste-Disposers" },
-  { label: "Floor Drainers", value: "Floor-Drainers" },
-];
+interface Category {
+  id: string;
+  name: string | null;
+  slug: string;
+}
 
 interface FaqFormProps {
   mode: "create" | "edit";
+  categories: Category[];
   initialData?: {
     id: string;
     question: string;
@@ -32,7 +26,7 @@ interface FaqFormProps {
   };
 }
 
-export default function FaqForm({ mode, initialData }: FaqFormProps) {
+export default function FaqForm({ mode, initialData, categories }: FaqFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -102,9 +96,9 @@ export default function FaqForm({ mode, initialData }: FaqFormProps) {
           <option value="" disabled>
             — Select a category —
           </option>
-          {CATEGORY_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
+          {categories.map((cat) => (
+            <option key={cat.slug} value={cat.slug}>
+              {cat.name}
             </option>
           ))}
         </select>
@@ -151,7 +145,7 @@ export default function FaqForm({ mode, initialData }: FaqFormProps) {
         <Button
           type="submit"
           disabled={isPending}
-          className="bg-[#2D5A5D] hover:bg-[#234749]"
+          
         >
           {isPending ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />

@@ -520,7 +520,7 @@ export default function StoreForm({ mode, initialData }: Props) {
 
             <Button
               type="submit"
-              className="bg-[#2D5A5D] hover:bg-[#234749]"
+              
               disabled={loading}
             >
               {loading ? (
