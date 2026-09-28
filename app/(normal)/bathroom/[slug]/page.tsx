@@ -9,6 +9,8 @@ import { getImageURL } from "@/lib/getImageLin";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
 import { Metadata } from "next";
 import { categorySchemas } from "@/const/schemas";
+import { getFaqsByCategory } from "@/helper/faq/action";
+import FAQSection from "@/components/FAQSection";
 
 export const dynamic = "force-static";
 export const revalidate = 86400;
@@ -43,9 +45,10 @@ export default async function CategoryPage({
 }) {
   const { slug } = await params;
 
-  const [categoryData, products] = await Promise.all([
+  const [categoryData, products, faqs] = await Promise.all([
     getCategoryBySlug(slug),
     getAllProductsByCategorySlug(slug),
+    getFaqsByCategory(slug),
   ]);
 
   if (!categoryData) {
@@ -134,6 +137,9 @@ export default async function CategoryPage({
           />
         )}
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection faqs={faqs} />
     </div>
   );
 }

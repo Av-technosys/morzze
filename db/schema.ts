@@ -564,3 +564,13 @@ export const stores = pgTable("stores", {
 
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+
+// ================= FAQS =================
+
+export const faqs = pgTable("faqs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  question: text("question").notNull(),
+  answer: text("answer").notNull(),
+  category: text("category").notNull(),
+});
