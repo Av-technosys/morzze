@@ -192,11 +192,11 @@ export function VerifyEmailForm() {
   return (
     <section>
       <div className="w-full px-4 lg:px-0 flex min-h-screen bg-black text-white">
-        <div className="hidden lg:block min-h-screen w-1/2 z-10">
-          <Link href="/">
+        <div className="hidden lg:block w-1/2 z-10 relative">
+          <Link href="/" className="block absolute inset-0">
             <Image
-              className="h-full object-cover content-center"
-              src={imageKitUrl("website-images/otp.jpeg")}
+              className="w-full h-full object-cover"
+              src="/Auth/login.jpeg"
               alt="Login Image"
               width={1300}
               height={800}
