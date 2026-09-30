@@ -57,7 +57,7 @@ const MissionVisionSection = () => {
                 </h3>
                 <p className="font-inter text-white/80 text-sm md:text-md leading-relaxed">
                   
-                To elevate the essential rhythms of the home transforming daily rituals of
+                To elevate the essential rhythms of the home, transforming daily rituals of
                 cleansing and culinary creation into experiences of grace and well-being.
             
                 We believe the home has two hearts. One beats for tranquility, the other for

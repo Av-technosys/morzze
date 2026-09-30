@@ -31,7 +31,7 @@ const features = [
   {
     icon: <IconFlask size={28} stroke={1.5} />,
     title: "Rigorous Testing",
-    desc: "Each product undergoes 72+ hours of testing includin pressure, corrosion, and wear tests.",
+    desc: "Each product undergoes 72+ hours of testing, including pressure, corrosion, and wear tests.",
   },
   {
     icon: <IconSettings size={28} stroke={1.5} />,
@@ -41,7 +41,7 @@ const features = [
   {
     icon: <IconRosetteFilled size={28} stroke={1.5} />,
     title: "ISO 9001:2015 Certified",
-    desc: "Our quality management systems meet internationa standards for consistent excellence.",
+    desc: "Our quality management systems meet international standards for consistent excellence.",
   },
   
   {

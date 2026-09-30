@@ -52,7 +52,7 @@ const page = () => {
               The product must be in its original condition, unopened, unused,
               and in its original packaging.
             </li>
-            <li>The product is purchased from Morzze.com only.</li>
+            <li>The product must have been purchased from Morzze.com.</li>
             <li>
               The return or exchange request must be initiated within 3 days of
               receiving the product.
