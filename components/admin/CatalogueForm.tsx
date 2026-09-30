@@ -475,7 +475,7 @@ export default function CatalogueForm({ mode, initialData }: Props) {
             </div>
             <Button
               type="submit"
-              className="bg-[#2D5A5D] hover:bg-[#234749]"
+              
               disabled={loading || uploading}
             >
               {loading ? (

@@ -30,7 +30,7 @@ export default async function AdminBlogPage() {
           <FileText className="w-6 h-6 text-[#2D5A5D]" /> Manage Blogs
         </h1>
         <Link href="/admin/blog/new">
-          <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+          <Button >
             <PlusCircle className="w-4 h-4 mr-2" /> Add New Blog
           </Button>
         </Link>

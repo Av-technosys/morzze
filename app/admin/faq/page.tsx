@@ -15,7 +15,7 @@ export default async function AdminFaqPage() {
           <HelpCircle className="w-6 h-6 text-[#2D5A5D]" /> Manage FAQs
         </h1>
         <Link href="/admin/faq/new">
-          <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+          <Button >
             <PlusCircle className="w-4 h-4 mr-2" /> Add FAQ
           </Button>
         </Link>

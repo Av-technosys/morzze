@@ -38,7 +38,7 @@ export default async function ApplicationDetailsPage({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+          <Button >
             <FileText className="w-4 h-4 mr-2" />
             Open Resume
           </Button>

@@ -113,7 +113,7 @@ export default function Details({ id }: { id: string }) {
               >
                 <Link href={`/admin/order`}>Cancel Order</Link>
               </Button>
-              <Button className="flex-1 rounded-full bg-[#2D5A5D] hover:bg-[#234749]">
+              <Button className="flex-1 rounded-full ">
                 Track Order
               </Button>
             </div>

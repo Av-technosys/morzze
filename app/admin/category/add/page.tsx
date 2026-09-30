@@ -240,7 +240,7 @@ export default function AddCategoryForm() {
               <Button
                 type="submit"
                 form="createCategory"
-                className="px-12 h-11 rounded-full bg-[#2D5A5D] hover:bg-[#234749] text-white"
+                className="px-12 h-11 rounded-full  text-white"
               >
                 Add
               </Button>

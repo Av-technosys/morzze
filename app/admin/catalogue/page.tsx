@@ -26,7 +26,7 @@ export default async function AdminCataloguePage() {
           <BookOpen className="w-6 h-6 text-[#2D5A5D]" /> Manage Catalogue
         </h1>
         <Link href="/admin/catalogue/new">
-          <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+          <Button >
             <PlusCircle className="w-4 h-4 mr-2" /> Add Catalogue
           </Button>
         </Link>

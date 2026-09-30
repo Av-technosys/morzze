@@ -19,7 +19,7 @@ export default async function AdminStoresPage() {
         <div className="flex items-center gap-2">
           {/* <StoreBulkUpload /> */}
           <Link href="/admin/stores/new">
-            <Button className="bg-[#2D5A5D] hover:bg-[#234749]">
+            <Button >
               <PlusCircle className="w-4 h-4 mr-2" /> Add Store
             </Button>
           </Link>
