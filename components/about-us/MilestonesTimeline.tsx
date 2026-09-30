@@ -6,27 +6,27 @@ const milestones = [
   {
     year: "1990",
     title: "Foundation",
-    desc: "Anupam founded at Naraina,New Delhi,India.",
+    desc: "Anupam was founded in Naraina, New Delhi, India.",
   },
   {
     year: "1997",
     title: "Expansion",
-    desc: "Anupam shifted its unit to new premises of 16000 sq.ft at Ghevera,New Delhi.",
+    desc: "Anupam shifted its unit to new premises of 16,000 sq. ft. in Ghevera, New Delhi.",
   },
   {
     year: "2000",
     title: "New Manufacturing Facility",
-    desc: "Anupam shifted its unit to new premises of 32000 sq.ft located in Industrial Estate of Kundli, Haryana, India.",
+    desc: "Anupam shifted its unit to new premises of 32,000 sq. ft. in the Industrial Estate of Kundli, Haryana, India.",
   },
   {
     year: "2008",
     title: "Display Centre Launch",
-    desc: "Opened its first Display Centre “ANUPAM WORLD”.By end of 2008, six display centres across India.",
+    desc: "Opened its first Display Centre “ANUPAM WORLD.” By the end of 2008, six display centres across India.",
   },
   {
     year: "2009",
     title: "Business Expansion",
-    desc: "Expanded business by establishing another unit in Kundli, Haryana measuring 35000 sq.ft.",
+    desc: "Expanded business by establishing another unit in Kundli, Haryana measuring 35,000 sq. ft..",
   },
   {
     year: "2024",
