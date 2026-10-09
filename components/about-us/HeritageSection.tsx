@@ -45,7 +45,7 @@ const HeritageSection = () => {
                 variants={fadeInUp}
                 className="text-3xl md:text-5xl text-[#FEFFF1] font-medium leading-[1.1]  tracking-tight"
               >
-                A Legacy of <br /> Craftsmanship
+                A Legacy Built on <br /> Precision & Pride
               </motion.h2>
             </div>
 

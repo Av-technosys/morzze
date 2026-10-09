@@ -5,6 +5,14 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+const passwordRule = z
+  .string()
+  .min(8, "Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character")
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
+    "Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character"
+  );
+
 export const signupSchema = z
   .object({
     name: z.string().min(2, "Name is required"),
@@ -14,7 +22,7 @@ export const signupSchema = z
       .min(10, "Phone must be at least 10 digits")
       .optional()
       .or(z.literal("")),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: passwordRule,
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -35,7 +43,7 @@ export const resetPasswordSchema = z
   .object({
     email: z.email("Enter a valid email"),
     code: z.string().min(1, "Verification code is required"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: passwordRule,
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

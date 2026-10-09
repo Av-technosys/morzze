@@ -1,5 +1,4 @@
 import BannerAbout from "@/components/about-us/BannerAbout";
-import BrandHeritage from "@/components/about-us/BrandHeritage";
 import CollectionHero from "@/components/about-us/CollectionHero";
 import HeritageSection from "@/components/about-us/HeritageSection";
 import LeadershipSection from "@/components/about-us/LeadershipSection";
@@ -31,7 +30,6 @@ const page = () => {
       <LeadershipSection />
       <MissionVisionSection />
       <ManufacturingExcellence />
-      <BrandHeritage />
       <MilestonesTimeline />
       <RecognitionSection />
       <CollectionHero />

@@ -41,6 +41,7 @@ export async function GET(request: Request) {
         id: category.id,
         name: category.name,
         slug: category.slug,
+        type: category.type,
         bannerImage: category.bannerImage,
       })
       .from(category)
