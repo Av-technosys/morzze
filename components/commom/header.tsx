@@ -34,6 +34,7 @@ type SearchCategory = {
   id: string;
   name: string;
   slug: string;
+  type?: "kitchen" | "bathroom" | null;
   bannerImage: string | null;
 };
 
@@ -84,7 +85,7 @@ function SearchResults({
                 {categories.map((cat) => (
                   <Link
                     key={cat.id}
-                    href={`/category`}
+                    href={`/${cat.type || "kitchen"}/${cat.slug}`}
                     onClick={onNavigate}
                     aria-label={`Go to ${cat.name} category`}
                     className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"
@@ -559,7 +560,7 @@ const Header = () => {
                               {searchCategories.map((cat) => (
                                 <Link
                                   key={cat.id}
-                                  href={`/category`}
+                                  href={`/${cat.type || "kitchen"}/${cat.slug}`}
                                   onClick={handleResultNavigate}
                                   aria-label={`Go to ${cat.name} category`}
                                   className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"

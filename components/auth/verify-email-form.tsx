@@ -124,7 +124,7 @@ export function VerifyEmailForm() {
       if (result.error) {
         toast.error(result.error, { id: toastId });
       } else {
-        toast.success("OTP resent successfully", { id: toastId });
+        toast.success("OTP has been sent to your email.", { id: toastId });
         setTimer(30);
         setCanResend(false);
       }
@@ -290,6 +290,10 @@ export function VerifyEmailForm() {
                 value="phone"
                 className="w-full grid grid-cols-1 gap-4 justify-center items-center mx-auto"
               >
+                <p className="text-sm text-center text-gray-300 max-w-96 mx-auto">
+                  An OTP has been sent to your email {email ? <span className="text-[#FDB813] font-medium">({email})</span> : null}.
+                </p>
+
                 <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                   {[0, 1, 2, 3, 4, 5].map((index) => (
                     <InputOTPGroup key={index}>

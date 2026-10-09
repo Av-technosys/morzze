@@ -25,6 +25,7 @@ function ResetPasswordContent() {
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
@@ -65,7 +66,7 @@ function ResetPasswordContent() {
     if (result.error) {
       toast.error(result.error, { id: toastId });
     } else {
-      toast.success("OTP resent successfully", { id: toastId });
+      toast.success("OTP has been sent to your email.", { id: toastId });
       setTimer(30);
       setCanResend(false);
     }
@@ -77,8 +78,12 @@ function ResetPasswordContent() {
       return;
     }
 
-    if (!password || !confirmPassword) {
-      toast.error("Both fields are required");
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character."
+      );
       return;
     }
 
@@ -119,6 +124,10 @@ function ResetPasswordContent() {
     }
   };
 
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  const isPasswordValid = passwordRegex.test(password);
+
   return (
     <section className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
       <div className="w-full max-w-md space-y-6">
@@ -135,7 +144,9 @@ function ResetPasswordContent() {
             Set New Password
           </h1>
           <p className="text-gray-400 text-sm">
-            Enter your registered email to receive reset link
+            {email
+              ? `An OTP has been sent to ${email}`
+              : "An OTP has been sent to your registered email"}
           </p>
         </div>
 
@@ -193,6 +204,8 @@ function ResetPasswordContent() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
               className="w-full bg-[#1A1A1A] border border-gray-800 rounded-md py-3.5 pl-10 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] transition-all"
             />
             <button
@@ -223,6 +236,12 @@ function ResetPasswordContent() {
               {showConfirm ? <IconEyeOff size={20} /> : <IconEye size={20} />}
             </button>
           </div>
+
+          {isPasswordFocused && !isPasswordValid ? (
+            <p className="text-left text-xs text-gray-400 leading-normal">
+              Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character.
+            </p>
+          ) : null}
 
           <button
             onClick={handleReset}
