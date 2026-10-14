@@ -19,13 +19,12 @@ import {
 import { Metadata } from "next";
 import { db } from "@/db";
 import { category } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or, ilike } from "drizzle-orm";
 import CategoryProductsClient from "@/components/commom/CategoryProductsClient";
 import { categorySchemas } from "@/const/schemas";
 import { getFaqsByCategory } from "@/helper/faq/action";
 import FAQSection from "@/components/FAQSection";
 
-export const dynamic = "force-static";
 export const revalidate = 86400;
 
 const CATEGORY_META: Record<string, Pick<Metadata, "title" | "description">> = {
@@ -39,7 +38,8 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const fallbackMeta = CATEGORY_META[slug];
+  const decodedSlug = decodeURIComponent(slug || "").trim();
+  const fallbackMeta = CATEGORY_META[decodedSlug] || CATEGORY_META[decodedSlug.toLowerCase()];
 
   try {
     const [productRes] = await db
@@ -50,7 +50,7 @@ export async function generateMetadata(
         image: category.bannerImage,
       })
       .from(category)
-      .where(eq(category.slug, slug));
+      .where(or(eq(category.slug, decodedSlug), ilike(category.slug, decodedSlug)));
 
     if (!productRes) {
       return {

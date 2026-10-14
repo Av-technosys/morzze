@@ -12,7 +12,6 @@ import { categorySchemas } from "@/const/schemas";
 import { getFaqsByCategory } from "@/helper/faq/action";
 import FAQSection from "@/components/FAQSection";
 
-export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function generateMetadata({

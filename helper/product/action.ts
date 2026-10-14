@@ -624,11 +624,17 @@ export async function getFullProductDetails(identifier: string) {
       try {
         if (!identifier) throw new Error("Missing product identifier");
 
+        const trimmedId = decodeURIComponent(identifier || "").trim();
         // 1. Slug se product lao
         const [productDeails] = await db
           .select()
           .from(product)
-          .where(and(eq(product.slug, identifier), or(eq(product.isHidden, false), isNull(product.isHidden))))
+          .where(
+            and(
+              or(eq(product.slug, trimmedId), ilike(product.slug, trimmedId)),
+              or(eq(product.isHidden, false), isNull(product.isHidden))
+            )
+          )
           .limit(1);
 
         if (!productDeails) throw new Error("Product not found");
