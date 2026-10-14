@@ -96,7 +96,7 @@ const ShopCategory = ({ categories = [] }: ShopCategoryProps) => {
 
                     <div className="absolute bottom-6 left-6 right-6 z-10">
                       <h4 className="text-xl md:text-2xl font-medium text-white transition-colors duration-300 group-hover:text-[#FFBF3F]">
-                        {cat.name}
+                        {cat.name === "Kitchen Faucet" ? "Kitchen Faucets" : cat.name}
                       </h4>
                       {cat.description && (
                         <p className="text-white/50 text-xs md:text-sm mt-2 font-inter line-clamp-2">

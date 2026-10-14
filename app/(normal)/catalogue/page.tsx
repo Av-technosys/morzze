@@ -17,7 +17,7 @@ const page = async () => {
   const rows = await getActiveCatalogues();
   const items = rows.map((r: any) => ({
     id: r.id,
-    title: r.title,
+    title: r.title?.toLowerCase() === "bathroom faucet" ? "Bathroom Faucet" : r.title,
     shortDescription: r.shortDescription,
     image: r.image,
     pdfFile: r.pdfFile,

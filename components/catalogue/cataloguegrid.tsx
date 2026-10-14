@@ -144,7 +144,7 @@ export default function CatalogueGridDownloads({ items }: Props) {
                   </div>
 
                   <h3 className="text-[15px] font-medium text-[#f5f2ea] mb-2">
-                    {item.title}
+                    {item.title?.toLowerCase() === "bathroom faucet" ? "Bathroom Faucet" : item.title}
                   </h3>
                   <p className="text-[12px] leading-6 text-[white]/80 mb-4 line-clamp-4">
                     {item.shortDescription}

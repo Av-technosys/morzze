@@ -231,6 +231,18 @@ const Header = () => {
     };
   }, []);
 
+  // Lock background scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   // Debounced search fetch
   const performSearch = useCallback((query: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);

@@ -26,7 +26,7 @@ const milestones = [
   {
     year: "2009",
     title: "Business Expansion",
-    desc: "Expanded business by establishing another unit in Kundli, Haryana measuring 35,000 sq. ft..",
+    desc: "Expanded business by establishing another unit in Kundli, Haryana measuring 35,000 sq. ft.",
   },
   {
     year: "2024",

@@ -34,8 +34,9 @@ const ProductBanner = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="text-white font-inter text-sm md:text-md leading-relaxed max-w-lg opacity-90"
           >
-            Discover our premium collection of granite basins, crafted to bring
-            durability, elegance, and modern sophistication to your space.
+            Discover our premium collection of kitchen sinks, bathroom fittings,
+            faucets, air taps, and luxury accessories, crafted to bring durability,
+            elegance, and modern sophistication to your space.
           </motion.p>
         </div>
       </div>

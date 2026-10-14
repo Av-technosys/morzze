@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 // Stats Data - Direct key-value match from photo
 const statsData = [
-  { value: "700+", title: "DEALER NETWORK" },
+  { value: "700+", title: "DEALERS" },
   { value: "35+", title: "YEARS OF EXCELLENCE" },
   { value: "50k+", title: "HAPPY CUSTOMERS" },
   { value: "200+", title: "PRODUCT VARIANTS" },

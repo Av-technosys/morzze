@@ -70,7 +70,7 @@ const HeritageSection = () => {
                 Every Morzze product undergoes rigorous testing and quality
                 control. We use only the finest materials—solid brass, 304-grade
                 stainless steel, and premium ceramic cartridges—to ensure
-                lasting performance and timeless beauty .
+                lasting performance and timeless beauty.
               </p>
             </motion.div>
           </motion.div>

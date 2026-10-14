@@ -1,7 +1,7 @@
 export const metaTags = {
     "Air-Tap": {
-        "title": "Air Tap | Innovative & Efficient Water Control for Your Kitchen",
-        "description": "Upgrade your kitchen with the Air Tap—efficient, easy to use, and designed for precise water flow while conserving energy. A smart solution for modern kitchens."
+        "title": "Air Tap | High-Speed Touchless Hand Dryer | Morzze",
+        "description": "Discover Morzze Air Tap—a high-speed, touchless hand dryer engineered with advanced air filtration, intelligent heating, and fast hygienic drying."
     },
     "Kitchen-Sinks": {
         "title": "Buy Kitchen Sinks Online at best price | Modern Kitchen sinks",

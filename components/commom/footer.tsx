@@ -267,10 +267,10 @@ const Footer = async () => {
             <Link
               href="/terms-of-use"
               target="_blank"
-              aria-label="Read our Terms of Service"
+              aria-label="Read our Terms of Use"
               className="text-white/80 hover:text-white transition-colors"
             >
-              Terms of Service
+              Terms of Use
             </Link>
 
             {/* <Link

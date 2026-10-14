@@ -41,7 +41,7 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
               Just Arrived
             </span>
             <h2 className="font-montserrat text-3xl md:text-5xl font-medium tracking-tight text-white">
-              New Arrival
+              New Arrivals
             </h2>
           </div>
           <div className="hidden md:block absolute right-0 bottom-7">

@@ -13,6 +13,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import Image from "next/image";
 import { getImageURL } from "@/lib/getImageLin";
+import { formatPrice, formatDimension } from "@/lib/utils";
 
 type ProductFilter = {
   type: string | null;
@@ -224,12 +225,12 @@ const CategoryProductsClient = ({
                 <div className=" flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="font-bold text-white font-inter text-sm md:text-base">
-                      ₹{product.basePrice}
+                      ₹{formatPrice(product.basePrice)}
                     </span>
                   </div>
                   {size && (
                     <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat">
-                      {size.split(" ")[0] + " inch"}
+                      {formatDimension(size)}
                     </p>
                   )}
                 </div>

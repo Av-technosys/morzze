@@ -15,13 +15,13 @@ const testimonials = [
     id: 2,
     text: "The touchless faucet's precision engineering is unmatched, filtered water on tap changed our daily routine. Highly recommended!",
     name: "Rahul Mehta",
-    location: "Mumbai • Kitchen Faucet",
+    location: "Mumbai • Kitchen Faucets",
   },
   {
     id: 3,
-    text: "Touchless living is the future. Morzze's Air Tap technology is seamless, hygienic, and saves so much water. Amazing innovation.",
+    text: "Touchless living is the future. Morzze's Air Tap hand dryer is seamless, hygienic, and dries hands in seconds. Amazing innovation.",
     name: "Ananya Iyer",
-    location: "Bangalore • Aeromix Sensor",
+    location: "Bangalore • Air Tap Hand Dryer",
   },
   {
     id: 4,

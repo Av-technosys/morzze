@@ -76,15 +76,13 @@ const page = async ({
 
     return (
       <>
-        <head>
-          {seoSchemas.map((schema: any, idx: number) => (
-            <script
-              key={idx}
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
-          ))}
-        </head>
+        {seoSchemas.map((schema: any, idx: number) => (
+          <script
+            key={idx}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
         <ProductClient product={product} slug={productslug} reviews={reviews} />
       </>
     );

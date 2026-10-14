@@ -164,7 +164,7 @@ const SupportTabs = () => {
         group-data-active:text-black
       "
                 >
-                  4. Whatsapp
+                  4. WhatsApp
                 </span>
 
                 {/* BIG BACKGROUND ICON */}
