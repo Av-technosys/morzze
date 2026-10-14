@@ -26,9 +26,9 @@ import { homeSchema } from "@/const/schemas";
 import { ExploreCollectionCTABtn } from "./ExploreCollectionBtn";
 
 export const metadata: Metadata = {
-  title: `India's Top Premium Kitchen and Bathroom Sinks Manufacturer | Morzze`,
+  title: "Premium Kitchen & Bathroom Products & Accessories Manufacturer | Morzze",
   description:
-    "Morzze offers a diverse range of high-quality kitchen and bathroom sinks. Our range of stylish and functional sinks is designed to complement any decor. Explore our collection today and transform your space.",
+    "Morzze offers a premium collection of luxury kitchen and bathroom products, including sinks, designer faucets, air taps, food waste disposers, towel warmers, and luxury accessories across India.",
 
   alternates: {
     canonical: "/",
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     url: "https://www.morzze.com/",
     siteName: "Morzze",
     title:
-      "India's Top Premium Kitchen and Bathroom Product Manufacturer | Morzze",
+      "Premium Kitchen & Bathroom Products & Accessories Manufacturer | Morzze",
     description:
-      "Morzze offers a diverse range of premium kitchen sinks, bathroom fittings, faucets, air taps, and more. Our range of stylish and functional products is designed to complement any decor. Explore our collection today and transform your space.",
+      "Morzze offers a premium collection of luxury kitchen and bathroom products, including sinks, designer faucets, air taps, food waste disposers, towel warmers, and luxury accessories across India.",
     images: [
       {
         url: "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "India's Top Premium Kitchen and Bathroom Product Manufacturer | Morzze",
+      "Premium Kitchen & Bathroom Products & Accessories Manufacturer | Morzze",
     description:
-      "Morzze offers a diverse range of premium kitchen sinks, bathroom fittings, faucets, air taps, and more. Our range of stylish and functional products is designed to complement any decor. Explore our collection today and transform your space.",
+      "Morzze offers a premium collection of luxury kitchen and bathroom products, including sinks, designer faucets, air taps, food waste disposers, towel warmers, and luxury accessories across India.",
     images: [
       "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
     ],

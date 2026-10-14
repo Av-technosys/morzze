@@ -19,10 +19,27 @@ const ReviewsTab = ({ reviews = [] }: any) => {
     count: reviews ? reviews.filter((r: any) => r.rating === rating).length : 0,
   }));
 
+  // If no reviews, display a clean, luxury empty state instead of 0.0 breakdown
+  if (!reviews || reviews.length === 0) {
+    return (
+      <div className="w-full bg-black py-12 p-4 md:p-10 font-inter border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto text-center py-12 border border-zinc-900/80 rounded-xl bg-zinc-950/40 px-6">
+          <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#CBA14D]/10 flex items-center justify-center text-[#CBA14D]">
+            <IconStar size={22} />
+          </div>
+          <h3 className="text-lg text-white font-medium mb-1">Customer Reviews</h3>
+          <p className="text-zinc-400 text-sm max-w-md mx-auto">
+            No reviews yet. Be the first to share your experience with this product!
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full bg-black py-10 p-4 md:p-10 font-inter border-t border-zinc-900">
       <div className="max-w-7xl mx-auto space-y-10">
-        <h2 className="text-xl text-white font-semibold">REVIEWS ({reviews?.length || 0})</h2>
+        <h2 className="text-xl text-white font-semibold">REVIEWS ({reviews.length})</h2>
 
         {/* RATING SUMMARY */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
