@@ -7,7 +7,7 @@ import { imageKitUrl } from "@/lib/imagekit-url";
 const FeaturedInnovation = () => {
   // Stats data based on the provided image
   const stats = [
-    { value: "100+", label: "Product Range" },
+    { value: "200+", label: "Product Variants" },
     { value: "35+", label: "Years of Legacy" },
     { value: "300+", label: "Projects Done" }
   ];
@@ -41,8 +41,8 @@ const FeaturedInnovation = () => {
             The <span className="text-white font-bold">Air Tap</span> is a sleek and
             innovative hand dryer designed for modern, eco-conscious spaces. Its
             advanced filtration system ensures clean air while drying, promoting
-            hygiene and reducing the spread of germs. With easy touch operation
-            and intelligent heating, this dryer offers a user-friendly experience,
+            hygiene and reducing the spread of germs. With touch-free sensor operation
+            and intelligent heating, this dryer offers a seamless experience,
             providing efficient and fast drying without compromising on comfort.
             The eco-friendly design, combined with its space-saving structure,
             makes it a perfect addition to any restroom, saving both energy and space.

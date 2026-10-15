@@ -53,7 +53,7 @@ export default function JoinUsHero() {
           viewport={{ once: true }}
           className="text-[13px] md:text-[18px] leading-7 text-[#efefef]/90"
         >
-          craft the future of luxury living
+          Craft the Future of Luxury Living
         </motion.p>
       </div>
     </section>

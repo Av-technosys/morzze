@@ -37,9 +37,9 @@ export function ChallengeAndSolution() {
             Market Opportunity
           </div>
 
-          <h1 className="mx-auto mt-7 max-w-7xl text-4xl font-bold tracking-tight md:text-5xl lg:leading-[1.1]">
+          <h2 className="mx-auto mt-7 max-w-7xl text-4xl font-bold tracking-tight md:text-5xl lg:leading-[1.1]">
             The Premium Kitchen &amp; Bath Market is Booming
-          </h1>
+          </h2>
 
           <p className="mx-auto mt-5 max-w-4xl text-base leading-relaxed text-[#9d9d9d] md:text-lg">
             Rising demand in residential and commercial sectors creates

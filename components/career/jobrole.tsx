@@ -54,7 +54,7 @@ const jobs: Job[] = [
     dept: "CUSTOMER SERVICE",
     location: "Gurugram, Haryana",
     type: "Full-time",
-    title: "Customer Services",
+    title: "Customer Service",
     exp: "1-3 years experience",
   },
 ];

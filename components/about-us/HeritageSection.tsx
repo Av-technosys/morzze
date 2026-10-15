@@ -45,7 +45,7 @@ const HeritageSection = () => {
                 variants={fadeInUp}
                 className="text-3xl md:text-5xl text-[#FEFFF1] font-medium leading-[1.1]  tracking-tight"
               >
-                A Legacy of <br /> Craftsmanship
+                A Legacy Built on <br /> Precision & Pride
               </motion.h2>
             </div>
 
@@ -70,7 +70,7 @@ const HeritageSection = () => {
                 Every Morzze product undergoes rigorous testing and quality
                 control. We use only the finest materials—solid brass, 304-grade
                 stainless steel, and premium ceramic cartridges—to ensure
-                lasting performance and timeless beauty .
+                lasting performance and timeless beauty.
               </p>
             </motion.div>
           </motion.div>

@@ -10,11 +10,34 @@ import { imageKitUrl } from "@/lib/imagekit-url";
 import { kitchenLandingSchema } from "@/const/schemas";
 
 export const metadata: Metadata = {
-  title: `Premium Kitchen Accessories | Faucets, Sinks & More - Morzze`,
+  title: "Premium Kitchen Accessories | Faucets, Sinks & More - Morzze",
   description:
     "Explore top-quality kitchen accessories at Morzze—faucets, sinks, disposers & air taps. Stylish, functional picks to elevate your kitchen effortlessly.",
   alternates: {
     canonical: "/kitchen",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.morzze.com/kitchen",
+    siteName: "Morzze",
+    title: "Premium Kitchen Accessories | Faucets, Sinks & More - Morzze",
+    description:
+      "Explore top-quality kitchen accessories at Morzze—faucets, sinks, disposers & air taps. Stylish, functional picks to elevate your kitchen effortlessly.",
+    images: [
+      {
+        url: "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
+      },
+    ],
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Premium Kitchen Accessories | Faucets, Sinks & More - Morzze",
+    description:
+      "Explore top-quality kitchen accessories at Morzze—faucets, sinks, disposers & air taps. Stylish, functional picks to elevate your kitchen effortlessly.",
+    images: [
+      "https://www.morzze.com/_next/image?url=https%3A%2F%2Fd2icu6klh68l1z.cloudfront.net%2Flogo.png&w=384&q=75",
+    ],
   },
 };
 

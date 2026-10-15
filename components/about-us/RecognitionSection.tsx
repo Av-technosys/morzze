@@ -46,7 +46,7 @@ const certifications = [
     // year: "2018",
     title: "Certificate Of Compliance",
     org: "Kitchen Sink, Faucet, Drainage and accessories",
-    href: "/certificates/CE Certificate.pdf",
+    href: "/certificates/CE%20Certificate.pdf",
     icon: <IconShieldCheck size={32} stroke={1.2} />,
   },
 ];

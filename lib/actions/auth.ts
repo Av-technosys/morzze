@@ -101,6 +101,7 @@ function getSignInErrorCode(response: unknown) {
 }
 
 function cognitoErrorMessage(error: unknown, fallback: string) {
+  console.error("Cognito Error:", error);
   if (
     typeof error === "object" &&
     error &&
@@ -117,13 +118,19 @@ function cognitoErrorMessage(error: unknown, fallback: string) {
       case "UserNotFoundException":
         return "No account was found for this email.";
       case "InvalidPasswordException":
-        return "Password does not meet the Cognito password requirements.";
+        return "Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character.";
       case "LimitExceededException":
       case "TooManyRequestsException":
         return "Too many attempts. Please try again later.";
+      case "InvalidParameterException":
+        return (error as { message?: string }).message || "Invalid input parameters.";
       default:
         break;
     }
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
   }
 
   return fallback;

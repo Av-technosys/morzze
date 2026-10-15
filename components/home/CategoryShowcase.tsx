@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { getImageURL } from "@/lib/getImageLin";
+import { formatPrice } from "@/lib/utils";
 
 interface CategoryProduct {
   id: string;
@@ -49,7 +50,7 @@ const CategoryShowcase = ({
                 <h4
                   className={`font-montserrat text-lg md:text-xl tracking-wide transition-colors duration-300 ${activeTab.id === cat.id ? "text-white" : "text-[white]/70 hover:text-white/60"}`}
                 >
-                  {cat.name}
+                  {cat.name === "Kitchen Faucet" ? "Kitchen Faucets" : cat.name}
                 </h4>
               </button>
 
@@ -125,7 +126,7 @@ const CategoryShowcase = ({
                       </p>
                       {prod.basePrice && (
                         <p className="text-xs text-[#CBA14D] font-semibold mt-0.5">
-                          ₹{prod.basePrice}
+                          ₹{formatPrice(prod.basePrice)}
                         </p>
                       )}
                     </div>
@@ -184,7 +185,7 @@ const CategoryShowcase = ({
                       </p>
                       {prod.basePrice && (
                         <p className="text-xs text-[#CBA14D] font-semibold mt-0.5">
-                          ₹{prod.basePrice}
+                          ₹{formatPrice(prod.basePrice)}
                         </p>
                       )}
                     </div>

@@ -374,13 +374,19 @@ export async function getAllProductsByCategorySlug(slug: string) {
 }
 
 export async function getCategoryBySlug(slug: string) {
+  const trimmedSlug = decodeURIComponent(slug || "").trim();
   return unstable_cache(
     async () => {
       try {
         const result = await db
           .select()
           .from(category)
-          .where(eq(category.slug, slug))
+          .where(
+            or(
+              eq(category.slug, trimmedSlug),
+              ilike(category.slug, trimmedSlug)
+            )
+          )
           .limit(1);
 
         return result[0] || null;
@@ -389,10 +395,10 @@ export async function getCategoryBySlug(slug: string) {
         return null;
       }
     },
-    [CACHE_TAGS.category(slug), slug],
+    [CACHE_TAGS.category(trimmedSlug.toLowerCase()), trimmedSlug.toLowerCase()],
     {
       revalidate: cacheRevalidateTime,
-      tags: [CACHE_TAGS.categories, CACHE_TAGS.category(slug)],
+      tags: [CACHE_TAGS.categories, CACHE_TAGS.category(trimmedSlug.toLowerCase())],
     },
   )();
 }

@@ -30,6 +30,7 @@ function SignupFormContent() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -86,8 +87,14 @@ function SignupFormContent() {
       isValid = false;
     }
 
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!formData.password) {
       nextErrors.password = "Password required";
+      isValid = false;
+    } else if (!passwordRegex.test(formData.password)) {
+      nextErrors.password =
+        "Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character.";
       isValid = false;
     }
 
@@ -126,7 +133,7 @@ function SignupFormContent() {
 
       if (nextError.digest?.startsWith("NEXT_REDIRECT")) {
         sessionStorage.setItem(PENDING_SIGNUP_EMAIL_KEY, formData.email);
-        toast.success("Verification code sent!", { id: toastId });
+        toast.success("OTP has been sent to your email.", { id: toastId });
         return;
       }
 
@@ -134,6 +141,10 @@ function SignupFormContent() {
       setLoading(false);
     }
   };
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  const isPasswordValid = passwordRegex.test(formData.password);
 
   return (
     <section>
@@ -239,6 +250,8 @@ function SignupFormContent() {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
               />
               <InputGroupAddon>
                 <LockIcon />
@@ -253,11 +266,15 @@ function SignupFormContent() {
                 </button>
               </InputGroupAddon>
             </InputGroup>
-            {errors.password && (
+            {errors.password ? (
               <p className=" text-left text-red-500 text-xs">
                 {errors.password}
               </p>
-            )}
+            ) : isPasswordFocused && !isPasswordValid ? (
+              <p className="text-left text-gray-400 text-xs leading-normal">
+                Password must be at least 8 characters with an uppercase, a lowercase, a number, and a special character.
+              </p>
+            ) : null}
 
             <InputGroup className=" py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
               <InputGroupInput

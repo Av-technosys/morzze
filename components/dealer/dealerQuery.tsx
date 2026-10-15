@@ -47,7 +47,7 @@ export default function ContactCTASection() {
           </motion.a>
 
           <motion.a
-            href="tel:+1800 110 123"
+            href="tel:1800110123"
             whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="w-full sm:w-[255px] h-[48px] rounded-[6px] border border-[#CBA14D] text-[#CBA14D] flex items-center justify-center gap-3 text-[14px] font-semibold hover:bg-[#1a1407] transition-colors duration-500"

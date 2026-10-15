@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/', '/dashboard/', '/cart', '/login', '/register', '/forgot-password'],
     },
-    sitemap: 'https://morzze.com/sitemap.xml',
+    sitemap: 'https://www.morzze.com/sitemap.xml',
   }
 }

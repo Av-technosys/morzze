@@ -12,7 +12,6 @@ import { categorySchemas } from "@/const/schemas";
 import { getFaqsByCategory } from "@/helper/faq/action";
 import FAQSection from "@/components/FAQSection";
 
-export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function generateMetadata({
@@ -29,11 +28,35 @@ export async function generateMetadata({
     };
   }
 
+  const metaTitle = categoryData.metaTitle || `${categoryData.name} | Morzze`;
+  const metaDescription =
+    categoryData.metaDescription ||
+    categoryData.description ||
+    `Browse ${categoryData.name} products at Morzze.`;
+  const imageUrl = categoryData.bannerImage
+    ? getImageURL(categoryData.bannerImage)
+    : undefined;
+
   return {
-    title: categoryData.metaTitle || `${categoryData.name} | Morzze`,
-    description: categoryData.metaDescription || categoryData.description || `Browse ${categoryData.name} products at Morzze.`,
+    title: metaTitle,
+    description: metaDescription,
     alternates: {
       canonical: `/bathroom/${slug}`,
+    },
+    openGraph: {
+      type: "website",
+      url: `https://www.morzze.com/bathroom/${slug}`,
+      siteName: "Morzze",
+      title: metaTitle,
+      description: metaDescription,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+      locale: "en_IN",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDescription,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   };
 }

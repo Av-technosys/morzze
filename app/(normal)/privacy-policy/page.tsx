@@ -187,9 +187,18 @@ const page = () => {
           <h2 className="text-lg font-semibold text-white mb-2">Contact Us</h2>
           <p>
             If you have any questions or concerns about this Privacy Policy,
-            please contact us at:{" "}
-            {/* <ContactLink type="email" value="info@morzze.com" /> */}
+            please contact us at:
           </p>
+          <div className="mt-2 space-y-1">
+            <p className="font-medium text-white">Anupam Retail Limited (Morzze)</p>
+            <p>Address: A-42, Phase-1, Naraina Industrial Area, New Delhi, India - 110028</p>
+            <p>
+              Email: <ContactLink type="email" value="info@morzze.com" />
+            </p>
+            <p>
+              Helpline: <ContactLink type="phone" value="1800 110 123" />
+            </p>
+          </div>
         </div>
 
         {/* Footer Note */}

@@ -23,6 +23,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import Pagination from "../commom/Pagination";
 import FilterSidebar from "@/components/product/FilterSidebar";
 import { getImageURL } from "@/lib/getImageLin";
+import { formatPrice, formatDimension } from "@/lib/utils";
 
 type FilterOption = {
   label: string;
@@ -194,12 +195,10 @@ const ProductGrid = ({
 
                 <div className="flex items-center justify-between mt-2 gap-3">
                   <span className="font-bold text-white font-inter text-sm md:text-base">
-                    ₹{product.basePrice}
+                    ₹{formatPrice(product.basePrice)}
                   </span>
                   <span className="font-bold text-gray-300 font-inter text-xs">
-                    {product.size
-                      ? product.size.replace("inch", "") + " Inches"
-                      : ""}
+                    {formatDimension(product.size)}
                   </span>
                 </div>
               </div>

@@ -13,7 +13,7 @@ const FAQ_CONTENT = {
   General: [
     {
       q: "What’s your helpline number?",
-      a: "You can contact us at 1800 11 0123 from Monday to Saturday (9:30am to 7:00pm).",
+      a: "You can contact us at 1800 110 123 from Monday to Saturday (9:30am to 7:00pm).",
     },
     {
       q: "What’s your support email ID?",

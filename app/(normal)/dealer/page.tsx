@@ -143,7 +143,7 @@ export function BrandFeatures() {
           className=" w-fit mx-auto mt-8  min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 bg-[#CBA14D] hover:bg-[#ab915e] overflow-hidden"
         >
           <span className="flex items-center relative z-10 font-inter text-[11px] md:text-xs font-bold text-black uppercase tracking-[0.22em]">
-            Become a Morzze dealer <MoveRight className="ml-2" size={16} />
+            Become a Morzze Dealer <MoveRight className="ml-2" size={16} />
           </span>
         </Link>
       </div>
@@ -167,7 +167,7 @@ const products = [
     title: "Kitchen & Bath Faucets",
     text: "Elegant faucets with superior finish and long-lasting performance",
     items: [
-      "Air Tap technology",
+      "Precision aerator flow",
       "Chrome & matte finishes",
       "Water-efficient designs",
     ],
@@ -181,6 +181,7 @@ const products = [
 ];
 
 const categories = [
+  "Air Tap Hand Dryers",
   "Food Waste Disposers",
   "Towel Warmers",
   "Floor Drainers",

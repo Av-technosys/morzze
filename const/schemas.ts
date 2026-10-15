@@ -201,7 +201,7 @@ export const kitchenLandingSchema = [
         {
           "@type": "ListItem",
           "position": 9,
-          "name": "Kitchen Faucet",
+          "name": "Kitchen Faucets",
           "url": "https://www.morzze.com/kitchen/Kitchen-Faucets",
         },
         {
@@ -1091,7 +1091,7 @@ export const categorySchemas: Record<string, any[]> = {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Kitchen Faucet",
+          "name": "Kitchen Faucets",
           "item": "https://www.morzze.com/kitchen/Kitchen-Faucets",
         },
       ],

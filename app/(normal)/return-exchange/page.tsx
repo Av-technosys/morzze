@@ -90,7 +90,7 @@ const page = () => {
           <p>
             Contact our customer support team at{" "}
             <ContactLink type="email" value="info@morzze.com" /> or call us at{" "}
-            <ContactLink type="phone" value="1800 11 0123" />. Provide details
+            <ContactLink type="phone" value="1800 110 123" />. Provide details
             of your purchase, including the order number and the reason for your
             return or exchange request.
           </p>
@@ -171,7 +171,7 @@ const page = () => {
             Email: <ContactLink type="email" value="info@morzze.com" />
           </p>
           <p>
-            Helpline: <ContactLink type="phone" value="1800 11 0123" />
+            Helpline: <ContactLink type="phone" value="1800 110 123" />
           </p>
         </div>
 

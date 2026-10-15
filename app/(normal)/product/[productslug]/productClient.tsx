@@ -14,8 +14,9 @@ import {
   IconChevronLeft,
   IconChevronRight,
 } from "@tabler/icons-react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 import DescriptionTabs, {
   ChildRef,
@@ -254,24 +255,47 @@ const ProductClient = ({ product, slug, reviews }: any) => {
             </div>
 
             {/* RATING */}
-            <div className="flex items-center gap-4">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <IconStarFilled
-                    key={i}
-                    size={16}
-                    className={i < 4 ? "text-[#FFBF3F]" : "text-[#333]"}
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-white/80">
-                ({product.reviews} Reviews)
-              </span>
-            </div>
+            {(() => {
+              const reviewCount = Array.isArray(reviews)
+                ? reviews.length
+                : typeof product?.reviews === "number"
+                ? product.reviews
+                : 0;
+
+              if (reviewCount > 0) {
+                return (
+                  <div className="flex items-center gap-4">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <IconStarFilled
+                          key={i}
+                          size={16}
+                          className={i < 4 ? "text-[#FFBF3F]" : "text-[#333]"}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-white/80">
+                      ({reviewCount} {reviewCount === 1 ? "Review" : "Reviews"})
+                    </span>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="flex items-center gap-2.5 text-white/50 text-xs">
+                  <div className="flex opacity-30">
+                    {[...Array(5)].map((_, i) => (
+                      <IconStarFilled key={i} size={14} className="text-[#888]" />
+                    ))}
+                  </div>
+                  <span>No reviews yet</span>
+                </div>
+              );
+            })()}
 
             {/* PRICE */}
             <div className="flex items-baseline gap-4">
-              <span className="text-3xl font-bold">₹{currentPrice}</span>
+              <span className="text-3xl font-bold">₹{formatPrice(currentPrice)}</span>
               {/* <span className="text-lg text-[#555] line-through">
                 ₹{product.strikethroughPrice}
               </span>
@@ -281,15 +305,22 @@ const ProductClient = ({ product, slug, reviews }: any) => {
             </div>
 
             {/* DESC */}
-            <a
-              href="#description-tabs"
-              className="text-white/90 text-base cursor-pointer hover:text-white transition-colors block"
-              onClick={() => {
-                descriptionTabsRef.current?.setActiveTab(0);
-              }}
-            >
-              {product.description}
-            </a>
+            {product.description && (
+              <div className="text-white/80 text-sm md:text-base leading-relaxed">
+                <p className="line-clamp-3">
+                  {product.description}
+                </p>
+                <a
+                  href="#description-tabs"
+                  className="text-[#FFBF3F] text-xs font-semibold uppercase tracking-wider hover:underline mt-1.5 inline-block cursor-pointer"
+                  onClick={() => {
+                    descriptionTabsRef.current?.setActiveTab(0);
+                  }}
+                >
+                  Read More &rarr;
+                </a>
+              </div>
+            )}
 
             {/* COLOUR VARIANTS */}
             {colourVariants.length > 0 && (
@@ -473,68 +504,104 @@ const ProductClient = ({ product, slug, reviews }: any) => {
             </div>
 
             {/* BUTTONS */}
-            <div className="flex gap-3">
-              <Button
-                type="button"
-                onClick={() => {
-                  addToCart(slug, quantity, {
-                    name: selectedSize ? `${product.name} (${selectedSize})` : product.name,
-                    price: currentPrice,
-                    oldPrice: product.strikethroughPrice,
-                    image: currentHeroImage,
-                    sku: product.sku,
-                    productId: product.id,
-                    selectedSize,
-                  });
-                }}
-                disabled={getItemQuantity(product.slug, selectedSize) > 0}
-                className="flex-1 py-5 bg-[#FDB813] hover:ring-[#FDB813] hover:ring hover:text-[#FDB813] text-black disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {getItemQuantity(product.slug, selectedSize) > 0 ? (
-                  <>
-                    <IconShoppingBag size={18} /> In Cart ✓
-                  </>
-                ) : (
-                  <>
-                    <IconShoppingBag size={18} /> Add to cart
-                  </>
-                )}
-              </Button>
+            {(() => {
+              const getSelectedCartData = () => {
+                if (finishFilters.length > 0 && !selectedFinish) {
+                  toast.error("Please select a finish option before purchasing");
+                  return null;
+                }
+                if (materialFilters.length > 0 && !selectedMaterial) {
+                  toast.error("Please select a material option before purchasing");
+                  return null;
+                }
+                if (colourVariants.length > 0 && selectedVariant === null) {
+                  toast.error("Please select a colour variant before purchasing");
+                  return null;
+                }
 
-              <Button
-                type="button"
-                onClick={() => {
-                  addToCart(slug, quantity, {
-                    name: selectedSize ? `${product.name} (${selectedSize})` : product.name,
-                    price: currentPrice,
-                    oldPrice: product.strikethroughPrice,
-                    image: currentHeroImage,
-                    sku: product.sku,
-                    productId: product.id,
-                    selectedSize,
-                  });
-                  router.push("/checkout");
-                }}
-                className="flex-1 py-5 border border-white/20"
-              >
-                <IconBolt size={16} /> Buy Now
-              </Button>
+                const selectedVariantName =
+                  selectedVariant !== null ? colourVariants[selectedVariant]?.name : null;
+                const selectedVariantSku =
+                  selectedVariant !== null && colourVariants[selectedVariant]?.sku
+                    ? colourVariants[selectedVariant]?.sku
+                    : product.sku;
 
-              <Button
-                type="button"
-                onClick={() => toggleWishlist(slug, product.id)}
-                className={cn(
-                  "bg-[#FFBF3F] border-[#2E2E2E] text-black hover:ring-[#FDB813] hover:ring transition-all hover:text-[#FDB813]",
-                  wishlisted && "border-red-500/50 bg-[#FFBF3F] ",
-                )}
-              >
-                {wishlisted ? (
-                  <IconHeartFilled className="text-red-500" />
-                ) : (
-                  <IconHeart />
-                )}
-              </Button>
-            </div>
+                const details: string[] = [];
+                if (selectedVariantName) details.push(selectedVariantName);
+                if (selectedFinish) details.push(selectedFinish);
+                if (selectedSize) details.push(selectedSize);
+
+                const itemName =
+                  details.length > 0
+                    ? `${product.name} (${details.join(", ")})`
+                    : product.name;
+
+                return {
+                  name: itemName,
+                  price: currentPrice,
+                  oldPrice: product.strikethroughPrice,
+                  image: currentHeroImage,
+                  sku: selectedVariantSku,
+                  productId: product.id,
+                  selectedSize: selectedSize || null,
+                  productVarientBox: selectedVariantName || null,
+                };
+              };
+
+              return (
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const itemData = getSelectedCartData();
+                      if (!itemData) return;
+                      addToCart(slug, quantity, itemData);
+                      toast.success("Added to cart");
+                    }}
+                    disabled={getItemQuantity(product.slug, selectedSize) > 0}
+                    className="flex-1 py-5 bg-[#FDB813] hover:ring-[#FDB813] hover:ring hover:text-[#FDB813] text-black disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {getItemQuantity(product.slug, selectedSize) > 0 ? (
+                      <>
+                        <IconShoppingBag size={18} /> In Cart ✓
+                      </>
+                    ) : (
+                      <>
+                        <IconShoppingBag size={18} /> Add to cart
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const itemData = getSelectedCartData();
+                      if (!itemData) return;
+                      addToCart(slug, quantity, itemData);
+                      router.push("/checkout");
+                    }}
+                    className="flex-1 py-5 border border-white/20"
+                  >
+                    <IconBolt size={16} /> Buy Now
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onClick={() => toggleWishlist(slug, product.id)}
+                    className={cn(
+                      "bg-[#FFBF3F] border-[#2E2E2E] text-black hover:ring-[#FDB813] hover:ring transition-all hover:text-[#FDB813]",
+                      wishlisted && "border-red-500/50 bg-[#FFBF3F] ",
+                    )}
+                  >
+                    {wishlisted ? (
+                      <IconHeartFilled className="text-red-500" />
+                    ) : (
+                      <IconHeart />
+                    )}
+                  </Button>
+                </div>
+              );
+            })()}
             {/* Features Grid */}
             <div className="grid grid-cols-2 gap-y-4 pt-8 border-t border-white/5">
               {[

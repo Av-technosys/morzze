@@ -162,6 +162,10 @@ const Footer = async () => {
                     href: "/kitchen/stainless-steel-sinks",
                   },
                   {
+                    label: "Granite Sink",
+                    href: "/kitchen/Granite-Sinks",
+                  },
+                  {
                     label: "Wash Basins",
                     href: "/bathroom/Bathroom-Basins",
                   },
@@ -180,6 +184,10 @@ const Footer = async () => {
                   {
                     label: "Bathroom Faucets",
                     href: "/bathroom/Bathroom-Faucets",
+                  },
+                  {
+                    label: "Kitchen Faucet",
+                    href: "/kitchen/Kitchen-Faucets",
                   },
                 ].map((item) => (
                   <li key={item.label}>
@@ -267,10 +275,10 @@ const Footer = async () => {
             <Link
               href="/terms-of-use"
               target="_blank"
-              aria-label="Read our Terms of Service"
+              aria-label="Read our Terms of Use"
               className="text-white/80 hover:text-white transition-colors"
             >
-              Terms of Service
+              Terms of Use
             </Link>
 
             {/* <Link

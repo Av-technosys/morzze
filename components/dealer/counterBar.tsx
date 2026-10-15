@@ -13,36 +13,34 @@ function useCountUp(
   end: number,
   duration: number = 1800,
 ): [number, React.RefObject<HTMLDivElement>] {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(end);
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          let start = 0;
+          setCount(0);
+          const increment = end / (duration / 16);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+        }
       },
       { threshold: 0.4 },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
-    let start = 0;
-    const increment = end / (duration / 16);
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [visible, end, duration]);
+  }, [end, duration]);
 
   return [count, ref] as [number, React.RefObject<HTMLDivElement>];
 }
@@ -65,7 +63,10 @@ function CounterItem({
       viewport={{ once: true }}
       className="flex flex-col items-center justify-center text-center"
     >
-      <div className="text-4xl md:text-5xl font-bold text-amber-400 tracking-tight">
+      <div
+        className="text-4xl md:text-5xl font-bold text-amber-400 tracking-tight"
+        aria-label={`${item.value}${item.suffix} ${item.label}`}
+      >
         {count}
         {item.suffix}
       </div>

@@ -5,9 +5,8 @@ import { getFullProductDetails } from "@/helper/product/action";
 import { getProductReviews } from "@/helper/review/action";
 import { db } from "@/db";
 import { product } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or, ilike } from "drizzle-orm";
 
-export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function generateMetadata({
@@ -16,6 +15,7 @@ export async function generateMetadata({
   params: Promise<{ productslug: string }>;
 }): Promise<Metadata> {
   const { productslug } = await params;
+  const decodedSlug = decodeURIComponent(productslug || "").trim();
 
   try {
     const [productRes] = await db
@@ -25,7 +25,7 @@ export async function generateMetadata({
         image: product.bannerImage,
       })
       .from(product)
-      .where(eq(product.slug, productslug));
+      .where(or(eq(product.slug, decodedSlug), ilike(product.slug, decodedSlug)));
 
     if (!productRes) {
       return {
@@ -76,15 +76,13 @@ const page = async ({
 
     return (
       <>
-        <head>
-          {seoSchemas.map((schema: any, idx: number) => (
-            <script
-              key={idx}
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
-          ))}
-        </head>
+        {seoSchemas.map((schema: any, idx: number) => (
+          <script
+            key={idx}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
         <ProductClient product={product} slug={productslug} reviews={reviews} />
       </>
     );

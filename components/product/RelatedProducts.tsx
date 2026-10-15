@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { getImageURL } from "@/lib/getImageLin";
+import { formatPrice } from "@/lib/utils";
 
 const RelatedProducts = ({ slug }: { slug: string }) => {
   const [products, setProducts] = useState<any[]>([]);
@@ -143,9 +144,9 @@ const RelatedProducts = ({ slug }: { slug: string }) => {
 
                   {/* Price */}
                   <div className="flex items-center justify-between gap-4 mt-auto">
-                    <span className="text-lg font-bold text-[#FFBF3F]">₹{product.basePrice}</span>
+                    <span className="text-lg font-bold text-[#FFBF3F]">₹{formatPrice(product.basePrice)}</span>
                     {/* {product.strikethroughPrice && (
-                      <span className="text-sm text-white/40 line-through">₹{product.strikethroughPrice}</span>
+                      <span className="text-sm text-white/40 line-through">₹{formatPrice(product.strikethroughPrice)}</span>
                     )} */}
                     <button
                       onClick={(e) => {
