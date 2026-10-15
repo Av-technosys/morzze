@@ -28,11 +28,35 @@ export async function generateMetadata({
     };
   }
 
+  const metaTitle = categoryData.metaTitle || `${categoryData.name} | Morzze`;
+  const metaDescription =
+    categoryData.metaDescription ||
+    categoryData.description ||
+    `Browse ${categoryData.name} products at Morzze.`;
+  const imageUrl = categoryData.bannerImage
+    ? getImageURL(categoryData.bannerImage)
+    : undefined;
+
   return {
-    title: categoryData.metaTitle || `${categoryData.name} | Morzze`,
-    description: categoryData.metaDescription || categoryData.description || `Browse ${categoryData.name} products at Morzze.`,
+    title: metaTitle,
+    description: metaDescription,
     alternates: {
       canonical: `/bathroom/${slug}`,
+    },
+    openGraph: {
+      type: "website",
+      url: `https://www.morzze.com/bathroom/${slug}`,
+      siteName: "Morzze",
+      title: metaTitle,
+      description: metaDescription,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+      locale: "en_IN",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDescription,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   };
 }

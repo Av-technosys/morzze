@@ -59,19 +59,33 @@ export async function generateMetadata(
       };
     }
 
-    const images: string = productRes.image!;
+    const metaTitle = productRes.title || fallbackMeta?.title || `${productRes.name} | Morzze`;
+    const metaDescription =
+      productRes.description ||
+      fallbackMeta?.description ||
+      `Browse ${productRes.name} products at Morzze.`;
+    const imageUrl = productRes.image ? getImageURL(productRes.image) : undefined;
 
     return {
-      title: productRes.title || fallbackMeta?.title || `${productRes.name} | Morzze`,
-      description:
-        productRes.description ||
-        fallbackMeta?.description ||
-        `Browse ${productRes.name} products at Morzze.`,
+      title: metaTitle,
+      description: metaDescription,
       alternates: {
         canonical: `/kitchen/${slug}`,
       },
       openGraph: {
-        images,
+        type: "website",
+        url: `https://www.morzze.com/kitchen/${slug}`,
+        siteName: "Morzze",
+        title: metaTitle,
+        description: metaDescription,
+        images: imageUrl ? [{ url: imageUrl }] : undefined,
+        locale: "en_IN",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: metaTitle,
+        description: metaDescription,
+        images: imageUrl ? [imageUrl] : undefined,
       },
     };
   } catch {
